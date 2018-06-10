@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Make table</title>
+</head>
+<script>
+//June 8, 2018 MAE -- basis for 
+//https://maeyler.github.io/Visual-Mujam/
+"use strict";
+function makeRows(m, n) {
+	var i, j, text = "";
+    var row = "<th></th>";
+    	for (j = 1; j <= n; j++) {
+    		row += "<th>"+j+"</th>";
+        }
+    	text += "<tr>"+row+"</tr>";
+	for (i = 1; i <= m; i++) {
+    	row = "<th>"+i+"</th>";
+    	for (j = 1; j <= n; j++) {
+        	var p = n*(i-1)+j;
+            var s = "<span class=tip>C"+p+"</span>"
+    		row += "<td>"+i+","+j+s+"</td>";
+        }
+    	text += "<tr>"+row+"</tr>";
+	}
+    var t = text.length+" chars";
+    console.log("makeRows: "+m+"x"+n+" "+t);
+    document.getElementById("out").innerHTML = t;
+	document.getElementById("tablo").innerHTML = text;
+}
+function tableFromMenu() {
+	var s = document.getElementById("size").value;
+    //console.log(s);
+	var a = s.split("x");
+	makeRows(a[0], a[1]);
+	document.getElementById("rows").value = a[0];
+    document.getElementById("cols").value = a[1];
+}
+function tableFromInput() {
+	var m = document.getElementById("rows").value;
+    var n = document.getElementById("cols").value;
+    //console.log(m+" "+n);
+	makeRows(m, n);
+    document.getElementById("size").value = m+"x"+n;
+}
+</script>
+<style>
+    table { border-collapse: collapse; }
+    th { color: blue; padding: 5px 5px; }
+    td { 
+        border: 1px solid blue; 
+        padding: 5px 5px; 
+        text-align: center; 
+    }
+    td:hover .tip { visibility: visible; }
+    .tip {
+        visibility: hidden;
+        font-size: small;
+        background-color: blue;
+        color: white;
+        text-align: center;
+        padding: 5px 5px;
+        position: absolute;
+    }
+</style>
+
+<body><center>
+<h3>Make a table</h3>
+  Size: 
+  <select id="size" oninput="tableFromMenu()">
+    <option selected>3x5</option>
+    <option>5x5</option>
+    <option>7x8</option>
+    <option>9x9</option>
+  </select>
+
+<table id="tablo"></table>
+<p id="out" style="font-size:small"></p>
+
+<script>makeRows(3, 5)</script>
+
+<form oninput="tableFromInput()">
+  Rows: 
+  <input type=number id=rows style="width:40px" value=7>
+  Columns: 
+  <input type=number id=cols style="width:40px" value=8>
+  <br><br>
+  <input type="reset">
+  <button type="button" onclick="tableFromInput()">
+  Make Table
+  </button> 
+</form>
+
+</center></body>
+</html> 
+
