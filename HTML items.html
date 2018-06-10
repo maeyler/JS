@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>Some HTML Items
+</title>
+<script>
+function sel(r) { //selected item in a radio group
+   for (i=0; i<r.length; i++)
+      if (r[i].checked) return r[i].value
+   return null
+}
+</script>
+</head>
+
+<body>
+Some HTML Items:
+<P>
+1. Text 
+<input type=text onChange="window.status=value">
+<P>
+2. Who came last?  
+<select name=last onChange="window.status=options[selectedIndex].text">
+<option>Celal<option>Hakki<option>Akif<option>Ismail
+</select>
+<P>
+3. 
+<input type=radio name=who value=Celal>Celal 
+<input type=radio name=who value=Hakki>Hakki 
+<input type=radio name=who value=Akif>Akif  
+<input type=button value=Show onClick="window.status=sel(who)">
+<P>
+4. Password
+<input type=password name=pas size=8 
+   onMouseOver="window.status='in'" onMouseOut="window.status='out'">
+<input type=button value=Show onClick="window.status=pas.value">
+<P>
+5. Which languages? 
+<input type=checkbox onClick="window.status='Eng '+checked">English
+<input type=checkbox onClick="window.status='Fre '+checked">French 
+<P>
+6. <input type=button value=Geri onClick="history.go(-1)">
+<P>
+<B>HTML cok kolay<BR>
+<I>JavaScript</B> is easy</I>
+<P>
+<script>
+   var x=last.options
+   document.write(x.length," options: ")
+   for (i=0; i<x.length; i++)
+      document.write(x[i].text,"  ")
+/**   x=elements
+   document.write(x.length," elements: ")
+   for (i=0; i<x.length; i++)
+      document.write(x[i].value,"  ")
+   last.focus()**/
+</script>
+
+</body>
+</html>
