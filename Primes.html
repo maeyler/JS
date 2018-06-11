@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Primes </title>
+</head>
+
+<script>
+"use strict";
+var title, output;  //global elements
+function primes(M) {
+    var k, p;
+    var s = new Array(M);
+    for (k=2; k<M; k++) s[k] = true;
+    for (p=2; p*p<M; p++) 
+        if (s[p]) { //p is next prime
+            for (k=2*p; k<M; k=k+p)
+               s[k] = false;
+        }
+    var t = "";
+    for (p=2; p<=M; p++) 
+        if (s[p]) t += p+"  ";
+    output.innerHTML = t; console.log(t); 
+}
+</script>
+
+<body>
+<h2 id=title></h2>
+Primes ≤ <input type=number value=100 onChange="primes(value)">
+
+<p id=output></p>
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    //primes(100)
+</script>
+
+</body>
+</html>

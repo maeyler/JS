@@ -1,8 +1,15 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title>Sample function
-</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Sample Math Functions </title>
+</head>
+
 <script>
+"use strict";
+var title, output;  //global elements
+const eps = 1e-10;
 function absdiff(a,b) {
   if (a>b) {
     return (a-b)/a;
@@ -11,48 +18,21 @@ function absdiff(a,b) {
   }
 }
 function root(x) {
-  var r, eps;
-  r = 1; eps = 0.00000001;
+  var r = 1;
   while (absdiff(r*r,x) > eps) {
     r = (r+x/r)/2;
-//    document.write(r," ",absdiff(r*r,x),"<BR>")
   }
   return r;
 }
 function expon(x) {
-  var eps, k, t, s;
-  eps = 0.00000001;
+  var k, t, s;
   k = 0; t = 1; s = 1;
   while (Math.abs(t/s) > eps)   {
     k = k+1; t = x*t/k; s = s+t;
-//    document.write(k,"  ",t,"  ",s,"<BR>")
   }
   return s;
 }
-function compare() {
-  var p;
-//  read "Exponential", p;
-  while (p>=0)   {
-    document.write("expon = ", expon(p),"  exp = ", Math.exp(p))
-//    read p;
-  }
-}
-function doSqrt() {
-   var a=X.value
-   document.write("<PRE>")
-   var r=root(a)
-   document.write("root:  ",r,"<BR>")
-   document.write("sqrt:  ",Math.sqrt(a),"<P>")
-}
-function doExp() {
-   var a=X.value
-   document.write("<PRE>")
-   var s=expon(a)
-   document.write("expon: ",s,"<BR>")
-   document.write("exp:   ",Math.exp(a),"<P>")
-}
 function power(a, n) {
-//print "power ",a," ",n;
   if (n == 0) {
       return 1;
   } else if (n < 0) { //-n is allowed
@@ -74,24 +54,34 @@ function gcd(m,n) {
   return m;
 }
 </script>
-</head>
 
 <body>
-X value <input type=text name=X value=2>  
-Y value <input type=text name=Y value=3>
+<h2 id=title></h2>
+
+X value <input type=number id=X value=2> <br>
+Y value <input type=number id=Y value=3>
 <P>
 <input type=button value="Sqrt(X)" 
 onClick="R.value=root(X.value); Z.value=Math.sqrt(X.value)">
 <input type=button value="Exp(X)" 
 onClick="R.value=expon(X.value); Z.value=Math.exp(X.value)">
 <input type=button value="GCD(X,Y)" 
-onClick="R.value=gcd(X.value,Y.value); Z.value=R.value">
-</body>
+onClick="R.value=gcd(X.value,Y.value); Z.value=''">
 <input type=button value="X^Y" 
-onClick="R.value=power(X.value,Y.value); Z.value=Math.pow(X.value)">
+onClick="R.value=power(X.value,Y.value); Z.value=Math.pow(X.value,Y.value)">
 <P>
-Result  <input type=text name=R value=0>
-<P>
-Actual  <input type=text name=Z value=0> 
-<P>
+Result <input type=number id=R> <br>
+Actual <input type=number id=Z>
+
+<p id=output></p>
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    var X = document.getElementById("X"),
+        Y = document.getElementById("Y"),
+        R = document.getElementById("R"),
+        Z = document.getElementById("Z");
+</script>
+</body>
 </html>

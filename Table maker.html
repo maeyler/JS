@@ -2,8 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Make table</title>
+    <meta name="viewport" content="width=device-width">
+    <title>Make a Table </title>
 </head>
+
 <script>
 //June 8, 2018 MAE -- basis for 
 //https://maeyler.github.io/Visual-Mujam/
@@ -26,7 +28,7 @@ function makeRows(m, n) {
 	}
     var t = text.length+" chars";
     console.log("makeRows: "+m+"x"+n+" "+t);
-    document.getElementById("out").innerHTML = t;
+    document.getElementById("output").innerHTML = t;
 	document.getElementById("tablo").innerHTML = text;
 }
 function tableFromMenu() {
@@ -45,6 +47,7 @@ function tableFromInput() {
     document.getElementById("size").value = m+"x"+n;
 }
 </script>
+
 <style>
     table { border-collapse: collapse; }
     th { color: blue; padding: 5px 5px; }
@@ -66,19 +69,18 @@ function tableFromInput() {
 </style>
 
 <body><center>
-<h3>Make a table</h3>
-  Size: 
-  <select id="size" oninput="tableFromMenu()">
+<h2 id=title></h2>
+
+Size: <select id="size" oninput="tableFromMenu()">
     <option selected>3x5</option>
     <option>5x5</option>
     <option>7x8</option>
     <option>9x9</option>
-  </select>
+</select>
 
 <table id="tablo"></table>
-<p id="out" style="font-size:small"></p>
 
-<script>makeRows(3, 5)</script>
+<p id=output style="font-size:small"></p>
 
 <form oninput="tableFromInput()">
   Rows: 
@@ -86,12 +88,16 @@ function tableFromInput() {
   Columns: 
   <input type=number id=cols style="width:40px" value=8>
   <br><br>
-  <input type="reset">
-  <button type="button" onclick="tableFromInput()">
-  Make Table
-  </button> 
+  <input type=reset>
+  <input type=button value="Make Table" onclick="tableFromInput()">
 </form>
+
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    makeRows(3, 5)
+</script>
 
 </center></body>
 </html> 
-
