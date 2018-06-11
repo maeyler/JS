@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<!-- Modify or remove all items marked xxx -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Empty Page xxx </title>
+</head>
+
+<script>
+"use strict";
+var title, output;  //global elements
+function xxx() {
+    console.log("xxx "+count); count++; 
+}
+</script>
+
+<style>
+    .xxx {
+        font-size: 12x;
+        background-color: blue;
+        color: white;
+        text-align: center;
+        padding: 5px 5px;
+        position: absolute;
+    }
+</style>
+
+
+<body>
+<h2 id=title></h2>
+
+<input type=button id=xxx value="xxx" onClick="xxx()">
+
+<p id=output></p>
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    output.innerHTML = "Modify all items marked xxx";
+    var count = 0; xxx();
+</script>
+
+</body>
+</html>
