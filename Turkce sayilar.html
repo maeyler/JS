@@ -1,91 +1,43 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-   <meta charset="UTF-8">
-
-   <title>Türkçe Sayılar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Türkçe Sayılar </title>
+    <script src="TurkceSayi.js"></script>
 </head>
+
 <script>
 "use strict";
-var ones = ["", "bir ","iki ","üç ","dört ","beş "
-   ,"altı ","yedi ","sekiz ","dokuz "]
-var tens = ["", "on ","yirmi ","otuz ","kırk ","elli "
-   ,"altmış ","yetmiş ","seksen ","doksan "]
-var word = ["yüz ","bin ","milyon ","milyar ","trilyon "]
-var trillion = 1000000000000;
-var billion = 1000000000;
-var million = 1000000;
-var thousand = 1000;
-var out; 
-function trunc(n) {
-   var s = ""+n;
-   var k = s.indexOf('.');
-   if (k<0) return n;
-   return s.substr(0,k);
-}
-function threeDigits(n) {
-   var s = "";
-   if (n < 1 || n > 999)
-      return "illegal value "+n;
-   if (n > 199) 
-      s += ones[trunc(n/100)];
-   if (n > 99) {
-      s += word[0]; //"yüz "; 
-      n %= 100;
-   }
-   if (n > 9) {
-      s += tens[trunc(n/10)]; 
-      n %= 10;
-   }
-   return s + ones[n];
-}
-function toWord(n) {
-   var s = "";
-   if (n == 0) 
-      return "sifir";
-   if (n < 0) 
-      return "eksi "+toWord(-n);
-   if (n >= trillion) {
-      s += threeDigits(trunc(n/trillion))+word[4]; 
-      n %= trillion;
-   }
-   if (n >= billion) {
-      s += threeDigits(trunc(n/billion))+word[3]; 
-      n %= billion;
-   }
-   if (n >= million) {
-      s += threeDigits(trunc(n/million))+word[2]; 
-      n %= million;
-   }
-   if (n >= thousand) {
-      if (n<2000) s += word[1];
-      else s += threeDigits(trunc(n/thousand))+word[1]; 
-      n %= thousand;
-   }
-   if (n >= 1) 
-      s += threeDigits(n);
-   return s;
-}
+var title, output;  //global elements
 function convert() {
     var n = document.getElementById("X").value;
     var s = toWord(n);
     console.log(n+" -> "+s);
-    out.innerHTML = s;
+    output.innerHTML = s;
 }
-function reort() {
+function report() {
     var n = document.getElementById("X").value;
-    document.write("<p>"+n+" -> "+out.innerHTML+"</p>");
+    console.log("<p>"+n+" -> "+output.innerHTML+"</p>");
 }
 </script>
 
 <body>
+
+<h2 id=title></h2>
+
 Sayı 
-<input type=text id=X style="width:90px" value=1234 onChange="convert()">  
+<input type=number id=X style="width:90px" value=1234 onChange="convert()">  
 <input type=button value="Çevir" onClick="report()">
 <p>
-<p id=out></p>
+<p id=output></p>
+
 <script>
-    out = document.getElementById("out"); convert();
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    convert();
 </script>
+
 </body>
 </html>

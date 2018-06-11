@@ -1,57 +1,52 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title>Some HTML Items
-</title>
-<script>
-function sel(r) { //selected item in a radio group
-   for (i=0; i<r.length; i++)
-      if (r[i].checked) return r[i].value
-   return null
-}
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Some HTML Items </title>
 </head>
 
-<body>
-Some HTML Items:
-<P>
-1. Text 
-<input type=text onChange="window.status=value">
-<P>
-2. Who came last?  
-<select name=last onChange="window.status=options[selectedIndex].text">
-<option>Celal<option>Hakki<option>Akif<option>Ismail
-</select>
-<P>
-3. 
-<input type=radio name=who value=Celal>Celal 
-<input type=radio name=who value=Hakki>Hakki 
-<input type=radio name=who value=Akif>Akif  
-<input type=button value=Show onClick="window.status=sel(who)">
-<P>
-4. Password
-<input type=password name=pas size=8 
-   onMouseOver="window.status='in'" onMouseOut="window.status='out'">
-<input type=button value=Show onClick="window.status=pas.value">
-<P>
-5. Which languages? 
-<input type=checkbox onClick="window.status='Eng '+checked">English
-<input type=checkbox onClick="window.status='Fre '+checked">French 
-<P>
-6. <input type=button value=Geri onClick="history.go(-1)">
-<P>
-<B>HTML cok kolay<BR>
-<I>JavaScript</B> is easy</I>
-<P>
+<script src="TurkceSayi.js"></script>
 <script>
-   var x=last.options
-   document.write(x.length," options: ")
-   for (i=0; i<x.length; i++)
-      document.write(x[i].text,"  ")
-/**   x=elements
-   document.write(x.length," elements: ")
-   for (i=0; i<x.length; i++)
-      document.write(x[i].value,"  ")
-   last.focus()**/
+"use strict";
+var title, output, pass;  //global elements
+function report(s) {
+    output.innerHTML = s; console.log(s);
+}
+</script>
+
+<body>
+<h2 id=title></h2>
+
+<p>1. Text 
+<input type=text value="All chars allowed" onChange="report(value)">
+</p>
+<p>2. Menu  
+<select name=last onChange="report(value)">
+<option>Celal<option>Hakkı<option>Akif<option>Ismail
+</select>
+</p>
+<p>3. Number
+<input type=number value=1234 onChange="report(toWord(value))">
+</p>
+<p>4. Password
+<input type=password id=pass style="width:90px">
+<input type=button value=Show onClick="report(pass.value)">
+</p>
+<p>5. Checkbox
+<input type=checkbox onClick="report('English '+checked)">English
+<input type=checkbox onClick="report('French '+checked)">French 
+</p>
+<p>6. Button
+<input type=button value=Back onClick="history.go(-1)"
+   onMouseOver="console.log('in')" onMouseOut="console.log('out')">
+
+<p id=output></p>
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    pass = document.getElementById("pass");
 </script>
 
 </body>
