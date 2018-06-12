@@ -9,17 +9,16 @@
 <script>
 "use strict";
 var title, output;  //global elements
-const eps = 1e-10;
-function absdiff(a,b) {
-  if (a>b) {
-    return (a-b)/a;
-  } else {
-    return (b-a)/a;
-  }
+function almostEqual(a, b) {
+  const eps = 1e-10;
+  if (a>b) return (a-b) < a*eps;
+  if (a<b) return (b-a) < a*eps;
+  return true;
 }
 function root(x) {
+  if (x < 0) return undefined;
   var r = 1;
-  while (absdiff(r*r,x) > eps) {
+  while (!almostEqual(r*r, x)) {
     r = (r+x/r)/2;
   }
   return r;
@@ -27,7 +26,7 @@ function root(x) {
 function expon(x) {
   var k, t, s;
   k = 0; t = 1; s = 1;
-  while (Math.abs(t/s) > eps)   {
+  while (!almostEqual(t/s, 0)) {
     k = k+1; t = x*t/k; s = s+t;
   }
   return s;
@@ -35,7 +34,7 @@ function expon(x) {
 function power(a, n) {
   if (n == 0) {
       return 1;
-  } else if (n < 0) { //-n is allowed
+  } else if (n < 0) {
       return power(1/a, -n);
   } else if (n%2 == 0) {
       return power(a*a, n/2); //even n
@@ -43,8 +42,9 @@ function power(a, n) {
       return a*power(a, n-1); //odd n
   }
 }
-function gcd(m,n) {
-  while (m != n) {
+function gcd(m, n) {
+  if (m<=0 || n<=0) return undefined;
+  while (!almostEqual(m, n)) { // m!=n
     if (m < n) { // use the larger
       n = n - m;
     } else {
@@ -53,25 +53,39 @@ function gcd(m,n) {
   }
   return m;
 }
+function action(a) {
+  var xv = Number(X.value), yv = Number(Y.value); 
+  var res, act;
+  console.log(a[0]+" X="+xv+" Y="+yv);
+  if (a[0] == "S") { //Sqrt
+    res = root(xv); act = Math.sqrt(xv);
+  } else if (a[0] == "E"){ //Exp
+    res = expon(xv); act = Math.exp(xv);
+  } else if (a[0] == "G") { //GCD
+    xv = xv.toFixed(0); yv = yv.toFixed(0);
+    X.value = xv; Y.value = yv;
+    res = gcd(xv, yv); act = "";
+  } else if (a[0] == "X") { //X^Y
+    yv = yv.toFixed(0); Y.value = yv;
+    res = power(xv, yv); act = Math.pow(xv, yv);
+  }
+  var s = a+"<br>Result: "+res;
+  if (act != "") s += "<br>Actual: "+act;
+  output.innerHTML = s; 
+}
 </script>
 
 <body>
 <h2 id=title></h2>
 
-X value <input type=number id=X value=2> <br>
+X value <input type=number id=X value=21> <br>
 Y value <input type=number id=Y value=3>
 <P>
-<input type=button value="Sqrt(X)" 
-onClick="R.value=root(X.value); Z.value=Math.sqrt(X.value)">
-<input type=button value="Exp(X)" 
-onClick="R.value=expon(X.value); Z.value=Math.exp(X.value)">
-<input type=button value="GCD(X,Y)" 
-onClick="R.value=gcd(X.value,Y.value); Z.value=''">
-<input type=button value="X^Y" 
-onClick="R.value=power(X.value,Y.value); Z.value=Math.pow(X.value,Y.value)">
+<input type=button value="Sqrt(X)"  onClick="action(value)">
+<input type=button value="Exp(X)"   onClick="action(value)">
+<input type=button value="GCD(X,Y)" onClick="action(value)">
+<input type=button value="X^Y"      onClick="action(value)">
 <P>
-Result <input type=number id=R> <br>
-Actual <input type=number id=Z>
 
 <p id=output></p>
 <script>
@@ -79,9 +93,7 @@ Actual <input type=number id=Z>
     title.innerHTML = document.title;
     output = document.getElementById("output");
     var X = document.getElementById("X"),
-        Y = document.getElementById("Y"),
-        R = document.getElementById("R"),
-        Z = document.getElementById("Z");
+        Y = document.getElementById("Y");
 </script>
 </body>
 </html>

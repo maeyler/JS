@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Color Paragraphs </title>
+</head>
+
+<script>
+"use strict";
+var title, output, input, para;  //global elements
+function color(c) {
+    var i, n = para.length;
+    for (i = 0; i < n; i++) 
+        para[i].style.color = c;
+    console.log(c);
+    output.innerHTML = n+" Paragraphs colored to "+c;
+}
+</script>
+
+<body>
+<h2 id=title></h2>
+
+<p>First Paragraph</p>
+
+<p>Second Paragraph</p>
+
+<input type=input id=input value=Red onChange="color(value)"
+   onMouseOver="style.color=value" onMouseOut="style.color='Black'">
+<input type=button value="Apply" onClick="color(input.value)">
+
+<p id=output>Third Paragraph</p>
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    input = document.getElementById("input");
+    para = document.getElementsByTagName("p");
+</script>
+
+</body>
+</html>
