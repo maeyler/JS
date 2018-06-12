@@ -1,11 +1,12 @@
 Bu repoda JavaScript öğrenmeye yönelik örnek web sayfaları bulacaksınız
 
-* [Date test](https://maeyler.github.io/JS/Date%20test.html) Date ve Color nesneleri ile işlem
-* [HTML items](https://maeyler.github.io/JS/HTML%20items.html) Programa veri girmenin yolları
-* [Türkçe sayılar](https://maeyler.github.io/JS/Turkce%20sayilar.html) Sayıların Türkçe isimleri
-* [Math functions](https://maeyler.github.io/JS/Math%20functions.html) Math fonksiyonların hesabı
-* [Primes](https://maeyler.github.io/JS/Primes.html) Verilen bir sayıdan küçük asal sayıların listesi
-* [Table maker](https://maeyler.github.io/JS/Table%20maker.html) İstenilen boyda tablo yapmak
+* [Date test](Date%20test.html) Date ve Color nesneleri ile işlem
+* [Color Paragraphs](Color%20Paragraphs.html) Program içinde renk değişimi
+* [HTML items](HTML%20items.html) Programa veri girmenin yolları
+* [Clock](Clock.html) setInterval() metodunu kullanan animasyon
+* [Math functions](Math%20functions.html) Math fonksiyonların hesabı
+* [Primes](Primes.html) Verilen bir sayıdan küçük asal sayıların listesi
+* [Table maker](Table%20maker.html) İstenilen boyda tablo yapmak
 
 ### Web Sayfaları
 * HTML ile yapısı tasarlanır `<html>`
