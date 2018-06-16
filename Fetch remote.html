@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Fetch Remote File </title>
+</head>
+
+<script>
+"use strict";
+var title, url, output;  //global elements
+function report(t, n) {
+    output.innerHTML = "<pre>"+t+"</pre>";
+    if (n == undefined) n = t;
+    console.log(n);
+}
+function readText() {
+    fetch(url.value)
+      .then(r => r.text())  //response
+      .then(t => report(t, t.length+" chars"));  //text
+}
+function readBlob() {
+    fetch(url.value)
+      .then(r => r.blob())  //response
+      .then(b => report("Binary: "+b.size+" bytes"));  //blob
+}
+</script>
+
+<body>
+<h2 id=title></h2>
+
+<input type=text id=url value="Enter URL" onChange="readText()">
+
+<input type=button value="text" onClick="readText()">
+<input type=button value="blob" onClick="readBlob()">
+
+<p id=output></p>
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    url = document.getElementById("url");
+    output = document.getElementById("output");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+# SimpleJava
+Simple Java code from earlier work
+
+single-file examples are included
+
+SSS V1.32
+=========
+* Menu.loadClass() is generalized to load from any package 
+
+* ParamDialog: check String entry
+
+SSS V1.31
+=========
+* Font selection dialog (prefs not saved yet)
+
+* All classes are public, most have publicconstructors
+
+SSS V1.30
+=========
+* Menu.toTree(File): check if zip/jar file or directory
+
+* TimerLoader: add identity (just a counter)
+
+SSS V1.29
+=========
+* More.listClasses(ClassLoader)
+
+* More.toZipFile(File)
+
+* Menu.toTree(Container): do not expand JScrollPane
+
+SSS V1.28
+=========
+* ParamDialog: center correctly
+
+* More.getFrames() and More.getThreads()
+
+* classes can be removed
+
+* Menu$Loader -> mae.util.TimerLoader
+  Menu$Filter -> mae.util.SimpleFilter
+  Inspector$Data (becomes inner class)
