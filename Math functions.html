@@ -53,6 +53,10 @@ function gcd(m, n) {
   }
   return m;
 }
+function round(x) {
+  var v = Math.round(x.value);
+  x.value = v; return v;
+}
 function action(a) {
   var xv = Number(X.value), yv = Number(Y.value); 
   var res, act;
@@ -62,11 +66,10 @@ function action(a) {
   } else if (a[0] == "E"){ //Exp
     res = expon(xv); act = Math.exp(xv);
   } else if (a[0] == "G") { //GCD
-    xv = xv.toFixed(0); yv = yv.toFixed(0);
-    X.value = xv; Y.value = yv;
+    xv = round(X); yv = round(Y);
     res = gcd(xv, yv); act = "";
   } else if (a[0] == "X") { //X^Y
-    yv = yv.toFixed(0); Y.value = yv;
+    yv = round(Y);
     res = power(xv, yv); act = Math.pow(xv, yv);
   }
   var s = a+"<br>Result: "+res;
