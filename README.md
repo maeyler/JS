@@ -3,9 +3,10 @@ Bu repoda JavaScript öğrenmeye yönelik örnek web sayfaları bulacaksınız
 * [Date test](Date%20test.html) Date ve Color nesneleri ile işlem
 * [Color Paragraphs](Color%20Paragraphs.html) Program içinde renk değişimi
 * [HTML items](HTML%20items.html) Programa veri girmenin yolları
-* [Clock](Clock.html) setInterval() metodunu kullanan animasyon
+* [Clock](Clock.html) setTimeout() metodunu kullanan en basit animasyon
 * [Math functions](Math%20functions.html) Math fonksiyonların hesabı
 * [Primes](Primes.html) Verilen bir sayıdan küçük asal sayıların listesi
+* [Fetch remote](Fetch%20remote.html) fecth() metodu ile dosya okumak
 * [Table maker](Table%20maker.html) İstenilen boyda tablo yapmak
 
 ### Web Sayfaları
