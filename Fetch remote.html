@@ -8,18 +8,27 @@
 
 <script>
 "use strict";
-var title, url, output;  //global elements
+var title, url, state, output;  //global elements
+function hide() {
+    state.style.visibility = "hidden"; //console.log("hide");
+}
+function show(v) {
+    state.value = v; state.style.visibility = "inherit"; //console.log(v);
+}
 function report(t, n) {
+    show("OK"); setTimeout(hide, 1000);
     output.innerHTML = "<pre>"+t+"</pre>";
     if (n == undefined) n = t;
     console.log(n);
 }
 function readText() {
+    show("FT");
     fetch(url.value)
       .then(r => r.text())  //response
       .then(t => report(t, t.length+" chars"));  //text
 }
 function readBlob() {
+    show("FB");
     fetch(url.value)
       .then(r => r.blob())  //response
       .then(b => report("Binary: "+b.size+" bytes"));  //blob
@@ -34,6 +43,7 @@ function readBlob() {
 
 <input type=button value="text" onClick="readText()">
 <input type=button value="blob" onClick="readBlob()">
+<input type=button id=state style="visibility: hidden">
 
 <p id=output></p>
 <script>
@@ -41,6 +51,7 @@ function readBlob() {
     title.innerHTML = document.title;
     url = document.getElementById("url");
     output = document.getElementById("output");
+    state = document.getElementById("state");
 </script>
 
 </body>
