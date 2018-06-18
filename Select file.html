@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Select local file </title>
+</head>
+
+<script>
+"use strict";
+var title, output;  //global elements
+//from html5rocks.com/en/tutorials/file/dndfiles/
+function render(f) {
+    return function(evt) {
+          // Render thumbnail.
+          var span = document.createElement('span');
+          span.innerHTML = '<img class=thumb src="'+ evt.target.result
+                +'" title="'+ f.name +'"/>';  //escape(f.name)
+          output.insertBefore(span, null);
+    };
+}
+function fileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0, f; f = files[i]; i++) {
+
+      // Only process image files.
+      if (!f.type.match('image.*')) continue;
+
+      var reader = new FileReader();
+      // Closure to capture the file information.
+      reader.onload = render(f);
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(f);
+    }
+}
+</script>
+
+<style>
+  .thumb {
+     height: 75px;
+     border: 1px solid #000;
+     margin: 10px 5px 0 0;
+  }
+</style>
+
+<body>
+<h2 id=title></h2>
+
+<input type="file" id="files" multiple />
+<output id="list" />
+
+<p id=output></p>
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("list");
+    var fe = document.getElementById('files');
+    fe.addEventListener('change', fileSelect, false);
+</script>
+
+</body>
+</html>
