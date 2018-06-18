@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Array Demo </title>
+</head>
+
+<script>
+"use strict";
+var title, output, ie, xe;  //global elements
+var a,  i,  x;     //global values
+function start(save) {
+    i = Number(ie.value); x = xe.value; 
+    if (save) xe.value = a[i];
+}
+function modify() {
+    start(true); a[i]=x; report("a["+i+"] = "+x);
+}
+function delet() {
+    start(true); delete a[i]; report("delete "+i);
+}
+function remove() {
+    start(true); a.splice(i, 1); report("remove "+i);
+}
+function push() {
+    start(false); a.push(x); report("push "+x);
+}
+function report(str) {
+    output.innerHTML = "a = [ "+ a.join(", ")+" ] "+a.length;
+    console.log(str);
+}
+</script>
+
+<body>
+<h2 id=title></h2>
+
+<p id=output></p>
+i = <input type=number id=ie value=1  style="width:40px"> &nbsp; &nbsp; 
+x = <input type=text   id=xe value=53 style="width:99px"> 
+<p>
+<input type=button value="a[i]=x"  onClick="modify()">
+<input type=button value="delete"  onClick="delet()">
+<input type=button value="remove"  onClick="remove()">
+<input type=button value="push x"  onClick="push()">
+
+<script>
+    title = document.getElementById("title");
+    title.innerHTML = document.title;
+    output = document.getElementById("output");
+    ie = document.getElementById("ie");
+    xe = document.getElementById("xe");
+    a = [234, "abc", "son"];  //initially
+    start(); report("start");
+</script>
+
+</body>
+</html>
