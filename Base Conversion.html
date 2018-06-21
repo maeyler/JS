@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Base Conversion </title>
+</head>
+
+<script>
+"use strict";
+function encode80(n) {
+    var s = "";
+    while (n > 0) {
+        const c = String.fromCharCode(MIN + n%BASE);
+        s = c + s; n = Math.trunc(n/BASE);
+    }
+    return s;
+}
+function decode80(s) {
+    var n = 0;
+    for (var i=0; i<s.length; i++) {
+        const c = s.charCodeAt(i);
+        if (c<MIN || c>MAX) return -1;
+        n = BASE*n + (c-MIN);
+    }
+    return n;
+}
+function encode(n) {
+    const rep = (n == undefined);
+    if (rep) n = Number(num.value);
+    else num.value = n;
+    hex.value = n.toString(16);
+    t80.value = encode80(n);
+    if (rep) report(n+" -> "+hex.value+" = "+t80.value);
+}
+function decode(e) {
+    const s = e.value;
+    const n = (e == hex? Number.parseInt(s, 16) : decode80(s));
+    if (Number.isInteger(n) && n>=0) encode(n);
+    report(s +" -> "+num.value);
+}
+function report(s) {
+    output.innerHTML = s; console.log(s);
+}
+</script>
+
+<body>
+<h2 id=title></h2>
+<p />
+Number: <input type=number id=num value=65536>
+<input type=button value="Encode" onClick="encode()">
+<p />
+Base 16: <input type=text id=hex value="">
+<input type=button value="Decode" onClick="decode(hex)">
+<p />
+Base 80: <input type=text id=t80 value="">
+<input type=button value="Decode" onClick="decode(t80)">
+
+<p id=output></p>
+<p />
+Base 16 is the well-known hexadecimal.<br />
+Base 80 uses a block of Unicode to reduce the string length further.<br />
+(The number of bytes is actually twice the number of chars in this block)
+<hr />
+Reference: <br />
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt">s.parseInt()</a><br />
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString">Number.toString()</a>
+
+<script>
+    const title = document.getElementById("title");
+    title.innerHTML = document.title;
+    const output = document.getElementById("output");
+    const num = document.getElementById("num");
+    const hex = document.getElementById("hex");
+    const t80 = document.getElementById("t80");
+    const BASE = 80, MIN = 7680, MAX = MIN+BASE-1;
+    encode();
+</script>
+
+</body>
+</html>
