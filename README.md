@@ -1,4 +1,4 @@
-[Bu repoda}(https://github.com/maeyler/JS) JavaScript öğrenmeye yönelik örnek web sayfaları bulacaksınız
+[Bu repoda](https://github.com/maeyler/JS) JavaScript öğrenmeye yönelik örnek web sayfaları bulacaksınız
 
 * [Date test](Date%20test.html) Date ve Color nesneleri ile işlem
 * [Color Paragraphs](Color%20Paragraphs.html) Program içinde renk değişimi

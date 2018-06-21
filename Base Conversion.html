@@ -8,6 +8,14 @@
 
 <script>
 "use strict";
+function encodeB(n, base) {
+    if (base == undefined) base = 16;
+    return n.toString(base);
+}
+function decodeB(s, base) {
+    if (base == undefined) base = 16;
+    return Number.parseInt(s, base);
+}
 function encode80(n) {
     var s = "";
     while (n > 0) {
@@ -29,14 +37,18 @@ function encode(n) {
     const rep = (n == undefined);
     if (rep) n = Number(num.value);
     else num.value = n;
-    hex.value = n.toString(16);
+    hex.value = encodeB(n);
+    t36.value = encodeB(n, 36);
     t80.value = encode80(n);
-    if (rep) report(n+" -> "+hex.value+" = "+t80.value);
+    if (rep) report(n+" -> "+t80.value);
 }
 function decode(e) {
-    const s = e.value;
-    const n = (e == hex? Number.parseInt(s, 16) : decode80(s));
+    const s = e.value; var n;
+    if (e == t36) n = decodeB(s, 36);
+    else if (e == hex) n = decodeB(s);
+    else n = decode80(s);
     if (Number.isInteger(n) && n>=0) encode(n);
+    else num.value = -1;
     report(s +" -> "+num.value);
 }
 function report(s) {
@@ -47,11 +59,15 @@ function report(s) {
 <body>
 <h2 id=title></h2>
 <p />
-Number: <input type=number id=num value=65536>
+Number: 
+<input type=number id=num value=65536 onChange="encode()">
 <input type=button value="Encode" onClick="encode()">
 <p />
 Base 16: <input type=text id=hex value="">
 <input type=button value="Decode" onClick="decode(hex)">
+<p />
+Base 36: <input type=text id=t36 value="">
+<input type=button value="Decode" onClick="decode(t36)">
 <p />
 Base 80: <input type=text id=t80 value="">
 <input type=button value="Decode" onClick="decode(t80)">
@@ -59,19 +75,22 @@ Base 80: <input type=text id=t80 value="">
 <p id=output></p>
 <p />
 Base 16 is the well-known hexadecimal.<br />
+Base 36 uses numeric digits and lower-case letters.<br />
 Base 80 uses a block of Unicode to reduce the string length further.<br />
 (The number of bytes is actually twice the number of chars in this block)
 <hr />
 Reference: <br />
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt">s.parseInt()</a><br />
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString">Number.toString()</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt">Number.parseInt()</a><br />
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString">n.toString()</a>
 
 <script>
     const title = document.getElementById("title");
     title.innerHTML = document.title;
     const output = document.getElementById("output");
     const num = document.getElementById("num");
+    num.min = 0; num.max = Number.MAX_SAFE_INTEGER;
     const hex = document.getElementById("hex");
+    const t36 = document.getElementById("t36");
     const t80 = document.getElementById("t80");
     const BASE = 80, MIN = 7680, MAX = MIN+BASE-1;
     encode();
