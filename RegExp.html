@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Regular Expressions </title>
+</head>
+
+<script>
+"use strict";
+function checkRE() {
+    const pat = document.getElementById("pat").value;
+    const inp = document.getElementById("inp").value;
+    if (pat > "" && inp > "") {
+        var res = RegExp(pat,'g'); //search
+        var str = "<span class=found>$&</span>";
+        output.innerHTML = inp.replace(res, str);
+    }
+}
+</script>
+
+<style>
+    .found { color: #F60; }
+</style>
+
+<body>
+<h2 id=title></h2>
+
+<input type=text id=pat value="d[iuü]k" onKeyUp="checkRE()"> Pattern
+<p>
+<input type=text id=inp value="geldik gördük bulduk" onKeyUp="checkRE()"> Input
+
+<p id=output></p>
+
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+function checkRE() {
+    if (pat > "" && inp > "") {
+        var res = RegExp(pat,'g'); //search
+        var str = "&lt;span class=found&gt;$&&lt;/span&gt;";
+        output.innerHTML = inp.replace(res, str);
+    }
+}
+</pre>
+<hr />
+Ref: <a href="https://emrahtema.github.io/Automata/regexp/EmrahTema_Regexp.html" target=_blank>Term project by Emrah Tema</a>
+<script>
+    const title = document.getElementById("title");
+    const output = document.getElementById("output");
+    title.innerHTML = document.title; checkRE();
+</script>
+
+</body>
+</html>
