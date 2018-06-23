@@ -8,20 +8,20 @@
 
 <script>
 "use strict";
-var hm, output;  //global elements
+var hm;  //global value
 function twoDigits(t) {
     if (t>9) return ""+t;
     return "0"+t;
 }
 function setHourMin() {
-    var d = new Date();
+    const d = new Date();
     hm = twoDigits(d.getHours())+":"
         +twoDigits(d.getMinutes());
     document.title = "Clock "+hm; 
     //console.log(hm);
 }
 function count() {
-    var d = new Date();
+    const d = new Date();
     var sec = twoDigits(d.getSeconds());
     if (sec == "00") setHourMin();
     output.innerHTML = "<br>"+hm+":"+sec+"<br>&nbsp; ";
@@ -39,12 +39,27 @@ function count() {
     }
 </style>
 
-
 <body>
 
 <p id=output></p>
+
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+function count() {
+    const d = new Date();
+    var sec = twoDigits(d.getSeconds());
+    if (sec == "00") setHourMin();
+    output.innerHTML = "&lt;br&gt;"+hm+":"+sec+"&lt;br&gt; ";
+    setTimeout(count, 1000);
+}
+</pre>
+<hr />
+
 <script>
-    output = document.getElementById("output");
+    const output = document.getElementById("output");
+    window.onfocus = function() { setHourMin() };
     setHourMin(); count();
 </script>
 

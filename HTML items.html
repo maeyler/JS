@@ -9,7 +9,6 @@
 <script src="TurkceSayi.js"></script>
 <script>
 "use strict";
-var title, output, pass;  //global elements
 function report(s) {
     output.innerHTML = s; console.log(s);
 }
@@ -22,7 +21,7 @@ function report(s) {
 <input type=text value="All chars allowed" onChange="report(value)">
 </p>
 <p>2. Menu  
-<select name=last onChange="report(value)">
+<select onChange="report(value)">
 <option>Celal<option>Hakkı<option>Akif<option>Ismail
 </select>
 </p>
@@ -43,10 +42,10 @@ function report(s) {
 
 <p id=output></p>
 <script>
-    title = document.getElementById("title");
+    const title = document.getElementById("title");
+    const output = document.getElementById("output");
     title.innerHTML = document.title;
-    output = document.getElementById("output");
-    pass = document.getElementById("pass");
+    const pass = document.getElementById("pass");
 </script>
 
 </body>

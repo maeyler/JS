@@ -8,33 +8,53 @@
 
 <script>
 "use strict";
-var title, output;  //global elements
 function primes(M) {
-    var k, p;
-    var s = new Array(M);
-    for (k=2; k<M; k++) s[k] = true;
-    for (p=2; p*p<M; p++) 
+    const s = new Array(M);
+    for (var k=2; k<M; k++) s[k] = true;
+    for (var p=2; p*p<M; p++) 
         if (s[p]) { //p is next prime
-            for (k=2*p; k<M; k=k+p)
+            for (var k=2*p; k<M; k=k+p)
                s[k] = false;
         }
-    var t = "";
-    for (p=2; p<=M; p++) 
-        if (s[p]) t += p+"  ";
-    output.innerHTML = t; console.log(t); 
+    var t = "", n = 0;
+    for (var p=2; p<=M; p++) 
+        if (s[p]) { t += p+"  "; n++ }
+    console.log(n+" primes < "+M); 
+    output.innerHTML = t;
 }
 </script>
 
 <body>
 <h2 id=title></h2>
-Primes ≤ <input type=number value=100 onChange="primes(value)">
+Primes &lt; <input type=number min=3 max=10000 value=100 onChange="primes(value)">
 
 <p id=output></p>
+
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+function primes(M) {
+    const s = new Array(M);
+    for (var k=2; k&lt;M; k++) s[k] = true;
+    for (var p=2; p*p&lt;M; p++) 
+        if (s[p]) { //p is next prime
+            for (var k=2*p; k&lt;M; k=k+p)
+               s[k] = false;
+        }
+    var t = "";
+    for (var p=2; p&lt;=M; p++) 
+        if (s[p]) t += p+"  ";
+    output.innerHTML = t;
+}
+</pre>
+<hr />
+
 <script>
-    title = document.getElementById("title");
+    const title = document.getElementById("title");
+    const output = document.getElementById("output");
     title.innerHTML = document.title;
-    output = document.getElementById("output");
-    //primes(100)
+    primes(100);
 </script>
 
 </body>

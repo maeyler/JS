@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -8,13 +8,18 @@
 
 <script>
 "use strict";
+function setValues() {
+    document.getElementById("pat").value = ppp[menu.selectedIndex];
+    document.getElementById("inp").value = word[menu.selectedIndex];
+    checkRE();
+}
 function checkRE() {
     const pat = document.getElementById("pat").value;
     const inp = document.getElementById("inp").value;
     if (pat > "" && inp > "") {
-        var res = RegExp(pat,'g'); //search
+        var exp = RegExp(pat,'g');
         var str = "<span class=found>$&</span>";
-        output.innerHTML = inp.replace(res, str);
+        output.innerHTML = inp.replace(exp, str);
     }
 }
 </script>
@@ -26,21 +31,22 @@ function checkRE() {
 <body>
 <h2 id=title></h2>
 
-<input type=text id=pat value="d[iuü]k" onKeyUp="checkRE()"> Pattern
+<input type=text id=pat  style="width:90px" onKeyUp="checkRE()"> Pattern 
+<select id=menu onChange="setValues()">
+<option>Letter<option>Number<option>Suffix<option>x+letter
+</select> Selection
 <p>
-<input type=text id=inp value="geldik gördük bulduk" onKeyUp="checkRE()"> Input
+<input type=text id=inp  style="width:250px" onKeyUp="checkRE()"> Input
 
 <p id=output></p>
-
 <hr />
 <b>Sample code</b>
-<p>
 <pre>
 function checkRE() {
     if (pat > "" && inp > "") {
-        var res = RegExp(pat,'g'); //search
+        var exp = RegExp(pat,'g');
         var str = "&lt;span class=found&gt;$&&lt;/span&gt;";
-        output.innerHTML = inp.replace(res, str);
+        output.innerHTML = inp.replace(exp, str);
     }
 }
 </pre>
@@ -49,7 +55,12 @@ Ref: <a href="https://emrahtema.github.io/Automata/regexp/EmrahTema_Regexp.html"
 <script>
     const title = document.getElementById("title");
     const output = document.getElementById("output");
-    title.innerHTML = document.title; checkRE();
+    const ppp = ["[a-z]", "[0-9]{4}", "d[iuü][km]", "x[a-z]"];
+    const word = 
+         ["Bir iki üç dört beş altı ", "Bugün 23/6/2018 saat 14",
+          "Geldim gördüm buldum...", "Excellent expression tax "];
+    const menu = document.getElementById("menu");
+    title.innerHTML = document.title; setValues();
 </script>
 
 </body>

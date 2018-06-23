@@ -7,43 +7,42 @@
 </head>
 
 <script>
+"use strict";
 //June 8, 2018 MAE -- basis for 
 //https://maeyler.github.io/Visual-Mujam/
-"use strict";
+//
 function makeRows(m, n) {
-	var i, j, text = "";
     var row = "<th></th>";
-    	for (j = 1; j <= n; j++) {
-    		row += "<th>"+j+"</th>";
-        }
-    	text += "<tr>"+row+"</tr>";
-	for (i = 1; i <= m; i++) {
-    	row = "<th>"+i+"</th>";
-    	for (j = 1; j <= n; j++) {
-        	var p = n*(i-1)+j;
+    for (var j = 1; j <= n; j++) 
+        row += "<th>"+j+"</th>";
+    var text = "<tr>"+row+"</tr>";
+    for (var i = 1; i <= m; i++) {
+        row = "<th>"+i+"</th>";
+        for (var j = 1; j <= n; j++) {
+            var p = n*(i-1)+j;
             var s = "<span class=tip>C"+p+"</span>"
-    		row += "<td>"+i+","+j+s+"</td>";
+            row += "<td>"+i+","+j+s+"</td>";
         }
-    	text += "<tr>"+row+"</tr>";
-	}
+        text += "<tr>"+row+"</tr>";
+    }
     var t = text.length+" chars";
     console.log("makeRows: "+m+"x"+n+" "+t);
     document.getElementById("output").innerHTML = t;
-	document.getElementById("tablo").innerHTML = text;
+    document.getElementById("tablo").innerHTML = text;
 }
 function tableFromMenu() {
-	var s = document.getElementById("size").value;
+    var s = document.getElementById("size").value;
     //console.log(s);
-	var a = s.split("x");
-	makeRows(a[0], a[1]);
-	document.getElementById("rows").value = a[0];
+    var a = s.split("x");
+    makeRows(a[0], a[1]);
+    document.getElementById("rows").value = a[0];
     document.getElementById("cols").value = a[1];
 }
 function tableFromInput() {
-	var m = document.getElementById("rows").value;
+    var m = document.getElementById("rows").value;
     var n = document.getElementById("cols").value;
     //console.log(m+" "+n);
-	makeRows(m, n);
+    makeRows(m, n);
     document.getElementById("size").value = m+"x"+n;
 }
 </script>
@@ -91,13 +90,35 @@ Size: <select id="size" oninput="tableFromMenu()">
   <input type=reset>
   <input type=button value="Make Table" onclick="tableFromInput()">
 </form>
+</center>
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+function makeRows(m, n) {
+    var row = "&lt;th&gt;&lt;/th&gt;";
+    for (var j = 1; j &lt;= n; j++) 
+        row += "&lt;th&gt;"+j+"&lt;/th&gt;";
+    text = "&lt;tr&gt;"+row+"&lt;/tr&gt;";
+    for (var i = 1; i &lt;= m; i++) {
+        row = "&lt;th&gt;"+i+"&lt;/th&gt;";
+        for (var j = 1; j &lt;= n; j++) {
+            var p = n*(i-1)+j;
+            var s = "&lt;span class=tip&gt;C"+p+"&lt;/span&gt;"
+            row += "&lt;td&gt;"+i+","+j+s+"&lt;/td&gt;";
+        }
+        text += "&lt;tr&gt;"+row+"&lt;/tr&gt;";
+    }
+    out.innerHTML = text;
+}
+</pre>
+<hr />
 
 <script>
-    title = document.getElementById("title");
+    const title = document.getElementById("title");
     title.innerHTML = document.title;
-    output = document.getElementById("output");
     makeRows(3, 5)
 </script>
 
-</center></body>
+</body>
 </html> 

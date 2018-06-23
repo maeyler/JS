@@ -7,19 +7,18 @@
 </head>
 
 <script>
+"use strict";
 //My first non-trivial JS code
 //June 8, 2018 MAE
-//https://www.w3schools.com/js/js_dates.asp
-"use strict";
-var title, output;  //global elements
+//
 function setDate(s) {
-	console.log("date: "+s);
-	output.innerHTML = "Current date is "+s;
+    console.log("date: "+s);
+    output.innerHTML = "Current date is "+s;
 }
 function setColor(c) {
-	console.log("color: "+c);
-	title.style.color = c;
-	output.style.color = c;
+    console.log("color: "+c);
+    title.style.color = c;
+    output.style.color = c;
 }
 </script>
 
@@ -32,10 +31,28 @@ function setColor(c) {
 <button onclick=setColor("green")>Green</button>
 
 <p id=output></p>
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+function setDate(s) {
+    console.log("date: "+s);
+    output.innerHTML = "Current date is "+s;
+}
+function setColor(c) {
+    console.log("color: "+c);
+    title.style.color = c;
+    output.style.color = c;
+}
+</pre>
+<hr />
+Ref: <a href="https://www.w3schools.com/js/js_dates.asp"
+      target=_blank>JS Date</a>
+
 <script>
-    title = document.getElementById("title");
+    const title = document.getElementById("title");
+    const output = document.getElementById("output");
     title.innerHTML = document.title;
-    output = document.getElementById("output");
     setDate("??");
 </script>
 

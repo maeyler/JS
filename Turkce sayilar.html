@@ -27,10 +27,18 @@ function report() {
 <h2 id=title></h2>
 
 Sayı 
-<input type=number id=X style="width:90px" value=1234 onChange="convert()">  
-<input type=button value="Çevir" onClick="report()">
+<input type=number id=X style="width:120px" value=1234560 onChange="convert()">  
+<input type=button value="Çevir" onClick="convert()">
 <p>
 <p id=output></p>
+<hr />
+
+<b>Sample code</b>
+<p>
+<pre>
+&lt;script src="TurkceSayi.js"&gt;&lt;/script&gt;
+</pre>
+<hr />
 
 <script>
     title = document.getElementById("title");

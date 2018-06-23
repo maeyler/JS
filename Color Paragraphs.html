@@ -8,7 +8,6 @@
 
 <script>
 "use strict";
-var title, output, input, para;  //global elements
 function color(c) {
     var i, n = para.length;
     for (i = 0; i < n; i++) 
@@ -30,12 +29,26 @@ function color(c) {
 <input type=button value="Apply" onClick="color(input.value)">
 
 <p id=output>Third Paragraph</p>
+
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+function color(c) {
+    var i, n = para.length;
+    for (i = 0; i &lt; n; i++) 
+        para[i].style.color = c;
+    console.log(c);
+}
+</pre>
+<hr />
+
 <script>
-    title = document.getElementById("title");
+    const title = document.getElementById("title");
     title.innerHTML = document.title;
-    output = document.getElementById("output");
-    input = document.getElementById("input");
-    para = document.getElementsByTagName("p");
+    const output = document.getElementById("output");
+    const input = document.getElementById("input");
+    const para = document.getElementsByTagName("p");
 </script>
 
 </body>

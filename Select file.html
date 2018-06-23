@@ -8,8 +8,6 @@
 
 <script>
 "use strict";
-var title, output;  //global elements
-//from html5rocks.com/en/tutorials/file/dndfiles/
 function render(f) {
     return function(evt) {
           // Render thumbnail.
@@ -52,11 +50,16 @@ function fileSelect(evt) {
 <output id="list" />
 
 <p id=output></p>
+<p>
+<hr />
+Ref: <a href="html5rocks.com/en/tutorials/file/dndfiles/" 
+      target=_blank>File selection</a>
+
 <script>
-    title = document.getElementById("title");
+    const title = document.getElementById("title");
     title.innerHTML = document.title;
-    output = document.getElementById("list");
-    var fe = document.getElementById('files');
+    const output = document.getElementById("list");
+    const fe = document.getElementById('files');
     fe.addEventListener('change', fileSelect, false);
 </script>
 

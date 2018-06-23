@@ -8,12 +8,11 @@
 
 <script>
 "use strict";
-var title, url, state, output;  //global elements
 function hide() {
-    state.style.visibility = "hidden"; //console.log("hide");
+    state.style.visibility = "hidden";
 }
 function show(v) {
-    state.value = v; state.style.visibility = "inherit"; //console.log(v);
+    state.value = v; state.style.visibility = "inherit";
 }
 function report(t, n) {
     show("OK"); setTimeout(hide, 1000);
@@ -22,10 +21,11 @@ function report(t, n) {
     console.log(n);
 }
 function readText() {
-    show("FT");
+    show("FT"); // FT = fetch text
     fetch(url.value)
-      .then(r => r.text())  //response
-      .then(t => report(t, t.length+" chars"));  //text
+      .then(r => r.text()) //response of fetch() is r
+      .then(t => report(t, t.length+" chars"));  
+      //response of text() is t
 }
 function readBlob() {
     show("FB");
@@ -46,12 +46,26 @@ function readBlob() {
 <input type=button id=state style="visibility: hidden">
 
 <p id=output></p>
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+function readText() {
+    show("FT"); // FT = fetch text
+    fetch(url.value)
+      .then(r => r.text()) //response of fetch() is r
+      .then(t => report(t, t.length+" chars"));  
+      //response of text() is t
+}
+</pre>
+<hr />
+
 <script>
-    title = document.getElementById("title");
+    const title = document.getElementById("title");
     title.innerHTML = document.title;
-    url = document.getElementById("url");
-    output = document.getElementById("output");
-    state = document.getElementById("state");
+    const url = document.getElementById("url");
+    const output = document.getElementById("output");
+    const state = document.getElementById("state");
 </script>
 
 </body>

@@ -63,13 +63,13 @@ Number:
 <input type=number id=num value=65536 onChange="encode()">
 <input type=button value="Encode" onClick="encode()">
 <p />
-Base 16: <input type=text id=hex value="">
+Base 16: <input type=text id=hex onChange="decode(hex)">
 <input type=button value="Decode" onClick="decode(hex)">
 <p />
-Base 36: <input type=text id=t36 value="">
+Base 36: <input type=text id=t36 onChange="decode(t36)">
 <input type=button value="Decode" onClick="decode(t36)">
 <p />
-Base 80: <input type=text id=t80 value="">
+Base 80: <input type=text id=t80 onChange="decode(t80)">
 <input type=button value="Decode" onClick="decode(t80)">
 
 <p id=output></p>
@@ -78,6 +78,20 @@ Base 16 is the well-known hexadecimal.<br />
 Base 36 uses numeric digits and lower-case letters.<br />
 Base 80 uses a block of Unicode to reduce the string length further.<br />
 (The number of bytes is actually twice the number of chars in this block)
+<hr />
+
+<b>Sample code</b>
+<p>
+<pre>
+function encodeB(n, base) {
+    if (base == undefined) base = 16;
+    return n.toString(base);
+}
+function decodeB(s, base) {
+    if (base == undefined) base = 16;
+    return Number.parseInt(s, base);
+}
+</pre>
 <hr />
 Reference: <br />
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt">Number.parseInt()</a><br />
