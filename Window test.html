@@ -1,0 +1,27 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Window test </title>
+</head> 
+
+<script> 
+function openWin(fn) {
+    win.open(fn+".html", "frm"); win.focus();
+    console.log(win.document.title);
+} 
+</script> 
+
+<body> 
+<iframe name="frm" width=400 height=600></iframe>
+<p>
+<input type="button" value="Clock" onclick="openWin(value)" /> 
+<input type="button" value="RegExp" onclick="openWin(value)" /> 
+
+<script>
+    const win = window.open("", "frm");
+    win.document.write("<p>Web pages will appear here</p>");
+    console.log(win.toString());
+    console.log(win.document.toString());
+</script> 
+</body> 
+</html>
