@@ -3,41 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>Select local file </title>
+    <title>Read local file </title>
 </head>
 
 <script>
 "use strict";
-function render(f) {
-    return function(evt) {
-          // Render thumbnail.
-          var span = document.createElement('span');
-          span.innerHTML = '<img class=thumb src="'+ evt.target.result
-                +'" title="'+ f.name +'"/>';  //escape(f.name)
-          output.insertBefore(span, null);
-    };
+const reader = new FileReader();
+function isText(f) {
+    console.assert(f instanceof File);
+    return f.type.startsWith("text") || f.name.endsWith(".md")
+         || f.name.endsWith(".js") || f.name.endsWith(".java");
 }
-function fileSelect(evt) {
-    var files = evt.target.files; // FileList object
-
-    // Loop through the FileList and render image files as thumbnails.
-    for (var i = 0, f; f = files[i]; i++) {
-
-      // Only process image files.
-      if (!f.type.match('image.*')) continue;
-
-      var reader = new FileReader();
-      // Closure to capture the file information.
-      reader.onload = render(f);
-      // Read in the image file as a data URL.
-      reader.readAsDataURL(f);
+function fileSelect(t) { //target is the button
+    console.assert(t == window.event.target);
+    const f = t.files[0];
+    const size = " "+f.size+" bytes ";
+    msg.innerHTML = f.type+size;
+    if (f.type.startsWith("image")) {
+        reader.onload = function(evt) {
+            const a = evt.target.result; //image source
+            out.innerHTML = "<img class=thumb "
+                +"src='"+a+"' title='"+f.name+"' />";
+            console.log(f.name+size+f.type);
+        };
+        reader.readAsDataURL(f);
+    } else if (isText(f)) {
+        reader.onload = function(evt) { //text
+            const a = evt.target.result.replace(/</g, "&lt;");
+            out.innerHTML = "<pre>"+a+"</pre>";
+            console.log(f.name+size+f.type);
+        };
+        reader.readAsText(f);
+    } else {
+        msg.innerHTML += "Unknown ";
+        out.innerHTML = "";
     }
 }
 </script>
 
 <style>
   .thumb {
-     height: 75px;
+     width: 400px;
      border: 1px solid #000;
      margin: 10px 5px 0 0;
   }
@@ -46,21 +52,17 @@ function fileSelect(evt) {
 <body>
 <h2 id=title></h2>
 
-<input type="file" id="files" multiple />
-<output id="list" />
-
-<p id=output></p>
-<p>
-<hr />
+<input type=file id=but onChange='fileSelect(this)' />
+<p></p>
+<output id=msg>Select text or image </output>
+<hr>
+<output id=out></output>
+<hr>
 Ref: <a href="html5rocks.com/en/tutorials/file/dndfiles/" 
       target=_blank>File selection</a>
 
 <script>
-    const title = document.getElementById("title");
     title.innerHTML = document.title;
-    const output = document.getElementById("list");
-    const fe = document.getElementById('files');
-    fe.addEventListener('change', fileSelect, false);
 </script>
 
 </body>
