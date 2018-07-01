@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<!-- Modify or remove all items marked xxx -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Numbers </title>
+    <script src="Number.js"></script>
+</head>
+
+<script>
+"use strict";
+var last;
+function rational() {
+    const n = Number(num.value), d = Number(den.value);
+    last = Make.rational(n, d); display(last);
+}
+function complex() {
+    const r = Number(re.value), i = Number(im.value);
+    last = Make.complex(r, i); display(last);
+}
+function inverse() {
+    last = last.inverse(); display(last);
+}
+function display(x) { //x is any object
+    var s = [];
+    for (var i in x)
+        s.push(i+":"+x[i]);
+    console.log(x+" "+s.join(", "));
+    out.innerHTML = x.toString();
+}
+</script>
+
+<body>
+<h2 id=title></h2>
+
+num = <input type=number id=num style="width:40px" value=10>
+den = <input type=number id=den style="width:40px" value=20>
+<input type=button value="Rational" onClick="rational()">
+<p />
+real = <input type=number id=re style="width:40px" value=0>
+img = <input type=number id=im style="width:40px" value=1>
+<input type=button value="Complex" onClick="complex()">
+<p />
+Result = <span id=out></span>
+<input type=button value="Inverse" onClick="inverse()">
+<hr />
+<b>Sample code</b>
+<p>
+<pre>
+class Make { //Factory methods to make numbers
+    static whole(n) {
+        return new Whole(n);
+    }
+    static rational(n, d) {
+        if (d < 0) { n = -n; d = -d; }
+        const g = Rational.gcd(n, d);
+        if (g == d) return new Whole(n/g);
+        else return new Rational(n/g, d/g);
+    }
+    static decimal(x) {
+        if (x == Math.round(x)) return new Whole(x);
+        else return new Decimal(x);
+    }
+    static complex(re, im) {
+        if (im == 0) return Make.decimal(re);
+        else return new Complex(re, im);
+    }
+}
+</pre>
+<hr />
+Ref: <a href="http://xxx" target=_blank>xxx</a>
+<script>
+    title.innerHTML = document.title;
+    var x = Make.rational(30, 20), y = Make.decimal(6/2);
+    console.log(x+" "+y+" "+x.add(y)+" "+x.mult(y));
+</script>
+
+</body>
+</html>
