@@ -87,9 +87,16 @@ class Complex {
     toPolar() {
         return "r:"+value()+"  a:"+angle();
     }
+    signedIm(x) {
+        if (x > 0) return "+"+x+"i";
+        if (x < 0) return "-"+(-x)+"i";
+        return "0";
+    }
     toString() {
-        const s = (this.im>0? " + "+this.im : " - "+(-this.im));
-        return this.re +s+"i";
+        const s = (this.re == 0? "" : ""+this.re);
+        if (this.im == 1) return s+"+i";
+        if (this.im ==-1) return s+"-i";
+        return s+this.signedIm(this.im);
     }
     static fromPolar(r, a) {
         const d = a/180*Math.PI;

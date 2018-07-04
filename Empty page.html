@@ -43,9 +43,10 @@ function xxx() {
 <hr />
 Ref: <a href="http://xxx" target=_blank>xxx</a>
 <script>
-    const title = document.getElementById("title");
+    //HTML elements with id have variables with name==id
+    //const title = document.getElementById("title");
     title.innerHTML = document.title;
-    const output = document.getElementById("output");
+    //const output = document.getElementById("output");
     output.innerHTML = "Modify all items marked xxx";
     var count = 0; xxx();
 </script>

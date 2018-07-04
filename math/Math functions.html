@@ -3,48 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <script src="MyMath.js"></script>
     <title>Sample Math Functions </title>
 </head>
 
 <script>
 "use strict";
-function almostEqual(a, b) {
-  const eps = 1e-10;
-  if (a>b) return (a-b) < a*eps;
-  if (a<b) return (b-a) < a*eps;
-  return true;
-}
-function root(x) {
-  if (x < 0) return undefined;
-  var r = 1;
-  while (!almostEqual(r*r, x)) {
-    r = (r+x/r)/2;
-  }
-  return r;
-}
-function expon(x) {
-  var k, t, s;
-  k = 0; t = 1; s = 1;
-  while (!almostEqual(t/s, 0)) {
-    k = k+1; t = x*t/k; s = s+t;
-  }
-  return s;
-}
-function power(a, n) {
-  if (n == 0) return 1;
-  if (n < 0) return power(1/a, -n);
-  if (n%2 == 0) return power(a*a, n/2);
-  return a*power(a, n-1); //odd n
-}
-function gcd(m, n) {
-  if (m<=0 || n<=0) return undefined;
-  while (!almostEqual(m, n)) { // m!=n
-    if (m < n) //use the larger
-         n = n - m;
-    else m = m - n;
-  }
-  return m;
-}
 function round(x) {
   var v = Math.round(x.value);
   x.value = v; return v;
@@ -52,20 +16,24 @@ function round(x) {
 function action(a) {
   var xv = Number(X.value), yv = Number(Y.value); 
   var res, act;
-  console.log(a[0]+" X="+xv+" Y="+yv);
-  if (a[0] == "S") { //Sqrt
+  console.log(a+" X="+xv+" Y="+yv);
+  if (a[0] == "M") { //Math.fun
+    const fun = a.split(".")[1];
+    res = Math[fun].call(null, xv, yv);
+  } if (a[0] == "S") { //Sqrt
     res = root(xv); act = Math.sqrt(xv);
   } else if (a[0] == "E"){ //Exp
     res = expon(xv); act = Math.exp(xv);
   } else if (a[0] == "G") { //GCD
     xv = round(X); yv = round(Y);
-    res = gcd(xv, yv); act = "";
+    res = gcd(xv, yv);
   } else if (a[0] == "X") { //X^Y
     yv = round(Y);
     res = power(xv, yv); act = Math.pow(xv, yv);
   }
+  a = a.replace("X", xv).replace("Y", yv);
   var s = a+"<br>Result: "+res;
-  if (act != "") s += "<br>Actual: "+act;
+  if (act) s += "<br>Actual: "+act;
   output.innerHTML = s; 
 }
 </script>
@@ -81,6 +49,10 @@ Y value <input type=number id=Y value=3>
 <input type=button value="Exp(X)"   onClick="action(value)">
 <input type=button value="GCD(X,Y)" onClick="action(value)">
 <input type=button value="X^Y"      onClick="action(value)">
+<p>
+<span style="font:12px arial,sans-serif">Math.</span>
+<input id=ff style="width:40px" value="cos"> 
+<input type=button value="f(X)" onClick="action('Math.'+ff.value)">
 
 <p id=output></p>
 <hr />
@@ -92,13 +64,16 @@ function power(a, n) {
   if (n%2 == 0) return power(a*a, n/2);
   return a*power(a, n-1);  //odd n
 }
+/* List of functions in Math class
+[ "abs", "acos", "acosh", "asin", "asinh", "atan", "atan2", 
+  "atanh", "cbrt", "ceil", "clz32", "cos", "cosh", "exp", 
+  "expm1", "floor", "fround", "hypot", "imul", "log", "log1p", 
+  "log2", "log10", "max", "min", "pow", "random", "round", 
+  "sign", "sin", "sinh", "sqrt", "tan", "tanh", "trunc" ]
+*/
 </pre>
 <script>
-    const title = document.getElementById("title");
     title.innerHTML = document.title;
-    const output = document.getElementById("output");
-    const X = document.getElementById("X");
-    const Y = document.getElementById("Y");
 </script>
 </body>
 </html>
