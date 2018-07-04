@@ -13,12 +13,12 @@
 //
 function setDate(s) {
     console.log("date: "+s);
-    output.innerHTML = "Current date is "+s;
+    out.innerHTML = "Current date is "+s;
 }
 function setColor(c) {
     console.log("color: "+c);
     title.style.color = c;
-    output.style.color = c;
+    out.style.color = c;
 }
 </script>
 
@@ -30,19 +30,19 @@ function setColor(c) {
 <button onclick=setColor("blue")>Blue</button>
 <button onclick=setColor("green")>Green</button>
 
-<p id=output></p>
+<p id=out></p>
 <hr />
 <b>Sample code</b>
 <p>
 <pre>
 function setDate(s) {
     console.log("date: "+s);
-    output.innerHTML = "Current date is "+s;
+    out.innerHTML = "Current date is "+s;
 }
 function setColor(c) {
     console.log("color: "+c);
     title.style.color = c;
-    output.style.color = c;
+    out.style.color = c;
 }
 </pre>
 <hr />
@@ -50,8 +50,6 @@ Ref: <a href="https://www.w3schools.com/js/js_dates.asp"
       target=_blank>JS Date</a>
 
 <script>
-    const title = document.getElementById("title");
-    const output = document.getElementById("output");
     title.innerHTML = document.title;
     setDate("??");
 </script>

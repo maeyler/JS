@@ -9,16 +9,15 @@
 
 <script>
 "use strict";
-var title, output;  //global elements
 function convert() {
     var n = document.getElementById("X").value;
     var s = toWord(n);
     console.log(n+" -> "+s);
-    output.innerHTML = s;
+    out.innerHTML = s;
 }
 function report() {
     var n = document.getElementById("X").value;
-    console.log("<p>"+n+" -> "+output.innerHTML+"</p>");
+    console.log("<p>"+n+" -> "+out.innerHTML+"</p>");
 }
 </script>
 
@@ -30,7 +29,7 @@ Sayı
 <input type=number id=X style="width:120px" value=1234560 onChange="convert()">  
 <input type=button value="Çevir" onClick="convert()">
 <p>
-<p id=output></p>
+<p id=out></p>
 <hr />
 
 <b>Sample code</b>
@@ -41,9 +40,7 @@ Sayı
 <hr />
 
 <script>
-    title = document.getElementById("title");
     title.innerHTML = document.title;
-    output = document.getElementById("output");
     convert();
 </script>
 

@@ -16,10 +16,11 @@ function round(x) {
 function action(a) {
   var xv = Number(X.value), yv = Number(Y.value); 
   var res, act;
-  console.log(a+" X="+xv+" Y="+yv);
   if (a[0] == "M") { //Math.fun
-    const fun = a.split(".")[1];
+    const fun = ff.value;
     res = Math[fun].call(null, xv, yv);
+    const t = (Math[fun].length == 1? "(X)" : "(X, Y)");
+    a = 'Math.'+fun+t; fX.value = t;
   } if (a[0] == "S") { //Sqrt
     res = root(xv); act = Math.sqrt(xv);
   } else if (a[0] == "E"){ //Exp
@@ -32,29 +33,29 @@ function action(a) {
     res = power(xv, yv); act = Math.pow(xv, yv);
   }
   a = a.replace("X", xv).replace("Y", yv);
-  var s = a+"<br>Result: "+res;
+  var s = a+" = "+res;
   if (act) s += "<br>Actual: "+act;
-  output.innerHTML = s; 
+  out.innerHTML = s; console.log(s);
 }
 </script>
 
 <body>
 <h2 id=title></h2>
 
-X value <input type=number id=X value=21> 
+X = <input type=number id=X value='3.14159'> 
 <p>
-Y value <input type=number id=Y value=3>
+Y = <input type=number id=Y value='15'>
 <p>
-<input type=button value="Sqrt(X)"  onClick="action(value)">
-<input type=button value="Exp(X)"   onClick="action(value)">
-<input type=button value="GCD(X,Y)" onClick="action(value)">
-<input type=button value="X^Y"      onClick="action(value)">
+<input type=button value="Sqrt(X)"   onClick="action(value)">
+<input type=button value="Exp(X)"    onClick="action(value)">
+<input type=button value="GCD(X, Y)" onClick="action(value)">
+<input type=button value="X^Y"       onClick="action(value)">
 <p>
 <span style="font:12px arial,sans-serif">Math.</span>
-<input id=ff style="width:40px" value="cos"> 
-<input type=button value="f(X)" onClick="action('Math.'+ff.value)">
+<input id=ff style="width:40px" value="cos" onChange="action('M')"> 
+<input id=fX type=button value="(X)" onClick="action('M')">
 
-<p id=output></p>
+<p id=out></p>
 <hr />
 <b>Sample code</b>
 <pre>
@@ -64,16 +65,22 @@ function power(a, n) {
   if (n%2 == 0) return power(a*a, n/2);
   return a*power(a, n-1);  //odd n
 }
-/* List of functions in Math class
-[ "abs", "acos", "acosh", "asin", "asinh", "atan", "atan2", 
-  "atanh", "cbrt", "ceil", "clz32", "cos", "cosh", "exp", 
-  "expm1", "floor", "fround", "hypot", "imul", "log", "log1p", 
-  "log2", "log10", "max", "min", "pow", "random", "round", 
-  "sign", "sin", "sinh", "sqrt", "tan", "tanh", "trunc" ]
+/* List of 35 functions in Math class
+[ "abs", "acos", "acosh", "asin", "asinh", 
+  "atan", "atan2", "atanh", "cbrt", "ceil", 
+  "clz32", "cos", "cosh", "exp", "expm1", 
+  "floor", "fround", "hypot", "imul", "log", 
+  "log1p", "log2", "log10", "max", "min", 
+  "pow", "random", "round", "sign", "sin", 
+  "sinh", "sqrt", "tan", "tanh", "trunc" ]
 */
 </pre>
+<hr />
+Ref: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math" target=_blank>Math class</a>
+
 <script>
     title.innerHTML = document.title;
+    action('Math');  //evaluate
 </script>
 </body>
 </html>

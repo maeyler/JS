@@ -24,13 +24,13 @@ function count() {
     const d = new Date();
     var sec = twoDigits(d.getSeconds());
     if (sec == "00") setHourMin();
-    output.innerHTML = "<br>"+hm+":"+sec+"<br>&nbsp; ";
+    out.innerHTML = "<br>"+hm+":"+sec+"<br>&nbsp; ";
     setTimeout(count, 1000);
 }
 </script>
 
 <style>
-    #output {
+    #out {
         font-size: 48px;
         background-color: blue;
         color: white;
@@ -41,7 +41,7 @@ function count() {
 
 <body>
 
-<p id=output></p>
+<p id=out></p>
 
 <hr />
 <b>Sample code</b>
@@ -51,14 +51,13 @@ function count() {
     const d = new Date();
     var sec = twoDigits(d.getSeconds());
     if (sec == "00") setHourMin();
-    output.innerHTML = "&lt;br&gt;"+hm+":"+sec+"&lt;br&gt; ";
+    out.innerHTML = "&lt;br&gt;"+hm+":"+sec+"&lt;br&gt; ";
     setTimeout(count, 1000);
 }
 </pre>
 <hr />
 
 <script>
-    const output = document.getElementById("output");
     window.onfocus = function() { setHourMin() };
     setHourMin(); count();
 </script>

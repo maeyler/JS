@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <script src="TurkceSayi.js"></script>
     <title>Some HTML Items </title>
 </head>
 
-<script src="TurkceSayi.js"></script>
 <script>
 "use strict";
 function report(s) {
-    output.innerHTML = s; console.log(s);
+    out.innerHTML = s; console.log(s);
 }
 </script>
 
@@ -40,12 +40,9 @@ function report(s) {
 <input type=button value=Back onClick="history.go(-1)"
    onMouseOver="console.log('in')" onMouseOut="console.log('out')">
 
-<p id=output></p>
+<p id=out></p>
 <script>
-    const title = document.getElementById("title");
-    const output = document.getElementById("output");
     title.innerHTML = document.title;
-    const pass = document.getElementById("pass");
 </script>
 
 </body>

@@ -13,7 +13,7 @@ function color(c) {
     for (i = 0; i < n; i++) 
         para[i].style.color = c;
     console.log(c);
-    output.innerHTML = n+" Paragraphs colored to "+c;
+    out.innerHTML = n+" Paragraphs colored to "+c;
 }
 </script>
 
@@ -28,7 +28,7 @@ function color(c) {
    onMouseOver="style.color=value" onMouseOut="style.color='Black'">
 <input type=button value="Apply" onClick="color(input.value)">
 
-<p id=output>Third Paragraph</p>
+<p id=out>Third Paragraph</p>
 
 <hr />
 <b>Sample code</b>
@@ -44,10 +44,7 @@ function color(c) {
 <hr />
 
 <script>
-    const title = document.getElementById("title");
     title.innerHTML = document.title;
-    const output = document.getElementById("output");
-    const input = document.getElementById("input");
     const para = document.getElementsByTagName("p");
 </script>
 
