@@ -16,26 +16,28 @@ function show(v) {
 }
 function report(t, n) {
     show("OK"); setTimeout(hide, 1000);
-    output.innerHTML = "<pre>"+t+"</pre>";
+    out.innerHTML = "<pre>"+t.replace(/</g, "&lt;")+"</pre>";
     if (n == undefined) n = t;
     console.log(n);
 }
 function readText() {
     show("FT"); // FT = fetch text
     fetch(url.value)
-      .then(r => r.text()) //response of fetch() is r
+      .then(r => r.text()) 
+      //response of fetch() is r
       .then(t => report(t, t.length+" chars"));  
       //response of text() is t
 }
 function readBlob() {
     show("FB");
     fetch(url.value)
-      .then(r => r.blob())  //response
-      .then(b => report("Binary: "+b.size+" bytes"));  //blob
+      .then(r => r.blob())  //response r
+      .then(b => report("Binary: "+b.size+" bytes"));  //blob b
 }
 </script>
 
 <body>
+
 <h2 id=title></h2>
 
 <input type=text id=url value="test/test.txt">
@@ -45,27 +47,16 @@ function readBlob() {
 <input type=button value="blob" onClick="readBlob()">
 <input type=button id=state style="visibility: hidden">
 
-<p id=output></p>
+<p id=out></p>
+
 <hr />
 <b>Sample code</b>
-<p>
-<pre>
-function readText() {
-    show("FT"); // FT = fetch text
-    fetch(url.value)
-      .then(r => r.text()) //response of fetch() is r
-      .then(t => report(t, t.length+" chars"));  
-      //response of text() is t
-}
-</pre>
+<pre id=sample></pre>
 <hr />
 
 <script>
-    const title = document.getElementById("title");
-    title.innerHTML = document.title;
-    const url = document.getElementById("url");
-    const output = document.getElementById("output");
-    const state = document.getElementById("state");
+    title.innerText = document.title;
+    sample.innerText = readText.toString();
 </script>
 
 </body>

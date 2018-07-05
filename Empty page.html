@@ -9,13 +9,14 @@
 
 <script>
 "use strict";
-function xxx() {
-    console.log("xxx "+count); count++; 
+function xxxf() { // used in button
+    console.log("Counter = "+count); 
+    return count++; 
 }
 </script>
 
 <style>
-    .xxx {
+    .xxx { /* CSS code -- not used */
         font-size: 12x;
         background-color: blue;
         color: white;
@@ -26,29 +27,30 @@ function xxx() {
 </style>
 
 <body>
+
 <h2 id=title></h2>
 
-<input type=button id=xxx value="xxx" onClick="xxx()">
+<input type=button value="xxx" onClick="xxxf()" />
 
-<p id=output></p>
+<p id=out></p>
 
 <hr />
 <b>Sample code</b>
-<p>
-<pre>
-function xxx() {
-    console.log("xxx "+count); count++; 
-}
-</pre>
+<pre id=sample></pre>
 <hr />
-Ref: <a href="http://xxx" target=_blank>xxx</a>
+
+<p>Ref: 
+<a href="https://www.w3schools.com/js/" 
+   target=_blank>JS Tutorial</a>
+</p>
+
 <script>
-    //HTML elements with id have variables with name==id
+    //HTML element with id has global variable id
     //const title = document.getElementById("title");
-    title.innerHTML = document.title;
-    //const output = document.getElementById("output");
-    output.innerHTML = "Modify all items marked xxx";
-    var count = 0; xxx();
+    title.innerText = document.title;
+    sample.innerText = xxxf.toString();
+    out.innerHTML = "Modify all items marked xxx";
+    var count = 0; xxxf();
 </script>
 
 </body>

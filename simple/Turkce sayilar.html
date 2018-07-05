@@ -10,14 +10,12 @@
 <script>
 "use strict";
 function convert() {
-    var n = document.getElementById("X").value;
-    var s = toWord(n);
-    console.log(n+" -> "+s);
+    var s = toWord(X.value);
+    console.log(X.value+" -> "+s);
     out.innerHTML = s;
 }
 function report() {
-    var n = document.getElementById("X").value;
-    console.log("<p>"+n+" -> "+out.innerHTML+"</p>");
+    console.log("<p>"+X.value+" -> "+out.innerHTML+"</p>");
 }
 </script>
 
@@ -26,21 +24,19 @@ function report() {
 <h2 id=title></h2>
 
 Sayı 
-<input type=number id=X style="width:120px" value=1234560 onChange="convert()">  
+<input type=number id=X style="width:120px" 
+value=1234560 onChange="convert()">  
 <input type=button value="Çevir" onClick="convert()">
-<p>
+
 <p id=out></p>
 <hr />
-
 <b>Sample code</b>
-<p>
-<pre>
-&lt;script src="TurkceSayi.js"&gt;&lt;/script&gt;
-</pre>
+<pre id=sample></pre>
 <hr />
 
 <script>
-    title.innerHTML = document.title;
+    title.innerText = document.title;
+    sample.innerText = toWord.toString();
     convert();
 </script>
 

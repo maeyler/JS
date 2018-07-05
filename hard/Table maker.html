@@ -17,33 +17,29 @@ function makeRows(m, n) {
         row += "<th>"+j+"</th>";
     var text = "<tr>"+row+"</tr>";
     for (var i = 1; i <= m; i++) {
-        row = "<th>"+i+"</th>";
-        for (var j = 1; j <= n; j++) {
-            var p = n*(i-1)+j;
-            var s = "<span class=tip>C"+p+"</span>"
-            row += "<td>"+i+","+j+s+"</td>";
-        }
-        text += "<tr>"+row+"</tr>";
+       row = "<th>"+i+"</th>";
+       for (var j = 1; j <= n; j++) {
+          const p = n*(i-1)+j;
+          const s = "<span class=tip>C"+p+"</span>"
+          row += "<td>"+i+","+j+s+"</td>";
+       }
+       text += "<tr>"+row+"</tr>";
     }
-    var t = text.length+" chars";
+    const t = text.length+" chars";
     console.log("makeRows: "+m+"x"+n+" "+t);
-    document.getElementById("output").innerHTML = t;
-    document.getElementById("tablo").innerHTML = text;
+    tablo.innerHTML = text; out.innerText = t; 
 }
 function tableFromMenu() {
-    var s = document.getElementById("size").value;
-    //console.log(s);
-    var a = s.split("x");
+    const a = size.value.split("x");
     makeRows(a[0], a[1]);
-    document.getElementById("rows").value = a[0];
-    document.getElementById("cols").value = a[1];
+    rows.value = a[0];
+    cols.value = a[1];
 }
 function tableFromInput() {
-    var m = document.getElementById("rows").value;
-    var n = document.getElementById("cols").value;
-    //console.log(m+" "+n);
+    const m = rows.value;
+    const n = cols.value;
     makeRows(m, n);
-    document.getElementById("size").value = m+"x"+n;
+    size.value = m+"x"+n;
 }
 </script>
 
@@ -67,7 +63,8 @@ function tableFromInput() {
     }
 </style>
 
-<body><center>
+<body>
+<center>
 <h2 id=title></h2>
 
 Size: <select id="size" oninput="tableFromMenu()">
@@ -79,7 +76,7 @@ Size: <select id="size" oninput="tableFromMenu()">
 
 <table id="tablo"></table>
 
-<p id=output style="font-size:small"></p>
+<p id=out style="font-size:small"></p>
 
 <form oninput="tableFromInput()">
   Rows: 
@@ -91,33 +88,16 @@ Size: <select id="size" oninput="tableFromMenu()">
   <input type=button value="Make Table" onclick="tableFromInput()">
 </form>
 </center>
+
 <hr />
-<b>Sample code</b>
-<p>
-<pre>
-function makeRows(m, n) {
-    var row = "&lt;th&gt;&lt;/th&gt;";
-    for (var j = 1; j &lt;= n; j++) 
-        row += "&lt;th&gt;"+j+"&lt;/th&gt;";
-    text = "&lt;tr&gt;"+row+"&lt;/tr&gt;";
-    for (var i = 1; i &lt;= m; i++) {
-        row = "&lt;th&gt;"+i+"&lt;/th&gt;";
-        for (var j = 1; j &lt;= n; j++) {
-            var p = n*(i-1)+j;
-            var s = "&lt;span class=tip&gt;C"+p+"&lt;/span&gt;"
-            row += "&lt;td&gt;"+i+","+j+s+"&lt;/td&gt;";
-        }
-        text += "&lt;tr&gt;"+row+"&lt;/tr&gt;";
-    }
-    out.innerHTML = text;
-}
-</pre>
+<b>Sample code</b><p>
+<pre id=sample></pre>
 <hr />
 
 <script>
-    const title = document.getElementById("title");
-    title.innerHTML = document.title;
-    makeRows(3, 5)
+    title.innerText = document.title;
+    sample.innerText = makeRows.toString();
+    makeRows(3, 5);
 </script>
 
 </body>

@@ -21,7 +21,7 @@ function threeDigits(n) {
 }
 function toWord(n) {
     var s = "";
-    if (n == 0) return "sifir";
+    if (n == 0) return "sıfır";
     if (n < 0) return "eksi "+toWord(-n);
     for (var i=4; i>=0; i--)
         if (n >= num[i]) {

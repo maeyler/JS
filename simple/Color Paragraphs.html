@@ -9,11 +9,11 @@
 <script>
 "use strict";
 function color(c) {
-    var i, n = para.length;
-    for (i = 0; i < n; i++) 
-        para[i].style.color = c;
+    const msg = " paragraphs colored to "+c;
+    for (const p of para) 
+        p.style.color = c;
+    out.innerText = para.length + msg;
     console.log(c);
-    out.innerHTML = n+" Paragraphs colored to "+c;
 }
 </script>
 
@@ -32,19 +32,12 @@ function color(c) {
 
 <hr />
 <b>Sample code</b>
-<p>
-<pre>
-function color(c) {
-    var i, n = para.length;
-    for (i = 0; i &lt; n; i++) 
-        para[i].style.color = c;
-    console.log(c);
-}
-</pre>
+<pre id=sample></pre>
 <hr />
 
 <script>
-    title.innerHTML = document.title;
+    title.innerText = document.title;
+    sample.innerText = color.toString();
     const para = document.getElementsByTagName("p");
 </script>
 

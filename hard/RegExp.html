@@ -9,17 +9,15 @@
 <script>
 "use strict";
 function setValues() {
-    document.getElementById("pat").value = ppp[menu.selectedIndex];
-    document.getElementById("inp").value = word[menu.selectedIndex];
+    pat.value = ppp[menu.selectedIndex];
+    inp.value = word[menu.selectedIndex];
     checkRE();
 }
 function checkRE() {
-    const pat = document.getElementById("pat").value;
-    const inp = document.getElementById("inp").value;
-    if (pat > "" && inp > "") {
-        var exp = RegExp(pat,'g');
-        var str = "<span class=found>$&</span>";
-        output.innerHTML = inp.replace(exp, str);
+    if (pat.value && inp.value) {
+        const exp = new RegExp(pat.value,'g');
+        const str = "<span class=found>$&</span>";
+        out.innerHTML = inp.value.replace(exp, str);
     }
 }
 </script>
@@ -37,30 +35,22 @@ function checkRE() {
 </select> Selection
 <p>
 <input type=text id=inp  style="width:250px" onKeyUp="checkRE()"> Input
+</p>
+<p id=out></p>
 
-<p id=output></p>
 <hr />
 <b>Sample code</b>
-<pre>
-function checkRE() {
-    if (pat > "" && inp > "") {
-        var exp = RegExp(pat,'g');
-        var str = "&lt;span class=found&gt;$&&lt;/span&gt;";
-        output.innerHTML = inp.replace(exp, str);
-    }
-}
-</pre>
+<pre id=sample></pre>
 <hr />
 Ref: <a href="https://emrahtema.github.io/Automata/regexp/EmrahTema_Regexp.html" target=_blank>Term project by Emrah Tema</a>
+
 <script>
-    const title = document.getElementById("title");
-    const output = document.getElementById("output");
     const ppp = ["[a-z]", "[0-9]{4}", "d[iuü][km]", "x[a-z]"];
     const word = 
          ["Bir iki üç dört beş altı ", "Bugün 23/6/2018 saat 14",
           "Geldim gördüm buldum...", "Excellent expression tax "];
-    const menu = document.getElementById("menu");
-    title.innerHTML = document.title; setValues();
+    sample.innerText = setValues.toString()+"\n"+checkRE.toString();
+    title.innerText = document.title; setValues();
 </script>
 
 </body>
