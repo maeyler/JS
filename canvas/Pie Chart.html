@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<!-- Modify or remove all items marked xxx -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Pie Chart </title>
+</head>
+
+<script>
+"use strict";
+function namesToHTML(data) {
+    var total = 0;
+    for (const x of data) total += x.count;
+    //data.reduce((sum, {count}) => sum + count, 0);
+    let s = "";
+    for (const x of data) {
+        x.percent = x.count * 100 / total;
+        s += x.percent.toFixed()+"% &nbsp; <span style='color:"
+            +x.color+"'> "+x.name+" </span><br>";
+    }
+    return s;
+}
+function pieChart(data) {
+    const M = Math.min(cnvs.width, cnvs.height);
+    const R = Math.round(M/2);
+    const cx = cnvs.getContext("2d");
+    const k = 2 * Math.PI / 100;
+    let a = -0.5 * Math.PI; // start at -pi/2
+    for (const x of data) {
+        const delta = x.percent * k;
+        cx.beginPath();
+        // center=(R,R) radius=R
+        // clockwise by delta
+        cx.arc(R, R, R, a, a + delta);
+        a += delta;
+        cx.lineTo(R, R);
+        cx.fillStyle = x.color;
+        cx.fill();
+    }
+}
+</script>
+
+<body>
+
+<h2 id=title></h2>
+using JavaScript canvas
+
+<p id=out></p>
+<hr />
+<center>
+<canvas id=cnvs width="230" height="230"></canvas>
+</center>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<p>Ref: <i> Eloquent JavaScript</i>,
+<a href="http://eloquentjavascript.net/17_canvas.html" 
+   target=_blank> Chap 17</a>
+</p>
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = pieChart.toString();
+    const results = [
+      {name: "Satisfied", count: 1043, color: "lightblue"},
+      {name: "Neutral", count: 563, color: "lightgreen"},
+      {name: "Unsatisfied", count: 510, color: "pink"},
+      {name: "No comment", count: 175, color: "silver"}
+    ];
+    out.innerHTML = namesToHTML(results);
+    //const canvas = document.querySelector("canvas");
+    pieChart(results);
+</script>
+
+</body>
+</html>
