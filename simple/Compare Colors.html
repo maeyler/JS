@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Compare Colors </title>
+</head>
+
+<script>
+"use strict";
+function getColor() {
+    const r = R.value, g = G.value, b = B.value;
+    return "rgb("+r+","+g+","+b+")";
+}
+function inverseC() {
+    const r = 255-R.value, g = 255-G.value, b = 255-B.value;
+    return "rgb("+r+","+g+","+b+")";
+}
+function setColor() {
+    const c1 = getColor();
+    const c2 = inverseC();
+    //D1.style.color = c2;
+    D1.style.background = c1;
+    //D2.style.color = c1;
+    D2.style.background = c2;
+    console.log(c1); return c1; 
+}
+</script>
+
+<style>
+    div {
+        height:120px;
+        width:360px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    input {
+        width:100px
+    }
+</style>
+
+<body>
+
+<h2 id=title></h2>
+
+<p id=out></p>
+R<input id=R type="range" min=0 max=255 value=210 onChange=setColor()>
+G<input id=G type="range" min=0 max=255 value=110 onChange=setColor()>
+B<input id=B type="range" min=0 max=255 value=127 onChange=setColor()>
+<div id=D1>Select color </div>
+<div id=D2> and its inverse </div>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="https://www.w3schools.com/js/" 
+   target=_blank>JS Tutorial</a>
+</p>
+
+<script>
+    //HTML element with id has global variable id
+    //const title = document.getElementById("title");
+    title.innerText = document.title;
+    sample.innerText = setColor.toString();
+    out.innerText = D1.innerText+" "+D2.innerText;
+    setColor();
+</script>
+
+</body>
+</html>
