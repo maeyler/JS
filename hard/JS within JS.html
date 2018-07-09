@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS within JS </title>
+</head>
+
+<script>
+"use strict";
+function magic() {
+    const s = code.value; var t;
+    try {
+      t = Function(s).call();
+      console.log("Result: "+t); 
+      out.style.color = "blue";
+    } catch (error) {
+      t = error;
+      console.log("Error: "+t); 
+      out.style.color = "red";
+    }
+    out.innerText = t; 
+    return t; 
+}
+</script>
+
+<style>
+    textarea { width:280px; height:200px; }
+</style>
+
+<body>
+
+<h2 id=title></h2>
+
+<textarea id="code">
+//This code is like magic
+//It runs any JS code
+
+//Two ways of doing sqrt:
+f = Math.sqrt
+a = 9*100
+e = "Math.sqrt("+a+")"
+return "f(a) = "+f(a) +"\n"
+      + e +" = "+eval(e)
+</textarea>
+
+<button onClick="magic()">Run</button>
+<pre id="out"></pre>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="http://eloquentjavascript.net/18_http.html#i_wTXvIH5Wds" 
+   target=_blank>A JavaScript workbench</a>
+</p>
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = magic.toString();
+    magic();
+</script>
+
+</body>
+</html>
