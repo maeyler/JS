@@ -45,20 +45,12 @@ function count() {
 
 <hr />
 <b>Sample code</b>
-<p>
-<pre>
-function count() {
-    const d = new Date();
-    var sec = twoDigits(d.getSeconds());
-    if (sec == "00") setHourMin();
-    out.innerHTML = "&lt;br&gt;"+hm+":"+sec+"&lt;br&gt; ";
-    setTimeout(count, 1000);
-}
-</pre>
+<pre id=sample></pre>
 <hr />
 
 <script>
-    window.onfocus = function() { setHourMin() };
+    sample.innerText = count.toString();
+    window.onfocus = setHourMin;
     setHourMin(); count();
 </script>
 

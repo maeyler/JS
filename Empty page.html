@@ -9,7 +9,8 @@
 
 <script>
 "use strict";
-function xxxf() { // used in button
+// JavaScript code used in button
+function xxxf() {
     console.log("Counter = "+count); 
     return count++; 
 }
@@ -30,7 +31,7 @@ function xxxf() { // used in button
 
 <h2 id=title></h2>
 
-<input type=button value="xxx" onClick="xxxf()" />
+<button onClick="xxxf()">xxx</button>
 
 <p id=out></p>
 
@@ -45,7 +46,7 @@ function xxxf() { // used in button
 </p>
 
 <script>
-    //HTML element with id has global variable id
+    //global variable id is the HTML element with id 
     //const title = document.getElementById("title");
     title.innerText = document.title;
     sample.innerText = xxxf.toString();

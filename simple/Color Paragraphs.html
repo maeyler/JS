@@ -9,9 +9,9 @@
 <script>
 "use strict";
 function color(c) {
+    const para = document.getElementsByTagName("p");
+    for (const p of para) p.style.color = c;
     const msg = " paragraphs colored to "+c;
-    for (const p of para) 
-        p.style.color = c;
     out.innerText = para.length + msg;
     console.log(c);
 }
@@ -24,9 +24,9 @@ function color(c) {
 
 <p>Second Paragraph</p>
 
-<input type=input id=input value=Red onChange="color(value)"
+<input id=inp value=Red onChange="color(value)"
    onMouseOver="style.color=value" onMouseOut="style.color='Black'">
-<input type=button value="Apply" onClick="color(input.value)">
+<button onClick="color(inp.value)">Apply</button>
 
 <p id=out>Third Paragraph</p>
 
@@ -38,7 +38,6 @@ function color(c) {
 <script>
     title.innerText = document.title;
     sample.innerText = color.toString();
-    const para = document.getElementsByTagName("p");
 </script>
 
 </body>

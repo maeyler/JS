@@ -26,31 +26,21 @@ function setColor(c) {
 <h2 id=title></h2>
 
 <button onclick=setDate(Date())>Print date</button>
-<button onclick=setDate("unknown")>Clear</button>
+<button onclick=setDate("??")>Clear</button>
 <button onclick=setColor("blue")>Blue</button>
 <button onclick=setColor("green")>Green</button>
 
 <p id=out></p>
 <hr />
 <b>Sample code</b>
-<p>
-<pre>
-function setDate(s) {
-    console.log("date: "+s);
-    out.innerHTML = "Current date is "+s;
-}
-function setColor(c) {
-    console.log("color: "+c);
-    title.style.color = c;
-    out.style.color = c;
-}
-</pre>
+<pre id=sample></pre>
 <hr />
 Ref: <a href="https://www.w3schools.com/js/js_dates.asp"
       target=_blank>JS Date</a>
 
 <script>
     title.innerHTML = document.title;
+    sample.innerText = setDate+"\n"+setColor;
     setDate("??");
 </script>
 

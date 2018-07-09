@@ -26,32 +26,19 @@ function primes(M) {
 
 <body>
 <h2 id=title></h2>
-Primes &lt; <input type=number min=3 max=10000 value=100 onChange="primes(value)">
+Primes &lt; 
+<input type=number min=3 max=10000 value=100 onChange="primes(value)">
 
 <p id=output></p>
 
 <hr />
 <b>Sample code</b>
-<p>
-<pre>
-function primes(M) {
-    const s = new Array(M);
-    for (var k=2; k&lt;M; k++) s[k] = true;
-    for (var p=2; p*p&lt;M; p++) 
-        if (s[p]) { //p is next prime
-            for (var k=2*p; k&lt;M; k=k+p)
-               s[k] = false;
-        }
-    var t = "";
-    for (var p=2; p&lt;=M; p++) 
-        if (s[p]) t += p+"  ";
-    output.innerHTML = t;
-}
-</pre>
+<pre id=sample></pre>
 <hr />
 
 <script>
     title.innerHTML = document.title;
+    sample.innerText = primes.toString();
     primes(100);
 </script>
 

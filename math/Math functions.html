@@ -39,6 +39,11 @@ function action(a) {
 }
 </script>
 
+<style>
+    #fM { font:12px arial,sans-serif }
+    #ff { width:40px }
+</style>
+
 <body>
 <h2 id=title></h2>
 
@@ -46,41 +51,36 @@ X = <input type=number id=X value='3.14159'>
 <p>
 Y = <input type=number id=Y value='15'>
 <p>
-<input type=button value="Sqrt(X)"   onClick="action(value)">
-<input type=button value="Exp(X)"    onClick="action(value)">
-<input type=button value="GCD(X, Y)" onClick="action(value)">
-<input type=button value="X^Y"       onClick="action(value)">
-<p>
-<span style="font:12px arial,sans-serif">Math.</span>
-<input id=ff style="width:40px" value="cos" onChange="action('M')"> 
-<input id=fX type=button value="(X)" onClick="action('M')">
+<input type=button value="Sqrt(X)"   onClick="action(value)"> 
+<input type=button value="Exp(X)"    onClick="action(value)"> 
+<input type=button value="GCD(X, Y)" onClick="action(value)"> 
+<input type=button value="X^Y"       onClick="action(value)"> <p>
+<span  id=fM> Math.</span>
+<input id=ff value="cos" onChange="action('Math')"> 
+<input id=fX type=button value="(X)" onClick="action('M')"> 
 
 <p id=out></p>
+
 <hr />
 <b>Sample code</b>
-<pre>
-function power(a, n) {
-  if (n == 0) return 1;
-  if (n < 0)   return power(1/a, -n);
-  if (n%2 == 0) return power(a*a, n/2);
-  return a*power(a, n-1);  //odd n
-}
-/* List of 35 functions in Math class
-[ "abs", "acos", "acosh", "asin", "asinh", 
-  "atan", "atan2", "atanh", "cbrt", "ceil", 
-  "clz32", "cos", "cosh", "exp", "expm1", 
-  "floor", "fround", "hypot", "imul", "log", 
-  "log1p", "log2", "log10", "max", "min", 
-  "pow", "random", "round", "sign", "sin", 
-  "sinh", "sqrt", "tan", "tanh", "trunc" ]
-*/
-</pre>
+<pre id=sample></pre>
 <hr />
 Ref: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math" target=_blank>Math class</a>
 
 <script>
     title.innerHTML = document.title;
     action('Math');  //evaluate
+    const list = `
+/* List of 35 functions in Math class
+  'abs', 'acos', 'acosh', 'asin', 'asinh', 
+  'atan', 'atan2', 'atanh', 'cbrt', 'ceil', 
+  'clz32', 'cos', 'cosh', 'exp', 'expm1', 
+  'floor', 'fround', 'hypot', 'imul', 'log', 
+  'log1p', 'log2', 'log10', 'max', 'min', 
+  'pow', 'random', 'round', 'sign', 'sin', 
+  'sinh', 'sqrt', 'tan', 'tanh', 'trunc'
+*/`  //multi-line string
+    sample.innerText = power+list;
 </script>
 </body>
 </html>

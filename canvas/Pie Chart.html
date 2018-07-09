@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<!-- Modify or remove all items marked xxx -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
@@ -21,20 +20,19 @@ function namesToHTML(data) {
     }
     return s;
 }
-function pieChart(data) {
-    const M = Math.min(cnvs.width, cnvs.height);
-    const R = Math.round(M/2);
+function pieChart(data, R = 110, C = 20) {
+    cnvs.width = 2*(R+C); cnvs.height = 2*(R+C);
     const cx = cnvs.getContext("2d");
     const k = 2 * Math.PI / 100;
-    let a = -0.5 * Math.PI; // start at -pi/2
+    let a = 0;  //-0.5 * Math.PI; // start at -pi/2
     for (const x of data) {
         const delta = x.percent * k;
         cx.beginPath();
-        // center=(R,R) radius=R
+        // center=(R+C, R+C) radius=R
         // clockwise by delta
-        cx.arc(R, R, R, a, a + delta);
+        cx.arc(R+C, R+C, R, a, a + delta);
         a += delta;
-        cx.lineTo(R, R);
+        cx.lineTo(R+C, R+C);
         cx.fillStyle = x.color;
         cx.fill();
     }
@@ -48,9 +46,7 @@ using JavaScript canvas
 
 <p id=out></p>
 <hr />
-<center>
-<canvas id=cnvs width="230" height="230"></canvas>
-</center>
+<canvas id=cnvs></canvas>
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
