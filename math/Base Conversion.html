@@ -8,6 +8,7 @@
 
 <script>
 "use strict";
+const BASE = 80, MIN = 7680, MAX = MIN+BASE-1;
 function encodeB(n, base) {
     if (base == undefined) base = 16;
     return n.toString(base);
@@ -52,7 +53,7 @@ function decode(e) {
     report(s +" -> "+num.value);
 }
 function report(s) {
-    output.innerHTML = s; console.log(s);
+    out.innerText = s; console.log(s);
 }
 </script>
 
@@ -72,7 +73,7 @@ Base 36: <input type=text id=t36 onChange="decode(t36)">
 Base 80: <input type=text id=t80 onChange="decode(t80)">
 <input type=button value="Decode" onClick="decode(t80)">
 
-<p id=output></p>
+<p id=out></p>
 <p />
 Base 16 is the well-known hexadecimal.<br />
 Base 36 uses numeric digits and lower-case letters.<br />
@@ -98,9 +99,8 @@ Reference: <br />
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString">n.toString()</a>
 
 <script>
-    title.innerHTML = document.title;
+    title.innerText = document.title;
     num.min = 0; num.max = Number.MAX_SAFE_INTEGER;
-    const BASE = 80, MIN = 7680, MAX = MIN+BASE-1;
     encode();
 </script>
 

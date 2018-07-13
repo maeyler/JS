@@ -37,7 +37,7 @@ function display() { //the stack
     while (n)
         s.push(stk[--n]);
     console.log(s.toString());
-    out.innerHTML = s.join("<br>");
+    out.innerText = s.join("\n");
 }
 </script>
 
@@ -86,7 +86,7 @@ class Make { //Factory methods to make numbers
 <hr />
 <!--Ref: <a href="http://xxx" target=_blank>xxx</a-->
 <script>
-    title.innerHTML = document.title;
+    title.innerText = document.title;
     rational(); complex();
 </script>
 

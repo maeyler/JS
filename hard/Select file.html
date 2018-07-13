@@ -36,7 +36,7 @@ function fileSelect(t) { //target is the button
         reader.readAsText(f);
     } else {
         msg.innerText += "Unknown ";
-        out.innerHTML = "";
+        out.innerText = "";
     }
 }
 </script>
@@ -67,7 +67,6 @@ Ref: <a href="https://www.html5rocks.com/en/tutorials/file/dndfiles/"
 <script>
     title.innerText = document.title;
     sample.innerText = fileSelect.toString();
-    title.innerHTML = document.title;
 </script>
 
 </body>

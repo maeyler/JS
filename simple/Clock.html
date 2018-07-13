@@ -24,7 +24,7 @@ function count() {
     const d = new Date();
     let sec = twoDigits(d.getSeconds());
     if (sec == "00") setHourMin();
-    out.innerHTML = "<br>"+hm+":"+sec+"<br>&nbsp; ";
+    out.innerText = hm+":"+sec;
     setTimeout(count, 1000);
 }
 </script>
@@ -35,7 +35,7 @@ function count() {
         background-color: blue;
         color: white;
         text-align: center;
-        padding: 40px;
+        padding: 80px;
     }
 </style>
 

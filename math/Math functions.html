@@ -34,8 +34,8 @@ function action(a) {
   }
   a = a.replace("X", xv).replace("Y", yv);
   let s = a+" = "+res;
-  if (act) s += "<br>Actual: "+act;
-  out.innerHTML = s; console.log(s);
+  if (act) s += "\nActual: "+act;
+  out.innerText = s; console.log(s);
 }
 </script>
 
@@ -68,7 +68,7 @@ Y = <input type=number id=Y value='15'>
 Ref: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math" target=_blank>Math class</a>
 
 <script>
-    title.innerHTML = document.title;
+    title.innerText = document.title;
     action('Math');  //evaluate
     const list = `
 /* List of 35 functions in Math class

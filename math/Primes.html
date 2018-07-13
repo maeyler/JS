@@ -20,7 +20,7 @@ function primes(M) {
     for (let p=2; p<=M; p++) 
         if (s[p]) { t += p+"  "; n++ }
     console.log(n+" primes < "+M); 
-    output.innerHTML = t;
+    out.innerText = t;
 }
 </script>
 
@@ -29,7 +29,7 @@ function primes(M) {
 Primes &lt; 
 <input type=number min=3 max=10000 value=100 onChange="primes(value)">
 
-<p id=output></p>
+<p id=out></p>
 
 <hr />
 <b>Sample code</b>
@@ -37,7 +37,7 @@ Primes &lt;
 <hr />
 
 <script>
-    title.innerHTML = document.title;
+    title.innerText = document.title;
     sample.innerText = primes.toString();
     primes(100);
 </script>

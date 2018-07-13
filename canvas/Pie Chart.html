@@ -8,6 +8,12 @@
 
 <script>
 "use strict";
+const results = [
+      {name: "Satisfied", count: 1043, color: "lightblue"},
+      {name: "Neutral", count: 563, color: "lightgreen"},
+      {name: "Unsatisfied", count: 510, color: "pink"},
+      {name: "No comment", count: 175, color: "silver"}
+    ];
 function namesToHTML(data) {
     let total = 0;
     for (const x of data) total += x.count;
@@ -59,14 +65,7 @@ using JavaScript canvas
 <script>
     title.innerText = document.title;
     sample.innerText = pieChart.toString();
-    const results = [
-      {name: "Satisfied", count: 1043, color: "lightblue"},
-      {name: "Neutral", count: 563, color: "lightgreen"},
-      {name: "Unsatisfied", count: 510, color: "pink"},
-      {name: "No comment", count: 175, color: "silver"}
-    ];
     out.innerHTML = namesToHTML(results);
-    //const canvas = document.querySelector("canvas");
     pieChart(results);
 </script>
 

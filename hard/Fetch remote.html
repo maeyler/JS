@@ -12,16 +12,15 @@ function hide() {
     state.style.visibility = "hidden";
 }
 function show(v) {
-    state.value = v; state.style.visibility = "inherit";
+    state.value = v; state.style.visibility = "";
 }
 function report(t, n) {
     show("OK"); setTimeout(hide, 1000);
-    out.innerHTML = "<pre>"+t.replace(/</g, "&lt;")+"</pre>";
-    if (n == undefined) n = t;
-    console.log(n);
+    out.innerText = t;
+    console.log(n? n : t);
 }
 function readText() {
-    show("FT"); // FT = fetch text
+    show("FT"); // fetch text
     fetch(url.value)
       .then(r => r.text()) 
       //response of fetch() is r
@@ -29,10 +28,10 @@ function readText() {
       //response of text() is t
 }
 function readBlob() {
-    show("FB");
+    show("FB"); // fetch blob
     fetch(url.value)
       .then(r => r.blob())  //response r
-      .then(b => report("Binary: "+b.size+" bytes"));  //blob b
+      .then(b => report(b.size+" bytes"));
 }
 </script>
 
@@ -47,7 +46,7 @@ function readBlob() {
 <input type=button value="blob" onClick="readBlob()">
 <input type=button id=state style="visibility: hidden">
 
-<p id=out></p>
+<pre id=out></pre>
 
 <hr />
 <b>Sample code</b>
@@ -56,7 +55,7 @@ function readBlob() {
 
 <script>
     title.innerText = document.title;
-    sample.innerText = readText.toString();
+    sample.innerText = readText+"\n"+readBlob;
 </script>
 
 </body>
