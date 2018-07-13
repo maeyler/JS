@@ -8,6 +8,37 @@
 
 <script>
 "use strict";
+function report(msg) {
+    console.log(msg); out.innerText = msg; count++;
+}
+function removeDots(evt, e) { //e is undefined
+    while (e = document.querySelector("dot")) 
+        e.remove();
+    return (count+":  "+evt.type+" ");
+}
+function addDot(x, y) {
+    let e = document.createElement("dot");
+    let r = 50;  //Number(e.style.borderRadius);
+    e.style.left = (x - r) + "px";
+    e.style.top  = (y - r) + "px";
+    e.style.borderRadius = r + "px";
+    document.body.appendChild(e);
+}
+function doClick(evt) {
+    let msg = removeDots(evt);
+    let x = evt.pageX, y = evt.pageY;
+    addDot(x, y); 
+    report(msg+" at "+x+", "+y);
+}
+function doTouch(evt) {
+    let msg = removeDots(evt);
+    let n = evt.touches.length;
+    for (let i = 0; i < n; i++) {
+        let t = evt.touches[i];
+        addDot(t.pageX, t.pageY); 
+    }
+    report(msg+n+" touches");
+}
 function scroller(evt) {
     let t = evt.target;
     let p = t.scrollTop * t.clientWidth;
@@ -15,32 +46,6 @@ function scroller(evt) {
     let w = (p/H).toFixed(0)+"px";
     out.innerText = (count+":  scroll "+w); 
     count++; bar.style.width = w;
-}
-function addDot(x, y) {
-      let e = document.createElement("dot");
-      let r = 50;  //Number(e.style.borderRadius);
-      e.style.left = (x - r) + "px";
-      e.style.top  = (y - r) + "px";
-      e.style.borderRadius = r + "px";
-      document.body.appendChild(e);
-}
-function update(evt) {
-    let e;  //remove all dot's
-    while (e = document.querySelector("dot")) 
-        e.remove();
-    let msg = (count+":  "+evt.type+" ");
-    if (evt.touches) { //touch
-        let n = evt.touches.length;
-        for (let i = 0; i < n; i++) {
-            let t = evt.touches[i];
-            addDot(t.pageX, t.pageY); 
-        }
-        msg += n+" touches";
-    } else {  //click
-        addDot(evt.pageX, evt.pageY); 
-        msg += " at "+evt.pageX+", "+evt.pageY;
-    }
-    console.log(msg); out.innerText = msg; count++;
 }
 </script>
 
@@ -69,9 +74,9 @@ function update(evt) {
 <h2 id=title></h2>
 
 <p id=touch>
-We are listening to click events and to touch events 
-on this element. Multiple touches are recognized and
-the red circle(s) are movable if touch screen is available.
+We are listening to click events and to touch events on 
+this element. Multiple touches are recognized and the red 
+circle(s) are movable if a touch screen is available.
 <br><br>
 Scroll events below are reflected on the blue bar.
 <br><br>
@@ -100,10 +105,10 @@ on either listener is reported below.
     long.innerText = "Modify all items marked xxx ".repeat(200);
     long.addEventListener("scroll", scroller);
     
-    touch.addEventListener("touchstart", update);
-    touch.addEventListener("touchmove", update);
-    //touch.addEventListener("touchend", update);
-    touch.addEventListener("click", update);
+    touch.addEventListener("touchstart", doTouch);
+    touch.addEventListener("touchmove", doTouch);
+    //touch.addEventListener("touchend", doTouch);
+    touch.addEventListener("click", doClick);
     var count = 0;
 </script>
 

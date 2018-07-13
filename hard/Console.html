@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>JS within JS </title>
+    <title>JS Console </title>
 </head>
 
 <script>
 "use strict";
 function magic() {
-    const s = code.value; var t;
+    let s = code.value, t;
     try {
       t = Function(s).call();
       console.log("Result: "+t); 
@@ -32,16 +32,21 @@ function magic() {
 
 <h2 id=title></h2>
 
+This code is like magic: <br>
+It runs any JS code within JS <br>
+<br>
 <textarea id="code">
-//This code is like magic
-//It runs any JS code
-
-//Two ways of doing sqrt:
+//Two ways of doing sqrt
+//and the active platform
 f = Math.sqrt
 a = 9*100
-e = "Math.sqrt("+a+")"
+e = "Math.sqrt(a)"
 return "f(a) = "+f(a) +"\n"
-      + e +" = "+eval(e)
+      + e +" = "+eval(e) +"\n"
+   + "os: "+ navigator.platform
+
+//we can return just one object
+//and only Strings are readable
 </textarea>
 
 <button onClick="magic()">Run</button>
