@@ -16,10 +16,10 @@ const results = [
     ];
 function namesToHTML(data) {
     let total = 0;
-    for (const x of data) total += x.count;
+    for (let x of data) total += x.count;
     //data.reduce((sum, {count}) => sum + count, 0);
     let s = "";
-    for (const x of data) {
+    for (let x of data) {
         x.percent = x.count * 100 / total;
         s += x.percent.toFixed()+"% &nbsp; <span style='color:"
             +x.color+"'> "+x.name+" </span><br>";
@@ -31,7 +31,7 @@ function pieChart(data, R = 110, C = 20) {
     const cx = cnvs.getContext("2d");
     const k = 2 * Math.PI / 100;
     let a = -0.5 * Math.PI; // start at -pi/2
-    for (const x of data) {
+    for (let x of data) {
         const delta = x.percent * k;
         cx.beginPath();
         // center=(R+C, R+C) radius=R

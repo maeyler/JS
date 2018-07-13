@@ -10,9 +10,10 @@
 "use strict";
 function color(c) {
     const para = document.getElementsByTagName("p");
-    for (const p of para) p.style.color = c;
-    const msg = " paragraphs colored to "+c;
-    out.innerText = para.length + msg;
+    let i = para.length;
+    out.innerText = i; //debug
+    while (i--) para[i].style.color = c; 
+    out.innerText += " paragraphs colored to "+c;
     console.log(c);
 }
 </script>

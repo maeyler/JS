@@ -59,34 +59,15 @@ Stack:
 <input type=button value="Clear" onClick="stk=[]; display()">
 <br>
 <span id=out></span>
+
 <hr />
 <b>Sample code</b>
-<p>
-<pre>
-class Make { //Factory methods to make numbers
-    static whole(n) {
-        return new Whole(n);
-    }
-    static rational(n, d) {
-        if (d < 0) { n = -n; d = -d; }
-        const g = Rational.gcd(n, d);
-        if (g == d) return new Whole(n/g);
-        else return new Rational(n/g, d/g);
-    }
-    static decimal(x) {
-        if (x == Math.round(x)) return new Whole(x);
-        else return new Decimal(x);
-    }
-    static complex(re, im) {
-        if (im == 0) return Make.decimal(re);
-        else return new Complex(re, im);
-    }
-}
-</pre>
+<pre id=sample></pre>
 <hr />
-<!--Ref: <a href="http://xxx" target=_blank>xxx</a-->
+
 <script>
     title.innerText = document.title;
+    sample.innerText = Make.toString();
     rational(); complex();
 </script>
 

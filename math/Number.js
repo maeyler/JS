@@ -104,11 +104,11 @@ class Complex {
     }
     static fromNumber(n) {
         if (n instanceof Complex) return n;
-        else return new Complex(n.value(), 0);    
+        return new Complex(n.value(), 0);    
     }
 }
 
-class Make { //Factory methods to make numbers
+class Make { //Factory methods for numbers
     static whole(n) {
         return new Whole(n);
     }
@@ -116,14 +116,16 @@ class Make { //Factory methods to make numbers
         if (d < 0) { n = -n; d = -d; }
         const g = Rational.gcd(n, d);
         if (g == d) return new Whole(n/g);
-        else return new Rational(n/g, d/g);
+        return new Rational(n/g, d/g);
     }
     static decimal(x) {
-        if (x == Math.round(x)) return new Whole(x);
-        else return new Decimal(x);
+        if (x == Math.round(x)) 
+             return new Whole(x);
+        return new Decimal(x);
     }
     static complex(re, im) {
-        if (im == 0) return Make.decimal(re);
-        else return new Complex(re, im);
+        if (im == 0) 
+             return Make.decimal(re);
+        return new Complex(re, im);
     }
 }
