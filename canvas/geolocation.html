@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Geo Location </title>
+</head>
+
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyDDuGt0E5IEGkcE6ZfrKfUtE9Ko_de66pA"></script>
+<script>
+"use strict";
+function locate(position) {
+  let p = position.coords, L =
+  new google.maps.LatLng(p.latitude, p.longitude);
+  const OPT = {
+     zoom: 13,
+     center: L,
+     //mapTypeId: google.maps.MapTypeId.TERRAIN,
+     //disableDefaultUI: true
+  }
+  new google.maps.Map(map, OPT); //map is a <div>
+}
+</script>
+
+<style>
+    #map {
+        width: 360px;
+        height: 300px;
+    }
+</style>
+
+<body>
+
+<h2 id=title></h2>
+
+<p id=out></p>
+
+<hr />
+<div id=map></div>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="https://github.com/mdn/learning-area/blob/master/javascript/apis/introduction/maps-example.html" 
+   target=_blank>Google Maps Example</a>
+</p>
+
+<script>
+    title.innerText = document.title;
+    out.innerHTML = "Google Maps at work";
+    sample.innerText = locate.toString();
+    navigator.geolocation.getCurrentPosition(locate);
+</script>
+
+</body>
+</html>
