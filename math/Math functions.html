@@ -10,12 +10,12 @@
 <script>
 "use strict";
 function round(x) {
-  var v = Math.round(x.value);
+  let v = Math.round(x.value);
   x.value = v; return v;
 }
 function action(a) {
-  var xv = Number(X.value), yv = Number(Y.value); 
-  var res, act;
+  let xv = Number(X.value), yv = Number(Y.value); 
+  let res, act;
   if (a[0] == "M") { //Math.fun
     const fun = ff.value;
     res = Math[fun].call(null, xv, yv);
@@ -33,7 +33,7 @@ function action(a) {
     res = power(xv, yv); act = Math.pow(xv, yv);
   }
   a = a.replace("X", xv).replace("Y", yv);
-  var s = a+" = "+res;
+  let s = a+" = "+res;
   if (act) s += "<br>Actual: "+act;
   out.innerHTML = s; console.log(s);
 }

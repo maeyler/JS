@@ -9,7 +9,7 @@
 <script>
 "use strict";
 function namesToHTML(data) {
-    var total = 0;
+    let total = 0;
     for (const x of data) total += x.count;
     //data.reduce((sum, {count}) => sum + count, 0);
     let s = "";
@@ -24,7 +24,7 @@ function pieChart(data, R = 110, C = 20) {
     cnvs.width = 2*(R+C); cnvs.height = 2*(R+C);
     const cx = cnvs.getContext("2d");
     const k = 2 * Math.PI / 100;
-    let a = 0;  //-0.5 * Math.PI; // start at -pi/2
+    let a = -0.5 * Math.PI; // start at -pi/2
     for (const x of data) {
         const delta = x.percent * k;
         cx.beginPath();

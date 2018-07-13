@@ -17,7 +17,7 @@ function decodeB(s, base) {
     return Number.parseInt(s, base);
 }
 function encode80(n) {
-    var s = "";
+    let s = "";
     while (n > 0) {
         const c = String.fromCharCode(MIN + n%BASE);
         s = c + s; n = Math.trunc(n/BASE);
@@ -25,8 +25,8 @@ function encode80(n) {
     return s;
 }
 function decode80(s) {
-    var n = 0;
-    for (var i=0; i<s.length; i++) {
+    let n = 0;
+    for (let i=0; i<s.length; i++) {
         const c = s.charCodeAt(i);
         if (c<MIN || c>MAX) return -1;
         n = BASE*n + (c-MIN);
@@ -43,7 +43,7 @@ function encode(n) {
     if (rep) report(n+" -> "+t80.value);
 }
 function decode(e) {
-    const s = e.value; var n;
+    const s = e.value; let n;
     if (e == t36) n = decodeB(s, 36);
     else if (e == hex) n = decodeB(s);
     else n = decode80(s);

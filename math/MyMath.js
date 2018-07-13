@@ -6,15 +6,14 @@ function almostEqual(a, b) {
 }
 function root(x) {
   if (x < 0) return undefined;
-  var r = 1;
+  let r = 1;
   while (!almostEqual(r*r, x)) {
     r = (r+x/r)/2;
   }
   return r;
 }
 function expon(x) {
-  var k, t, s;
-  k = 0; t = 1; s = 1;
+  let k = 0, t = 1, s = 1;
   while (!almostEqual(t/s, 0)) {
     k = k+1; t = x*t/k; s = s+t;
   }

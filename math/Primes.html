@@ -10,14 +10,14 @@
 "use strict";
 function primes(M) {
     const s = new Array(M);
-    for (var k=2; k<M; k++) s[k] = true;
-    for (var p=2; p*p<M; p++) 
+    for (let k=2; k<M; k++) s[k] = true;
+    for (let p=2; p*p<M; p++) 
         if (s[p]) { //p is next prime
-            for (var k=2*p; k<M; k=k+p)
+            for (let k=2*p; k<M; k=k+p)
                s[k] = false;
         }
-    var t = "", n = 0;
-    for (var p=2; p<=M; p++) 
+    let t = "", n = 0;
+    for (let p=2; p<=M; p++) 
         if (s[p]) { t += p+"  "; n++ }
     console.log(n+" primes < "+M); 
     output.innerHTML = t;

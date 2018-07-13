@@ -22,7 +22,7 @@ function setHourMin() {
 }
 function count() {
     const d = new Date();
-    var sec = twoDigits(d.getSeconds());
+    let sec = twoDigits(d.getSeconds());
     if (sec == "00") setHourMin();
     out.innerHTML = "<br>"+hm+":"+sec+"<br>&nbsp; ";
     setTimeout(count, 1000);

@@ -75,7 +75,7 @@ class Complex {
         return Math.sqrt(this.r2);
     }
     angle() { //in degrees
-        const eps = 1E-10;  var a;
+        const eps = 1E-10;  let a;
         if (Math.abs(this.re) < eps) {
             a = (this.im < -eps? -90 : 90);
         } else {

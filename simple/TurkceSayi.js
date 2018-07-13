@@ -6,7 +6,7 @@ const ones = ["", "bir ","iki ","üç ","dört ","beş "
       word = ["","bin ","milyon ","milyar ","trilyon "],
       num = [1, 1000, 1000000, 1000000000, 1000000000000];
 function threeDigits(n) {
-    var s = "";
+    let s = "";
     if (n < 1 || n > 999)
         return "hata "+n;
     if (n > 199) 
@@ -20,10 +20,10 @@ function threeDigits(n) {
     return s + ones[n];
 }
 function toWord(n) {
-    var s = "";
+    let s = "";
     if (n == 0) return "sıfır";
     if (n < 0) return "eksi "+toWord(-n);
-    for (var i=4; i>=0; i--)
+    for (let i=4; i>=0; i--)
         if (n >= num[i]) {
             const k = Math.trunc(n/num[i]);
             if (i==1 && n<2000) s += word[1];

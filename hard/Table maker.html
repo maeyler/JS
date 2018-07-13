@@ -12,13 +12,13 @@
 //https://maeyler.github.io/Visual-Mujam/
 //
 function makeRows(m, n) {
-    var row = "<th></th>";
-    for (var j = 1; j <= n; j++) 
+    let row = "<th></th>";
+    for (let j = 1; j <= n; j++) 
         row += "<th>"+j+"</th>";
-    var text = "<tr>"+row+"</tr>";
-    for (var i = 1; i <= m; i++) {
+    let text = "<tr>"+row+"</tr>";
+    for (let i = 1; i <= m; i++) {
        row = "<th>"+i+"</th>";
-       for (var j = 1; j <= n; j++) {
+       for (let j = 1; j <= n; j++) {
           const p = n*(i-1)+j;
           const s = "<span class=tip>C"+p+"</span>"
           row += "<td>"+i+","+j+s+"</td>";
