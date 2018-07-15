@@ -11,46 +11,57 @@
 "use strict";
 var MAP; //global object from google.maps
 function locate(pos) {
-  let lat = pos.coords.latitude, 
-      lon = pos.coords.longitude;
-  const OPT = {
-     zoom: 13,
-     center: new google.maps.LatLng(lat, lon),
-   //mapTypeId: google.maps.MapTypeId.TERRAIN,
-   //disableDefaultUI: true
-  }
   console.log(pos);
+  let x = pos.coords.latitude, 
+      y = pos.coords.longitude;
+  init({lat: x, lng: y});
+}
+function init(point) {
+  const OPT = {
+    zoom: 15,
+    center: point,
+    disableDefaultUI: true,
+    mapTypeId: "satellite",
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    rotateControl: false,
+    fullscreenControl: false
+  }
+  console.log(point);
   //map is a <div> for rendering the MAP
   MAP = new google.maps.Map(map, OPT); 
 }
-const MIN = 0, MAX = 19;
+const MIN = 2, MAX = 19;
 var incr = 0;
 function stop() {
     but.value = "Run";
     but.onclick = start;
+    zzz.innerText = "";
     incr = 0;
 }
 function start() {
-    MAP.setZoom(MIN);
     but.value = "Stop";
     but.onclick = stop;
     incr = 1; zoom();
 }
 function zoom() {
     if (incr == 0) return;
-    let zz = MAP.zoom;
-    MAP.setZoom(zz + incr);
-    zz = MAP.zoom;
-    if (zz >= MAX) incr = -1;
-    if (zz <= MIN) incr = 1;
-    setTimeout(zoom, 500);
+    let z = MAP.zoom;
+    MAP.setZoom(z + incr);
+    z = MAP.zoom;
+    zzz.innerText = "Zoom = "+z;
+    if (z >= MAX) incr = -1;
+    if (z <= MIN) incr = 1;
+    setTimeout(zoom, 700);
 }
 </script>
 
 <style>
     #map {
         width: 360px;
-        height: 300px;
+        height: 360px;
     }
 </style>
 
@@ -60,7 +71,7 @@ function zoom() {
 
 <span id=out></span>
 <input id=but type=button value="Run" onClick="start()">
-
+<span id=zzz></span>
 
 <hr />
 <div id=map></div>
@@ -70,15 +81,20 @@ function zoom() {
 <hr />
 
 <p>Ref: 
+<a href="https://developers.google.com/maps/documentation/javascript/controls" 
+   target=_blank>Map Controls</a> <br>
 <a href="https://github.com/mdn/learning-area/blob/master/javascript/apis/introduction/maps-example.html" 
    target=_blank>Google Maps Example</a>
 </p>
 
 <script>
     title.innerText = document.title;
-    out.innerHTML = "Google Maps at work";
-    sample.innerText = locate+"\n"+zoom;
-    navigator.geolocation.getCurrentPosition(locate);
+    out.innerText = "Google Maps at work";
+    sample.innerText = locate+"\n"+init;
+    //initial coordinates are given: 50. Yil Parki
+    init({lat:40.970021, lng:29.057876});
+  //or get current location from the OS (ask the user)
+  //navigator.geolocation.getCurrentPosition(locate);
 </script>
 
 </body>
