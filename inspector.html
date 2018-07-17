@@ -8,84 +8,120 @@
 
 <script>
 "use strict";
-const obj1 = [], objP = [], prop = [], meth = [];
-var current;  //current object index in list1
-function report(input, result) {
-    addObject(result);
-    console.log(input); console.log(result); 
-    out.innerText = input+" = "+result;
+const VERSION = "V0.3";
+const objA = [], objP = [], prop = [], meth = [];
+var current = 0;  //current object index in list1 & objA
+var hist = []; //object history
+function init() {
+    display(Date());
+    let a = {one: 123, two: "456", random: Math.random, 
+        sqrt: Math.sqrt, power: Math.pow, pi: Math.PI};
+    display(a); display(window); display(document);
+    inp.value = "Enter any JS statement";
+    inp.selectionEnd = inp.value.length; 
+    inp.selectionStart = 0; inp.focus();
 }
-function truncate(s, M) {
-    if (s.length > M+5) s = s.substring(0, M)+"...";
-    return s;
+function report(input, result) {
+    display(result);
+    console.log(input); if (result) console.log(result); 
+    out.innerText = input+" = "+trunc(result, 25);
+}
+function remove() {
+    objA.splice(current, 1);
+    list1.removeChild(list1.children[current]);
+    displayItem(-1); //select last item
+}
+function doMethod(met) {
+    let obj = objA[current];
+    let ff = obj[met]; //simpler than reflection
+    if (typeof ff != "function") return;
+    let n = ff.length, arg = [];
+    if (n > 0) {
+        let s = "Enter ";
+        if (n == 1) s += "the argument ";
+        else s += n+" arguments separated by blanks ";
+        s = prompt(s+"in order to call "+met+"()");
+        if (!s) return; arg = s.split(" ");
+    }
+    try {
+        report(met+"("+arg+")", ff.apply(obj, arg));
+    } catch(error) {
+        out.innerText = error;
+    }
 }
 function doClick(t) { //t is target, <ul> element
     let y = t.scrollTop + event.layerY;
     let h = t.firstChild.clientHeight + 2; //16px
     let k = Math.trunc(y/h);
     if (t == list1) {
-        display(obj1[k]);
+        displayItem(k);
     } else if (t == list2) {
-        addObject(objP[k]);
+        display(objP[k]);
     } else if (t == list3) {
-        let obj = obj1[current];
-        let ff = obj[meth[k]];
-        if (typeof ff != "function") return;
-        let n = ff.length, arg = [];
-        if (n > 0) {
-            let s = "Enter ";
-            if (n == 1) s += "the argument";
-            else s += n+" arguments separated by blanks";
-            s = prompt(s+"\nin order to call "+meth[k]+"()");
-            if (!s) return; arg = s.split(" ");
-        }
-        report(meth[k]+"("+arg+")", ff.apply(obj, arg));
+        doMethod(meth[k]);
     }
 }
-function remove() {
-    obj1.splice(current, 1);
-    list1.removeChild(list1.children[current])
-    if (current < obj1.length) display(obj1[current]);
+function doKey() {
+    //console.log(event.key, current);
+    switch (event.key) {
+      case "Delete":
+        remove(); return;
+      case "ArrowUp":
+        displayItem(current-1); return;
+      case "ArrowDown":
+        displayItem(current+1); return;
+      case "ArrowLeft": case "BackSpace":
+        let n = hist.length; if (n<2) return;
+        hist.pop(); display(hist.pop()); 
+        return;
+    }
 }
-function doKey(exp) {
-    //cannot hear keys from the list
-    report(exp, eval(exp));
+function doInput(exp) {
+    try {
+        report(exp, eval(exp));
+    } catch(error) {
+        out.innerText = error;
+    }
 }
-function addObject(f) {
-    if (!f) return;  //!f.toString().startsWith("[object"))
-    let t = typeof f;
-    if (t == "string" || t == "object") display(f);
+function trunc(f, M) { //if s is long, truncate to M chars
+    let s = f.toString();
+    if (s.length > M+5) s = s.substring(0, M)+"...";
+    return s;
 }
 function arrayToList(a, L) {
-    //const LI = "<li onClick='doClick(this)'>";
-    const MAX = 25;
+    const MAX = 25, LI = "<li>", LT = /</g;
     let list = "";
     for (let obj of a) {
         if (!obj) continue;
-        let s = obj.toString();  //.replace(/\n/g, " ");
-        s = truncate(s, 25).replace(/</g, "&lt;");
-        list += "<li>" + s;
+        list += LI + trunc(obj, 25).replace(LT, "&lt;");
     }
     L.innerHTML = list;
 }
-function selectCurrent(sel) {
-    if (!current) return;
-    let c = list1.children[current]; if (!c) return;
-    c.style.color = (sel? "white" : "");
-    c.style.backgroundColor = (sel? "blue" : "");
-}
 function display(f) {
-    selectCurrent(false);
-    let i = obj1.indexOf(f);
+    if (!f) return;  //!f.toString().startsWith("[object"))
+    let t = typeof f;
+    if (t != "string" && t != "object") return;
+    let i = objA.indexOf(f);
     if (i >= 0) {
-        current = i;  //select i
+        displayItem(i);
     } else {
-        current = obj1.length; obj1.push(f);
-        //const name = f.name || f.constructor.name;
-        arrayToList(obj1, list1);
+        objA.push(f); arrayToList(objA, list1);
+        displayItem(-1); 
     }
-    selectCurrent(true);
-    const LC = /[a-z0-9]/;
+}
+function selectCurrent(dark) {
+    let c = list1.children[current]; if (!c) return;
+    c.style.color = (dark? "white" : "");
+    c.style.backgroundColor = (dark? "blue" : "");
+}
+function selectItem(c) {
+    selectCurrent(false); current = c;
+    if (c < 0) current = objA.length-1;
+    if (c >= objA.length) current = 0;
+    selectCurrent(true); 
+}
+function displayItem(c) {
+    selectItem(c); let f = objA[current]; 
     objP.length = 0; prop.length = 0; meth.length = 0;
     for (let key in f) try {
         if (key == "webkitStorageInfo") continue;
@@ -93,6 +129,7 @@ function display(f) {
         if (typeof obj == "function") {
             meth.push(key);
         } else if (obj != null) {
+            const LC = /[a-z0-9]/;
             //skip uppercase constants
             if (!LC.test(key)) continue;
             let s = obj.toString();
@@ -105,7 +142,8 @@ function display(f) {
     arrayToList(prop, list2);
     arrayToList(meth, list3);
     let s = prop.length+" properties and "+meth.length+" methods";
-    out.innerText = truncate(f.toString(), 25)+" -- "+s;
+    out.innerText = trunc(f, 25)+" -- "+s; list1.focus();
+    hist.push(f);
 }
 </script>
 
@@ -116,8 +154,7 @@ function display(f) {
     border-spacing: 1px;
     background: yellow;
   }
-/*scroll works on block elements, not on td*/
-  ul {
+  ul { /*scroll doesn't work on td*/
     padding: 0;
     margin: 2px;
     border: 1px solid;
@@ -136,10 +173,13 @@ function display(f) {
     color: white;
     background-color: blue;
   }
+  #out {
+    font: 13px arial, sans-serif;
+  }
 </style>
 
 <body>
-<h2 id=title></h2>
+<h3 id=title><h3>
 <table id=tablo>
 <tr>
     <th>Objects <button onClick='remove()'>Del</button></th>
@@ -147,22 +187,31 @@ function display(f) {
     <th>Methods</th>
 </tr>
 <tr>
-    <td><ul id=list1 onClick='doClick(this)' onKeyUp='doKey(123)'></ul></td>
+    <td><ul id=list1 onClick='doClick(this)' 
+         tabindex="0" onKeyUp='doKey()'></ul></td>
     <td><ul id=list2 onClick='doClick(this)'></ul></td>
     <td><ul id=list3 onClick='doClick(this)'></ul></td>
 </tr>
 <tr>
-    <td><input id=inp style="width:170px;" value='"Enter any JS statement"'
-        onChange='doKey(this.value)'></td>
+    <td><input id=inp style="width:198px;" 
+         onChange='doInput(this.value)'></td>
     <td id=out colSpan=2>output goes here</td>
-    <!--td><input id=arg hidden=true value="arguments"></td-->
 </tr>
 </table>
+<p>
+<h3>Sample code</h3>
+<pre id=sample></pre>
+<hr />
+
 <script>
-    title.innerText = document.title; display(Date());
-    let a = {one: 123, two: "456", random: Math.random, 
-        sqrt: Math.sqrt, power: Math.pow, pi: Math.PI};
-    display(a); display(window); display(document);
+    title.innerText = document.title+" "+VERSION;
+    const out = document.getElementById("out");
+    sample.innerText = ""+doMethod;
+    try {
+        init();
+    } catch(error) {
+        out.innerText = error;
+    }
 </script>
 
 </body>
