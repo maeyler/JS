@@ -8,15 +8,16 @@
 
 <script>
 "use strict";
-const VERSION = "V0.3";
+const VERSION = "V0.4";
 const objA = [], objP = [], prop = [], meth = [];
 var current = 0;  //current object index in list1 & objA
 var hist = []; //object history
 function init() {
-    display(Date());
-    let a = {one: 123, two: "456", random: Math.random, 
+    let a = [0, 11, "22", "abc"], b = /[a-z]/g;
+    let c = {one: 123, two: "456", random: Math.random, 
         sqrt: Math.sqrt, power: Math.pow, pi: Math.PI};
-    display(a); display(window); display(document);
+    let d = [Date(), a, b, c, document, window];
+    for (let x of d) display(x);
     inp.value = "Enter any JS statement";
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
@@ -34,16 +35,19 @@ function remove() {
 function doMethod(met) {
     let obj = objA[current];
     let ff = obj[met]; //simpler than reflection
+    if (!ff) ff = obj.__proto__[met];
     if (typeof ff != "function") return;
     let n = ff.length, arg = [];
-    if (n > 0) {
-        let s = "Enter ";
-        if (n == 1) s += "the argument ";
-        else s += n+" arguments separated by blanks ";
-        s = prompt(s+"in order to call "+met+"()");
-        if (!s) return; arg = s.split(" ");
-    }
+    let s = "Enter ";
+    if (n == 0) s += "optional string argument(s) ";
+    if (n == 1) s += "the string argument ";
+    if (n >= 2) s += n+" strings separated by blanks ";
+    s = prompt(s+"in order to call "+met+"()");
+    if (s == undefined || s == null) return; 
+    arg = s.split(" ");
+    if (arg.length < n) arg = s.split(",");
     try {
+        if (arg.length < n) throw(n+" arguments required");
         report(met+"("+arg+")", ff.apply(obj, arg));
     } catch(error) {
         out.innerText = error;
@@ -61,6 +65,10 @@ function doClick(t) { //t is target, <ul> element
         doMethod(meth[k]);
     }
 }
+function previous() {
+        let n = hist.length; if (n<2) return;
+        hist.pop(); display(hist.pop()); 
+}
 function doKey() {
     //console.log(event.key, current);
     switch (event.key) {
@@ -70,10 +78,8 @@ function doKey() {
         displayItem(current-1); return;
       case "ArrowDown":
         displayItem(current+1); return;
-      case "ArrowLeft": case "BackSpace":
-        let n = hist.length; if (n<2) return;
-        hist.pop(); display(hist.pop()); 
-        return;
+      case "ArrowLeft": case "Backspace":
+        previous(); return;
     }
 }
 function doInput(exp) {
@@ -84,7 +90,7 @@ function doInput(exp) {
     }
 }
 function trunc(f, M) { //if s is long, truncate to M chars
-    let s = f.toString();
+    let s = (f == null? "null" : f.toString());
     if (s.length > M+5) s = s.substring(0, M)+"...";
     return s;
 }
@@ -120,6 +126,9 @@ function selectItem(c) {
     if (c >= objA.length) current = 0;
     selectCurrent(true); 
 }
+function addMethods(metA) {
+    for (let m of metA) meth.push(m); 
+}
 function displayItem(c) {
     selectItem(c); let f = objA[current]; 
     objP.length = 0; prop.length = 0; meth.length = 0;
@@ -139,6 +148,12 @@ function displayItem(c) {
         }
     } catch(error) { //silently ignore
     }
+    if (typeof f == "string") 
+addMethods(["charAt", "concat", "replace", "search", "split", "substring"]);
+    if (f instanceof Array) 
+        addMethods(["indexOf", "join", "push", "pop", "reverse", "splice"]);
+    if (f instanceof RegExp) addMethods(["test", "exec"]);
+    if (f instanceof Promise) meth.push("then");
     arrayToList(prop, list2);
     arrayToList(meth, list3);
     let s = prop.length+" properties and "+meth.length+" methods";
@@ -179,10 +194,11 @@ function displayItem(c) {
 </style>
 
 <body>
-<h3 id=title><h3>
+<h3 id=title></h3>
 <table id=tablo>
 <tr>
-    <th>Objects <button onClick='remove()'>Del</button></th>
+    <th><button onClick='previous()'>&lt;</button>
+    Objects <button onClick='remove()'>Del</button></th>
     <th>Properties</th>
     <th>Methods</th>
 </tr>
@@ -198,15 +214,28 @@ function displayItem(c) {
     <td id=out colSpan=2>output goes here</td>
 </tr>
 </table>
+
+<h3>Initial Objects </h3>
+<pre id=sample>
+let a = [0, 11, "22", "abc"], b = /[a-z]/g;
+let c = {one: 123, two: "456", random: Math.random, 
+    sqrt: Math.sqrt, power: Math.pow, pi: Math.PI};
+let d = [Date(), a, b, c, document, window];
+</pre>
 <p>
-<h3>Sample code</h3>
-<pre id=sample></pre>
+Date() is a string (not an Object in JS) <br>
+a is an Array with 2 numbers and 2 strings <br>
+b is a RegExp testing lowercase letters <br>
+c is an Object with 3 properties and 3 methods <br>
+document is the HTML document currently open <br>
+window contains global variables related to this page 
+</p>
 <hr />
 
 <script>
     title.innerText = document.title+" "+VERSION;
     const out = document.getElementById("out");
-    sample.innerText = ""+doMethod;
+    //sample.innerText = ""+doMethod;
     try {
         init();
     } catch(error) {
