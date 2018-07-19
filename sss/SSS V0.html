@@ -1,0 +1,81 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width"> 
+    <title>Small Simple Safe </title> 
+</head> 
+ 
+<script> 
+"use strict"; 
+function xxx(t) { 
+    console.log("click "+t.innerText); 
+} 
+function makeList(e, w, n) { 
+    var s = []; const t = "<li onClick='xxx(this)'>"; 
+    for (var i=1; i<=n; i++) s.push(w+i); 
+    e.innerHTML = "<ul>"+t + s.join(t) +"</ul>"; 
+} 
+</script> 
+ 
+<style> 
+  table { 
+    padding: 0px; 
+    border: 1px solid; 
+    border-spacing: 6px; 
+    background: yellow; 
+  } 
+  td.box { 
+    border: 1px solid; 
+    height: 200px; 
+    width:  200px; 
+    vertical-align: text-top; 
+    background: white; 
+    overflow-y: scroll; 
+  } 
+  ul { 
+    padding: 0; 
+    margin: 4px; 
+  } 
+  li { 
+    margin: 2px; 
+    font: 12px arial, sans-serif; 
+    list-style-type: none; 
+    cursor: pointer; 
+  } 
+  li:hover { 
+    color: white; 
+    background-color: blue; 
+  } 
+</style> 
+ 
+<body> 
+<h2 id=title></h2> 
+ 
+<table id=tablo> 
+<tr> 
+    <th>Objects</th> 
+    <th>Properties</th> 
+    <th>Methods</th> 
+</tr> 
+<tr> 
+    <td id=list1 class=box></td> 
+    <td id=list2 class=box></td> 
+    <td id=list3 class=box></td> 
+</tr> 
+<tr> 
+    <td><input id=inp style="width:150px;" value="input"></td> 
+    <td colSpan=2 id=out>output goes here</td> 
+</tr> 
+</table> 
+ 
+<script> 
+    title.innerHTML = document.title; 
+    makeList(list1, "Object ", 15); 
+    makeList(list2, "Property ", 5); 
+    makeList(list3, "Method ", 20); 
+</script> 
+ 
+</body> 
+</html> 
+

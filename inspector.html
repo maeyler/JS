@@ -3,164 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <script src="sss/inspector.js"></script>
     <title>Inspector </title>
 </head>
-
-<script>
-"use strict";
-const VERSION = "V0.4";
-const objA = [], objP = [], prop = [], meth = [];
-var current = 0;  //current object index in list1 & objA
-var hist = []; //object history
-function init() {
-    let a = [0, 11, "22", "abc"], b = /[a-z]/g;
-    let c = {one: 123, two: "456", random: Math.random, 
-        sqrt: Math.sqrt, power: Math.pow, pi: Math.PI};
-    let d = [Date(), a, b, c, document, window];
-    for (let x of d) display(x);
-    inp.value = "Enter any JS statement";
-    inp.selectionEnd = inp.value.length; 
-    inp.selectionStart = 0; inp.focus();
-}
-function report(input, result) {
-    display(result);
-    console.log(input); if (result) console.log(result); 
-    out.innerText = input+" = "+trunc(result, 25);
-}
-function remove() {
-    objA.splice(current, 1);
-    list1.removeChild(list1.children[current]);
-    displayItem(-1); //select last item
-}
-function doMethod(met) {
-    let obj = objA[current];
-    let ff = obj[met]; //simpler than reflection
-    if (!ff) ff = obj.__proto__[met];
-    if (typeof ff != "function") return;
-    let n = ff.length, arg = [];
-    let s = "Enter ";
-    if (n == 0) s += "optional string argument(s) ";
-    if (n == 1) s += "the string argument ";
-    if (n >= 2) s += n+" strings separated by blanks ";
-    s = prompt(s+"in order to call "+met+"()");
-    if (s == undefined || s == null) return; 
-    arg = s.split(" ");
-    if (arg.length < n) arg = s.split(",");
-    try {
-        if (arg.length < n) throw(n+" arguments required");
-        report(met+"("+arg+")", ff.apply(obj, arg));
-    } catch(error) {
-        out.innerText = error;
-    }
-}
-function doClick(t) { //t is target, <ul> element
-    let y = t.scrollTop + event.layerY;
-    let h = t.firstChild.clientHeight + 2; //16px
-    let k = Math.trunc(y/h);
-    if (t == list1) {
-        displayItem(k);
-    } else if (t == list2) {
-        display(objP[k]);
-    } else if (t == list3) {
-        doMethod(meth[k]);
-    }
-}
-function previous() {
-        let n = hist.length; if (n<2) return;
-        hist.pop(); display(hist.pop()); 
-}
-function doKey() {
-    //console.log(event.key, current);
-    switch (event.key) {
-      case "Delete":
-        remove(); return;
-      case "ArrowUp":
-        displayItem(current-1); return;
-      case "ArrowDown":
-        displayItem(current+1); return;
-      case "ArrowLeft": case "Backspace":
-        previous(); return;
-    }
-}
-function doInput(exp) {
-    try {
-        report(exp, eval(exp));
-    } catch(error) {
-        out.innerText = error;
-    }
-}
-function trunc(f, M) { //if s is long, truncate to M chars
-    let s = (f == null? "null" : f.toString());
-    if (s.length > M+5) s = s.substring(0, M)+"...";
-    return s;
-}
-function arrayToList(a, L) {
-    const MAX = 25, LI = "<li>", LT = /</g;
-    let list = "";
-    for (let obj of a) {
-        if (!obj) continue;
-        list += LI + trunc(obj, 25).replace(LT, "&lt;");
-    }
-    L.innerHTML = list;
-}
-function display(f) {
-    if (!f) return;  //!f.toString().startsWith("[object"))
-    let t = typeof f;
-    if (t != "string" && t != "object") return;
-    let i = objA.indexOf(f);
-    if (i >= 0) {
-        displayItem(i);
-    } else {
-        objA.push(f); arrayToList(objA, list1);
-        displayItem(-1); 
-    }
-}
-function selectCurrent(dark) {
-    let c = list1.children[current]; if (!c) return;
-    c.style.color = (dark? "white" : "");
-    c.style.backgroundColor = (dark? "blue" : "");
-}
-function selectItem(c) {
-    selectCurrent(false); current = c;
-    if (c < 0) current = objA.length-1;
-    if (c >= objA.length) current = 0;
-    selectCurrent(true); 
-}
-function addMethods(metA) {
-    for (let m of metA) meth.push(m); 
-}
-function displayItem(c) {
-    selectItem(c); let f = objA[current]; 
-    objP.length = 0; prop.length = 0; meth.length = 0;
-    for (let key in f) try {
-        if (key == "webkitStorageInfo") continue;
-        let obj = f[key];
-        if (typeof obj == "function") {
-            meth.push(key);
-        } else if (obj != null) {
-            const LC = /[a-z0-9]/;
-            //skip uppercase constants
-            if (!LC.test(key)) continue;
-            let s = obj.toString();
-            if (typeof obj == "string") s = '"'+s+'"';
-            s = key+": "+s;
-            objP.push(obj); prop.push(s);
-        }
-    } catch(error) { //silently ignore
-    }
-    if (typeof f == "string") 
-addMethods(["charAt", "concat", "replace", "search", "split", "substring"]);
-    if (f instanceof Array) 
-        addMethods(["indexOf", "join", "push", "pop", "reverse", "splice"]);
-    if (f instanceof RegExp) addMethods(["test", "exec"]);
-    if (f instanceof Promise) meth.push("then");
-    arrayToList(prop, list2);
-    arrayToList(meth, list3);
-    let s = prop.length+" properties and "+meth.length+" methods";
-    out.innerText = trunc(f, 25)+" -- "+s; list1.focus();
-    hist.push(f);
-}
-</script>
 
 <style>
   table {
@@ -191,14 +36,19 @@ addMethods(["charAt", "concat", "replace", "search", "split", "substring"]);
   #out {
     font: 13px arial, sans-serif;
   }
+  .cname {
+    font-weight: bold;
+    text-align: center;
+    background-color: #aaffaa;
+  }
 </style>
 
 <body>
 <h3 id=title></h3>
 <table id=tablo>
 <tr>
-    <th><button onClick='previous()'>&lt;</button>
-    Objects <button onClick='remove()'>Del</button></th>
+    <th><button id=Back onClick='previous()'>◀</button>
+    Objects <button id=Del onClick='remove()'>✘</button></th>
     <th>Properties</th>
     <th>Methods</th>
 </tr>
@@ -215,32 +65,44 @@ addMethods(["charAt", "concat", "replace", "search", "split", "substring"]);
 </tr>
 </table>
 
+<script>
+function init() {
+  const s = "Small is beautiful", d = new Date();
+  let a = [0, 11, "22", "abc"], b = /[A-Z]/g;
+  let c = {one: 123, two: "456", random: Math.random, 
+      sqrt: Math.sqrt, power: Math.pow, pi: Math.PI,
+      toString: (() => s)}  //same as return s;
+  for (let x of [s, d, a, b, c, document, window]) 
+      display(x);
+}
+</script>
+
 <h3>Initial Objects </h3>
-<pre id=sample>
-let a = [0, 11, "22", "abc"], b = /[a-z]/g;
-let c = {one: 123, two: "456", random: Math.random, 
-    sqrt: Math.sqrt, power: Math.pow, pi: Math.PI};
-let d = [Date(), a, b, c, document, window];
-</pre>
+<pre id=sample></pre>
 <p>
-Date() is a string (not an Object in JS) <br>
-a is an Array with 2 numbers and 2 strings <br>
-b is a RegExp testing lowercase letters <br>
-c is an Object with 3 properties and 3 methods <br>
-document is the HTML document currently open <br>
-window contains global variables related to this page 
+• s is a String with 18 chars <br>
+• d is a Date with nothing to display <br>
+• a is an Array with 2 numbers and 2 strings <br>
+• b is a RegExp for testing uppercase letters <br>
+• c is an Object with 3 properties and 4 methods <br>
+• document is the HTML document currently open <br>
+• window contains global variables related to this page 
 </p>
+Use "co" for the current object selected
 <hr />
 
 <script>
     title.innerText = document.title+" "+VERSION;
     const out = document.getElementById("out");
-    //sample.innerText = ""+doMethod;
+    sample.innerText = init.toString();
     try {
         init();
-    } catch(error) {
-        out.innerText = error;
+    } catch(e) {
+        reportError(e);
     }
+    inp.value = "anything here";
+    inp.selectionEnd = inp.value.length; 
+    inp.selectionStart = 0; inp.focus();
 </script>
 
 </body>

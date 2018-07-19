@@ -1,0 +1,169 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width"> 
+    <title>Inspector </title> 
+</head> 
+ 
+<script> 
+"use strict"; 
+const obj1 = [], objP = [], prop = [], meth = []; 
+var current;  //current object index in list1 
+function report(input, result) { 
+    addObject(result); 
+    console.log(input); console.log(result);  
+    out.innerText = input+" = "+result; 
+} 
+function truncate(s, M) { 
+    if (s.length > M+5) s = s.substring(0, M)+"..."; 
+    return s; 
+} 
+function doClick(t) { //t is target, <ul> element 
+    let y = t.scrollTop + event.layerY; 
+    let h = t.firstChild.clientHeight + 2; //16px 
+    let k = Math.trunc(y/h); 
+    if (t == list1) { 
+        display(obj1[k]); 
+    } else if (t == list2) { 
+        addObject(objP[k]); 
+    } else if (t == list3) { 
+        let obj = obj1[current]; 
+        let ff = obj[meth[k]]; 
+        if (typeof ff != "function") return; 
+        let n = ff.length, arg = []; 
+        if (n > 0) { 
+            let s = "Enter "; 
+            if (n == 1) s += "the argument"; 
+            else s += n+" arguments separated by blanks"; 
+            s = prompt(s+"\nin order to call "+meth[k]+"()"); 
+            if (!s) return; arg = s.split(" "); 
+        } 
+        report(meth[k]+"("+arg+")", ff.apply(obj, arg)); 
+    } 
+} 
+function remove() { 
+    obj1.splice(current, 1); 
+    list1.removeChild(list1.children[current]) 
+    if (current < obj1.length) display(obj1[current]); 
+} 
+function doKey(exp) { 
+    //cannot hear keys from the list 
+    report(exp, eval(exp)); 
+} 
+function addObject(f) { 
+    if (!f) return;  //!f.toString().startsWith("[object")) 
+    let t = typeof f; 
+    if (t == "string" || t == "object") display(f); 
+} 
+function arrayToList(a, L) { 
+    //const LI = "<li onClick='doClick(this)'>"; 
+    const MAX = 25; 
+    let list = ""; 
+    for (let obj of a) { 
+        if (!obj) continue; 
+        let s = obj.toString();  //.replace(/\n/g, " "); 
+        s = truncate(s, 25).replace(/</g, "&lt;"); 
+        list += "<li>" + s; 
+    } 
+    L.innerHTML = list; 
+} 
+function selectCurrent(sel) { 
+    if (!current) return; 
+    let c = list1.children[current]; if (!c) return; 
+    c.style.color = (sel? "white" : ""); 
+    c.style.backgroundColor = (sel? "blue" : ""); 
+} 
+function display(f) { 
+    selectCurrent(false); 
+    let i = obj1.indexOf(f); 
+    if (i >= 0) { 
+        current = i;  //select i 
+    } else { 
+        current = obj1.length; obj1.push(f); 
+        //const name = f.name || f.constructor.name; 
+        arrayToList(obj1, list1); 
+    } 
+    selectCurrent(true); 
+    const LC = /[a-z0-9]/; 
+    objP.length = 0; prop.length = 0; meth.length = 0; 
+    for (let key in f) try { 
+        if (key == "webkitStorageInfo") continue; 
+        let obj = f[key]; 
+        if (typeof obj == "function") { 
+            meth.push(key); 
+        } else if (obj != null) { 
+            //skip uppercase constants 
+            if (!LC.test(key)) continue; 
+            let s = obj.toString(); 
+            if (typeof obj == "string") s = '"'+s+'"'; 
+            s = key+": "+s; 
+            objP.push(obj); prop.push(s); 
+        } 
+    } catch(error) { //silently ignore 
+    } 
+    arrayToList(prop, list2); 
+    arrayToList(meth, list3); 
+    let s = prop.length+" properties and "+meth.length+" methods"; 
+    out.innerText = truncate(f.toString(), 25)+" -- "+s; 
+} 
+</script> 
+ 
+<style> 
+  table { 
+    padding: 2px; 
+    border: 1px solid; 
+    border-spacing: 1px; 
+    background: yellow; 
+  } 
+/*scroll works on block elements, not on td*/ 
+  ul { 
+    padding: 0; 
+    margin: 2px; 
+    border: 1px solid; 
+    height: 260px; 
+    width:  200px; 
+    background: white; 
+    overflow-y: scroll; 
+  } 
+  li { 
+    margin: 2px; 
+    font: 12px arial, sans-serif; 
+    list-style-type: none; 
+    cursor: pointer; 
+  } 
+  li:hover { 
+    color: white; 
+    background-color: blue; 
+  } 
+</style> 
+ 
+<body> 
+<h2 id=title></h2> 
+<table id=tablo> 
+<tr> 
+    <th>Objects <button onClick='remove()'>Del</button></th> 
+    <th>Properties</th> 
+    <th>Methods</th> 
+</tr> 
+<tr> 
+    <td><ul id=list1 onClick='doClick(this)' onKeyUp='doKey(123)'></ul></td> 
+    <td><ul id=list2 onClick='doClick(this)'></ul></td> 
+    <td><ul id=list3 onClick='doClick(this)'></ul></td> 
+</tr> 
+<tr> 
+    <td><input id=inp style="width:170px;" value='"Enter any JS statement"' 
+        onChange='doKey(this.value)'></td> 
+    <td id=out colSpan=2>output goes here</td> 
+    <!--td><input id=arg hidden=true value="arguments"></td--> 
+</tr> 
+</table> 
+<script> 
+    title.innerText = document.title; display(Date()); 
+    let a = {one: 123, two: "456", random: Math.random,  
+        sqrt: Math.sqrt, power: Math.pow, pi: Math.PI}; 
+    display(a); display(window); display(document); 
+</script> 
+ 
+</body>
+</html>
