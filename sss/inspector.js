@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V1.0";
+const VERSION = "V1.1";
 const objA = [], objP = [], prop = [], meth = [];
 var hist = [];    //object history -- global variables
 var current = 0;  //current object index in list1 & objA
@@ -95,6 +95,11 @@ function arrayToList(a, L) {
 function display(f) {
     if (!f) return; let t = typeof f;
     if (t != "string" && t != "object") return;
+    if (f instanceof Promise) { //nothing to display in f
+        f.then(y => display(y), e => reportError(e));
+        out.innerText = "A Promise was made - takes time";
+        out.style.backgroundColor = "cyan"; return;
+    }
     let i = objA.indexOf(f);
     if (i >= 0) {
         displayItem(i);
@@ -102,6 +107,7 @@ function display(f) {
         objA.push(f); arrayToList(objA, list1);
         displayItem(-1); 
     }
+    return f;
 }
 function selectCurrent(dark) {
     let c = list1.children[current]; if (!c) return;
@@ -132,7 +138,6 @@ function add_proto_() {
     if (co instanceof RegExp) { 
         addMethods(["test", "exec"]); addProperty("flags");
     }
-    if (co instanceof Promise) meth.push("then");
 }
 function displayItem(c) {
     //co is global -- current object
@@ -158,6 +163,7 @@ function displayItem(c) {
     let p = prop.length - 1, m = meth.length;
     let s = p+" properties and "+m+" methods";
     out.innerText = trunc(co, 25)+" — "+s; 
+    out.style.backgroundColor = "";
     let n = hist.length;
     if (hist[n-1] !== co) hist.push(co); 
     if (n > 50) hist.splice(0, 20);
