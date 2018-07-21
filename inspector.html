@@ -71,28 +71,41 @@
     <th>Methods</th>
 </tr>
 <tr>
-    <td><ul id=list1 onClick='doClick(this)' 
-         tabindex="0" onKeyUp='doKey()'></ul></td>
-    <td><ul id=list2 onClick='doClick(this)'></ul></td>
-    <td><ul id=list3 onClick='doClick(this)'></ul></td>
+    <td><ul id=list1 
+        onClick='displayItem(lineNumber(this))' 
+        tabindex="0" onKeyUp='doKey()'>
+    </ul></td>
+    <td><ul id=list2 onClick='doClick2(this)'>
+    </ul></td>
+    <td><ul id=list3 
+        onClick='doMethod(meth[lineNumber(this)])'><
+    /ul></td>
 </tr>
 <tr>
     <td><input id=inp style="width:198px;" 
-         onChange='doInput()' onKeyUp='doEnter()'></td>
+         onKeyUp='doEnter()'></td>
     <td id=out colSpan=2>output goes here</td>
 </tr>
 </table>
 
 <script>
+function lineNumber(t) { //t is target, <ul> element
+    let y = t.scrollTop + event.layerY;
+    let h = t.firstChild.clientHeight + 2; //16px
+    return Math.trunc(y/h);
+}
 function makeVisible(t, val) {
     t.style.visibility = val? "visible" : "";
 }
+//b = /[A-Z]/g,
+//• b is a RegExp for testing uppercase letters <br>
 function init() {
-  const s = "Small is beautiful", d = new Date();
-  let a = [0, 11, "22", "abc"], b = /[A-Z]/g;
-  let c = {one: 123, two: "456", random: Math.random, 
-      sqrt: Math.sqrt, power: Math.pow, pi: Math.PI,
-      toString: (() => s)}  //same as return s;
+  let s = "Small is beautiful", d = new Date(), 
+      a = [0, 11, "22", "abc"], b = new Set(a),
+      c = {one: 123, two: "456", random: Math.random, 
+         sqrt: Math.sqrt, power: Math.pow, pi: Math.PI,
+         toString: (() => s)  //same as return s;
+      }
   for (let x of [s, d, a, b, c, document, window]) 
       display(x);
 }
@@ -104,7 +117,7 @@ function init() {
 • s is a String with 18 chars <br>
 • d is a Date with nothing to display <br>
 • a is an Array with 2 numbers and 2 strings <br>
-• b is a RegExp for testing uppercase letters <br>
+• b is a Set with the same members as a <br>
 • c is an Object with 3 properties and 4 methods <br>
 • document is the HTML document currently open <br>
 • window contains global variables related to this page 
