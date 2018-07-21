@@ -18,9 +18,10 @@
     padding: 0;
     margin: 2px;
     border: 1px solid;
+    width:  210px;
     height: 260px;
-    width:  200px;
     background: white;
+    overflow-x: auto;
     overflow-y: scroll;
   }
   li {
@@ -41,14 +42,31 @@
     text-align: center;
     background-color: #aaffaa;
   }
+  .tip {
+    visibility: hidden;
+    font: 10px arial, sans-serif;
+    text-align: center;
+    color: white;
+    background-color: blue;
+    padding: 5px 5px;
+    position: absolute;
+  }
 </style>
 
 <body>
 <h3 id=title></h3>
 <table id=tablo>
 <tr>
-    <th><button id=Back onClick='previous()'>◀</button>
-    Objects <button id=Del onClick='remove()'>✘</button></th>
+    <th><button onClick='previous()' 
+      onMouseOver='makeVisible(prev, true)'
+      onMouseOut ='makeVisible(prev, false)'>◀</button>
+    <span id=prev class=tip>Display previous object</span>
+    &nbsp; Objects &nbsp;
+    <button onClick='remove()' 
+      onMouseOver='makeVisible(dele, true)' 
+      onMouseOut ='makeVisible(dele, false)'>✘</button>
+    <span id=dele class=tip>Delete current object</span>
+    </th>
     <th>Properties</th>
     <th>Methods</th>
 </tr>
@@ -60,12 +78,15 @@
 </tr>
 <tr>
     <td><input id=inp style="width:198px;" 
-         onChange='doInput(this.value)'></td>
+         onChange='doInput()' onKeyUp='doEnter()'></td>
     <td id=out colSpan=2>output goes here</td>
 </tr>
 </table>
 
 <script>
+function makeVisible(t, val) {
+    t.style.visibility = val? "visible" : "";
+}
 function init() {
   const s = "Small is beautiful", d = new Date();
   let a = [0, 11, "22", "abc"], b = /[A-Z]/g;
@@ -102,7 +123,7 @@ Use "co" for the current object selected
     }
     inp.value = "navigator.getBattery()";
     inp.selectionEnd = inp.value.length; 
-    inp.selectionStart = 0; inp.focus();
+    inp.selectionStart = 0; //inp.focus();
 </script>
 
 </body>

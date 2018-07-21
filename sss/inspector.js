@@ -1,40 +1,33 @@
 "use strict";
-const VERSION = "V1.1";
+const VERSION = "V1.2";
 const objA = [], objP = [], prop = [], meth = [];
 var hist = [];    //object history -- global variables
 var current = 0;  //current object index in list1 & objA
 var co = 0;  //current object
 function report(input, result) { 
     display(result); 
-    let msg = trunc(input, 25)+trunc(" ⇒ "+result, 35); 
+    let msg = trunc(input, 25)+trunc(" ⇒ "+result, 40); 
     console.log(msg); out.innerText = msg; 
     out.style.backgroundColor = "";
 }
 function reportError(e) {
-    console.log(e); out.innerText = trunc(" "+e, 50); 
+    console.log(e); out.innerText = trunc(" "+e, 60); 
     out.style.backgroundColor = "pink";
 }
-function remove() {
-    objA.splice(current, 1);
-    list1.removeChild(list1.children[current]);
-    displayItem(current);
-}
 function doMethod(met) {
-    let obj = objA[current];
-    let ff = obj[met]; //simpler than reflection
-    if (!ff) ff = obj.__proto__[met];
+    //co = objA[current];
+    let ff = co[met]; //simpler than reflection
+    if (!ff) ff = co.__proto__[met];
     if (typeof ff != "function") return;
-    let n = ff.length, arg = [];
-    let s = "Enter ", w = "string without quotes ";
-    if (n == 0) s += "optional "+w;
-    if (n == 1) s += "the "+w;
-    if (n >= 2) s += n+" strings separated by commas ";
-    s = prompt(s+"in order to call "+met+"()");
-    if (s == undefined || s == null) return; 
-    arg = s.split(",");
-    try {
-        if (arg.length < n) throw(n+" arguments required");
-        report(met+"("+arg+")", ff.apply(obj, arg));
+    let n = ff.length;
+    let s = "Enter "+n+" arguments separated by commas ";
+    let arg = "("; while (--n > 0) arg += ", "; arg += ")";
+    arg = prompt(s+"in order to call "+met+"()", arg);
+    if (arg) try {
+        if (arg[0] != "(" || !arg.endsWith(")")) 
+            throw (Error(arg));
+        let cmd = "co."+met+arg;
+        report(cmd, eval(cmd));
     } catch(e) {
         reportError(e);
     }
@@ -52,8 +45,13 @@ function doClick(t) { //t is target, <ul> element
     }
 }
 function previous() {
-        let n = hist.length; if (n<2) return;
-        hist.pop(); display(hist.pop()); 
+    let n = hist.length; if (n<2) return;
+    hist.pop(); display(hist.pop()); 
+}
+function remove() {
+    objA.splice(current, 1);
+    list1.removeChild(list1.children[current]);
+    previous();
 }
 function doKey() {
     //console.log(event.key, current);
@@ -61,31 +59,53 @@ function doKey() {
       case "Delete":
         remove(); return;
       case "ArrowUp":
+        event.preventDefault();
         displayItem(current-1); return;
       case "ArrowDown":
+        event.preventDefault();
         displayItem(current+1); return;
       case "ArrowLeft": case "Backspace":
         previous(); return;
     }
 }
-function doInput(exp) {
-    try {
+function doEnter() {
+    if (event.key == "Enter") try {
+        event.preventDefault();
+        let exp = inp.value;
         report(exp, eval(exp));
     } catch(e) {
         reportError(e);
     }
 }
-function trunc(f, M) { //if s is long, truncate to M chars
-    let s = (f == null? "null" : f.toString());
+function doInput() {
+    console.log(event);
+}
+function trunc(s, M) { //if s is long, truncate to M chars
+    if (s == null) s = "null";
     if (s.length > M+5) s = s.substring(0, M)+"...";
     return s;
 }
+function objToString(obj) {
+    const LT = /</g;
+    let s = obj.toString().replace(LT, "&lt;");
+    if (typeof obj == "string") s = '"'+s+'"';
+    else if (obj instanceof Array) s = '['+s+']';
+    //else if (obj instanceof Set) s = '{'+s+'}';
+    return s;
+}
 function arrayToList(a, L) {
-    const MAX = 25, LT = /</g;
+    const MAX = 30, OBJ = "[object ", RB = "]";
     let list = "";
     for (let obj of a) {
         if (!obj) continue;
-        let s = trunc(obj, 25).replace(LT, "&lt;");
+        let s = (L == list1? objToString(obj) : obj);
+        s = trunc(s, MAX);
+        if (s.includes(OBJ)) {
+          s = s.replace(OBJ, "<B>");
+          if (s.includes(RB))
+            s = s.replace(RB, "</B>");
+          else s = s+"</B>";
+        }
         if (s.startsWith("* *")) //class name
              list += "<li class=cname>" + s.substring(3);
         else list += "<li>" + s;
@@ -96,10 +116,13 @@ function display(f) {
     if (!f) return; let t = typeof f;
     if (t != "string" && t != "object") return;
     if (f instanceof Promise) { //nothing to display in f
-        f.then(y => display(y), e => reportError(e));
+        f.then(display, reportError);
         out.innerText = "A Promise was made - takes time";
         out.style.backgroundColor = "cyan"; return;
     }
+    /*if (f instanceof Symbol.iterator) {
+        a = []; for (let x of f) a.push(x); f = a;
+    }*/
     let i = objA.indexOf(f);
     if (i >= 0) {
         displayItem(i);
@@ -122,9 +145,7 @@ function selectItem(c) {
 }
 function addProperty(key) {
     let obj = co[key];
-    let s = obj.toString();
-    if (typeof obj == "string") s = '"'+s+'"';
-    s = key+": "+s;
+    let s = key +": "+ objToString(obj);
     objP.push(obj); prop.push(s);
 }
 function addMethods(metA) {
@@ -162,7 +183,7 @@ function displayItem(c) {
     arrayToList(meth, list3);
     let p = prop.length - 1, m = meth.length;
     let s = p+" properties and "+m+" methods";
-    out.innerText = trunc(co, 25)+" — "+s; 
+    out.innerText = trunc(co.toString(), 25)+" — "+s; 
     out.style.backgroundColor = "";
     let n = hist.length;
     if (hist[n-1] !== co) hist.push(co); 
