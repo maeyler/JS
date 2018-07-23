@@ -54,7 +54,11 @@
 </style>
 
 <body>
-<h3 id=title></h3>
+<p><span id=title style="font-weight: bold"></span> &nbsp;
+<a href="https://maeyler.github.io/JS/sss/">Read me</a>
+</p>
+
+
 <table id=tablo>
   <tr>
     <th><button onClick='previous()' 
@@ -88,6 +92,7 @@
     <td id=out colSpan=2>output goes here</td>
   </tr>
 </table>
+<hr />
 
 <script>
 "use strict";
@@ -114,26 +119,9 @@ function init() {
   for (let x of [s, d, a, b, c, document, window]) 
       display(x);
 }
-</script>
 
-<h3>Initial Objects </h3>
-<pre id=sample></pre>
-<p>
-• s is a String with 18 chars <br>
-• d is a Date with nothing to display <br>
-• a is an Array with 2 numbers and 2 strings <br>
-• b is a Set with the same members as a <br>
-• c is an Object with 3 properties and 4 methods <br>
-• document is the HTML document currently open <br>
-• window contains global variables related to this page 
-</p>
-Use "_" for the current object selected
-<hr />
-
-<script>
     title.innerText = document.title+" "+VERSION;
     const out = document.getElementById("out");
-    sample.innerText = init.toString();
     try {
         init();
     } catch(e) {
