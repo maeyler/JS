@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Student Database </title>
+</head>
+
+<script>
+"use strict";
+function readData(file) {
+    console.log("readData "+file);
+    fetch(url+file)
+        .then(r => r.text(), console.log)
+        .then(addStudents, console.log);
+}
+function parseStudent(b) {
+    let list = [];
+    for (let i=3; i<b.length; i++) list.push(b[i]);
+    let id = b[0], name = b[1], gpa = b[2];
+    return {id, name, gpa, list};
+}
+function addStudents(txt) {
+    console.log("Chars: "+txt.length);
+    let a = txt.split("\n");
+    console.log("Lines: "+a.length);
+    for (let s of a) {
+        let b = s.split("\t");
+        keys.push(b[0]); vals.push(parseStudent(b));
+    }
+    out.innerText += "\n"+keys.length+" students";
+}
+function findID(id) {
+    let i = keys.indexOf(id);
+    if (i < 0) return null;
+    return vals[i];
+}
+function report(id) {
+    let t = "\n"+id+" ";
+    let std = findID(id);
+    if (std) t += stdToString(std);
+    else t += "not found";
+    out.innerText += t;
+}
+function stdToString(std) {
+    return std.name+" "+std.list.length+" courses "+std.gpa;
+}
+function studentsIn(code) {
+    code = code.toUpperCase();
+    let t = "\n"+code+": ", a = [];
+    for (let std of vals) 
+        if (std.list.includes(code)) a.push(std.name);
+    out.innerText += t+" ["+a+"]";
+}
+function randomStd() {
+    let i = Math.trunc(keys.length * Math.random());
+    let b = vals[i];
+    out.innerText += "\nRandom: "+b.id+" "+b.name;
+}
+function findBest() {
+    let b = vals[0];
+    for (let std of vals) 
+        if (std.gpa > b.gpa) b = std;
+    out.innerText += "\nBest: "+b.id+" "+b.name;
+}
+</script>
+
+<body>
+
+<h2 id=title></h2>
+
+<button onClick='randomStd()'>Random Student</button>
+<button onClick='findBest()'>Best GPA</button>
+
+<p>Student id: <input type=number onChange="report(value)">
+</p>
+<p>Course code: <input type=text onChange="studentsIn(value)">
+</p>
+<p id=out>Result:</p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = readData+"\n"+addStudents;
+    const keys = [], vals = [];
+    const url = origin=="null"? "https://maeyler.github.io/JS/data/" : "";
+    readData("Students.txt")
+</script>
+
+</body>
+</html>
