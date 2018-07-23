@@ -130,7 +130,7 @@ function displayItem(c) {
     let b = list1.children[current]; if (!b) return;
     b.style.color = (dark? "white" : "");
     b.style.backgroundColor = (dark? "blue" : "");
-    if (c == list1.length-1) b.scrollIntoView();
+    //b.scrollIntoView();
   }
   function selectItem() {
     selectCurrent(false); current = c;
