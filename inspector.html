@@ -76,19 +76,19 @@
   </tr>
   <tr>
     <td><ul id=list1 
-        onClick='displayItem(lineNumber(this))' 
-        tabindex="0" onKeyDown='doKey()'>
+        onClick='displayItem(lineNumber(this, event))' 
+        tabindex="0" onKeyDown='doKey(event)'>
     </ul></td>
     <td><ul id=list2 
-        onClick='doClick2(lineNumber(this))'>
+        onClick='doClick2(lineNumber(this, event))'>
     </ul></td>
     <td><ul id=list3 
-        onClick='doMethod(lineNumber(this))'>
+        onClick='doMethod(lineNumber(this, event))'>
     </ul></td>
   </tr>
   <tr>
     <td><input id=inp style="width:198px;" 
-         onKeyUp='doEnter()'></td>
+         onKeyUp='doEnter(event)'></td>
     <td id=out colSpan=2>output goes here</td>
   </tr>
 </table>
@@ -96,8 +96,8 @@
 
 <script>
 "use strict";
-function lineNumber(t) { //t is target, <ul> element
-    let y = t.scrollTop + event.layerY;
+function lineNumber(t, evt) { //t is target, <ul> element
+    let y = t.scrollTop + evt.layerY;
     let h = t.firstChild.clientHeight + 2; //16px
     return Math.trunc(y/h);
 }
@@ -112,10 +112,10 @@ function hideTips() {
 function init() {
   let s = "Small is beautiful", d = new Date(), 
       a = [0, 11, "22", "abc"], b = new Set(a),
-      c = {one: 123, two: "456", random: Math.random, 
-         sqrt: Math.sqrt, power: Math.pow, pi: Math.PI,
-         toString: (() => s)  //same as return s;
-      }
+      one = 123, two = "456", random = Math.random, 
+      sqrt = Math.sqrt, power = Math.pow, pi = Math.PI,
+      toString = (() => s),  //same as return s
+      c = {one, two, random, sqrt, power, pi, toString};
   for (let x of [s, d, a, b, c, document, window]) 
       display(x);
 }

@@ -36,7 +36,7 @@ function doMethod(c) {
         reportError(e);
     }
 }
-function doClick2(c) { //event.target == list2
+function doClick2(c) { //target == list2
     if (c == 0 && _ instanceof Array) return;
     let obj = objP[c];
     if (obj === ITERABLE) 
@@ -53,24 +53,24 @@ function remove() {
     list1.removeChild(list1.children[current]);
     previous();
 }
-function doKey() {
-    //console.log(event.key, current);
-    switch (event.key) {
+function doKey(evt) {
+    //console.log(evt.key, current);
+    switch (evt.key) {
       case "Delete":
         remove(); return;
       case "ArrowUp":
-        event.stopPropagation();
+        evt.stopPropagation();
         displayItem(current-1); return;
       case "ArrowDown":
-        event.stopPropagation();
+        evt.stopPropagation();
         displayItem(current+1); return;
       case "ArrowLeft": case "Backspace":
         previous(); return;
     }
 }
-function doEnter() {
-    if (event.key == "Enter") try {
-        event.stopPropagation();
+function doEnter(evt) {
+    if (evt.key == "Enter") try {
+        evt.stopPropagation();
         let exp = inp.value;
         report(exp, eval(exp));
     } catch(e) {
@@ -79,7 +79,7 @@ function doEnter() {
 }
 function trunc(s, M) { //if s is long, truncate to M chars
     if (s == null) s = "null";
-    if (s.length > M+5) s = s.substring(0, M)+"...";
+    if (s.length > M+4) s = s.substring(0, M)+"...";
     return s;
 }
 function objToArray(obj) {
@@ -148,19 +148,19 @@ function displayItem(c) {
   }
   function add_proto_() {
     if (typeof _ == "string") {
-        addMethods(["charAt", "concat", "indexOf", "repeat", "replace", 
-        "search", "split", "substring"]); addProperty("length");
+        addProperty("length"); addMethods(["charAt", "concat", 
+        "indexOf", "repeat", "replace", "search", "split", "substring"]); 
     } else if (_ instanceof Array) {
+        addProperty("length"); meth.push("includes"); 
         addMethods(["indexOf", "join", "push", "pop", "reverse", "splice"]);
-        addProperty("length");
     } else if (_ instanceof Set) {
+        addProperty("size");
         addMethods(["add", "clear", "delete", "has", "values"]); 
-        addProperty("size");
     } else if (_ instanceof Map) {
-        addMethods(["delete", "entries", "get", "has", "keys", "set"]); 
         addProperty("size");
+        addMethods(["delete", "entries", "get", "has", "keys", "set"]); 
     } else if (_ instanceof RegExp) { 
-        addMethods(["test", "exec"]); addProperty("flags");
+        addProperty("flags"); addMethods(["test", "exec"]); 
     }
     /*else if (_ instanceof Error) { 
         addProperty("fileName"); addProperty("stack");
