@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Page made by JavaScript </title>
+</head>
+
+<!-- The document body is made by the script below -->
+
+<script>
+"use strict";
+function elt(type, ...list) {
+  let node = document.createElement(type)
+  for (let c of list) {
+    if (typeof c != "string") node.appendChild(c)
+    else node.appendChild(document.createTextNode(c))
+  }
+  return node;
+}
+function makePage() {
+  let txt = "No book can ever be finished. While "
+    +"working just enough to find it immature "
+    +"the moment we turn away from it."
+  let book = "The Open Society and Its Enemies"
+  document.documentElement.appendChild(
+    elt("body", 
+      elt("h2", document.title), 
+      elt("hr"), 
+      elt("blockquote", txt,
+        elt("p", "— ",
+          elt("strong", "Karl Popper"),
+          ", preface to the second editon of ",
+          elt("em", book), ", 1950"
+        )
+      ), 
+      elt("hr"), 
+      elt("div",
+        elt("strong", "Sample code"),
+        elt("pre", elt+"\n"+makePage) //function text
+      ), 
+      elt("hr"), 
+      elt("div", "Ref: ", elt("a", "Creating nodes"))
+    )
+  )
+  document.getElementsByTagName("a")[0].href =
+"http://eloquentjavascript.net/14_dom.html#c_3rSOndXJQI"
+}
+  makePage()
+</script>
+
+</html>
+
