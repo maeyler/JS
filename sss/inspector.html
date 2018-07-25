@@ -3,115 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <link href="inspector.css" rel="stylesheet" media="all">
     <script src="inspector.js"></script>
     <title>Inspector </title>
 </head>
 
 <style>
-  table {
-    padding: 2px;
-    border: 1px solid;
-    border-spacing: 1px;
-    background: yellow;
-  }
-  ul { /*scroll doesn't work on td*/
-    padding: 0;
-    margin: 2px;
-    border: 1px solid;
-    width:  210px;
-    height: 260px;
-    background: white;
-    overflow-x: auto;
-    overflow-y: scroll;
-  }
-  li {
-    margin: 2px;
-    font: 12px arial, sans-serif;
-    list-style-type: none;
-    cursor: pointer;
-  }
-  li:hover {
-    color: white;
-    background-color: blue;
-  }
-  #out {
-    font: 13px arial, sans-serif;
-  }
-  .cname {
+  #docName {
     font-weight: bold;
-    text-align: center;
-    background-color: #aaffaa;
-  }
-  .tip {
-    visibility: hidden;
-    font: 10px arial, sans-serif;
-    text-align: center;
-    color: white;
-    background-color: blue;
-    padding: 5px 5px;
-    position: absolute;
   }
 </style>
 
 <body>
-<p><span id=title style="font-weight: bold"></span> &nbsp;
-<a href="https://maeyler.github.io/JS/sss/">Read me</a>
+<p><span id=docName></span> &nbsp;
+<a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
 <input type=file multiple onChange='fileSelect(this)' />
 </p>
-
-<table id=tablo>
-  <tr>
-    <th><button onClick='previous()' 
-      onMouseOver='makeVisible(prev, true)'
-      onMouseOut ='makeVisible(prev, false)'>◀</button>
-    <span id=prev class=tip>Display previous object</span>
-    &nbsp; Objects &nbsp;
-    <button onClick='remove()' 
-      onMouseOver='makeVisible(dele, true)' 
-      onMouseOut ='makeVisible(dele, false)'>✘</button>
-    <span id=dele class=tip>Delete current object</span>
-    </th>
-    <th>Properties</th>
-    <th>Methods</th>
-  </tr>
-  <tr>
-    <td><ul id=list1 
-        onClick='displayItem(lineNumber(this, event))' 
-        tabindex="0" onKeyDown='doKey(event)'>
-    </ul></td>
-    <td><ul id=list2 
-        onClick='doClick2(lineNumber(this, event))'>
-    </ul></td>
-    <td><ul id=list3 
-        onClick='doMethod(lineNumber(this, event))'>
-    </ul></td>
-  </tr>
-  <tr>
-    <td><input id=inp style="width:198px;" 
-         onKeyUp='doEnter(event)'></td>
-    <td id=out colSpan=2>output goes here</td>
-  </tr>
-</table>
-<hr />
+</body>
 
 <script>
 "use strict";
-function fileSelect(t) { //target is the button
+const READER = new FileReader();
+function fileSelect(t) { 
+//target t is the file selection HTMLInputElement
     let a = t.files; display(t);
+    if (a.length == 0) return;
+    display(READER);
     display(a.length == 1? a[0] : a);
-}
-function lineNumber(t, evt) { //t is target, <ul> element
-    let y = t.scrollTop + evt.layerY;
-    let h = t.firstChild.clientHeight + 2; //16px
-    return Math.trunc(y/h);
-}
-function makeVisible(t, val) {
-    t.style.visibility = val? "visible" : "";
-    if (val) setTimeout(hideTips, 2500);
-}
-function hideTips() {
-    prev.style.visibility = "";
-    dele.style.visibility = "";
 }
 function init() {
   let s = "Small is beautiful", d = new Date(), 
@@ -123,18 +41,13 @@ function init() {
   for (let x of [s, d, a, b, c, document, window]) 
       display(x);
 }
-
-    title.innerText = document.title+" "+VERSION;
-    const out = document.getElementById("out");
+    docName.innerText = document.title+" "+VERSION;
     try {
-        init();
+        let body = document.documentElement;
+        inspect(body, init, "_.toString()");
     } catch(e) {
         reportError(e);
     }
-    inp.value = "_.toString()";
-    inp.selectionEnd = inp.value.length; 
-    inp.selectionStart = 0; inp.focus();
 </script>
 
-</body>
 </html>

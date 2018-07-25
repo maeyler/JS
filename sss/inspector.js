@@ -1,21 +1,35 @@
 "use strict";
-const VERSION = "V1.4", ITERABLE = new Object();
+const VERSION = "V1.5", ITERABLE = new Object();
+const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
-var hist = [];    //object history -- global variables
+var hist = [];    //object history -- global variable
 var current = 0;  //current object index in list1 & objA
-var _ = 0;  //current object
+var _  = "";  //current object
+var __ = "";  //previous object
+function makeVisible(t, val) {
+    t.style.visibility = val? "visible" : "";
+    if (val) setTimeout(hideTips, 2500);
+}
+function hideTips() {
+    prev.style.visibility = "";
+    dele.style.visibility = "";
+}
 function report(input, result) { 
-    display(result); 
-    let msg = trunc(input, 25)+trunc(" ⇒ "+result, 40); 
+    let msg = trunc(input, MAX_CHARS);
+    if (result != undefined) {
+        display(result);
+        msg += trunc(" ⇒ "+result, 2*MAX_CHARS); 
+    }
     console.log(msg); out.innerText = msg; 
     out.style.backgroundColor = "";
 }
 function reportError(e) {
-    console.log(e); out.innerText = trunc(" "+e, 60); 
+    console.log(e); 
+    out.innerText = trunc(" "+e, 4*MAX_CHARS); 
     out.style.backgroundColor = "pink";
 }
-function doMethod(c) {
-    let met = list3.children[c].innerText;
+function doMethod(met) { //target == list3
+    //let met = list3.children[c].innerText;
     //_ = objA[current];
     let ff = _[met]; //simpler than reflection
     if (!ff) ff = _.__proto__[met];
@@ -25,23 +39,37 @@ function doMethod(c) {
     if (n == 0) s += "optional arguments "; 
     if (n == 1) s += "the argument ";
     if (n >= 2) s += n+" arguments separated by commas ";
-    let arg = "("; while (--n > 0) arg += ", "; arg += ")";
-    arg = prompt(s+"in order to call "+met+"()", arg);
-    if (arg) try {
-        let cmd = "_."+met+arg;
-        if (arg[0] != "(" || !arg.endsWith(")")) 
-             reportError(Error(cmd));
-        else report(cmd, eval(cmd));
+    let //arg = "("; while (--n > 0) arg += ", "; arg += ")";
+    arg = prompt(s+"in order to call "+met+"()");
+    if (arg != null) try {
+        let cmd = "_."+met+"("+arg+")";
+        report(cmd, eval(cmd));
     } catch(e) {
         reportError(e);
     }
 }
-function doClick2(c) { //target == list2
+function doProperty(c) { //target == list2
     if (c == 0 && _ instanceof Array) return;
     let obj = objP[c];
     if (obj === ITERABLE) 
          display(objToArray(_));
     else display(obj);
+}
+function doClick(evt, target) {
+    let e = document.elementFromPoint(evt.pageX, evt.pageY);
+    if (target == list3) {
+        doMethod(e.innerText); return;
+    }
+    let p = e.parentNode;
+    if (p !== target) e = p; //<li>
+    console.assert(e.parentNode === target);
+    let c = target.children.length;
+    while (c--) if (target.children[c] === e) break;
+    console.log(c+" "+e.innerText);
+    if (c < 0) return;
+    if (target == list1) displayItem(c);
+    else if (target == list2) doProperty(c);
+    else reportError("Unknown "+target); 
 }
 function previous() {
     if (hist.length < 2) return;
@@ -94,12 +122,12 @@ function objToString(obj) {
     return s;
 }
 function arrayToList(a, L) {
-    const MAX = 28, OBJ = "[object ", RB = "]";
+    const OBJ = "[object ", RB = "]";
     let list = "";
     for (let obj of a) {
         if (!obj) continue;
         let s = (L == list1? objToString(obj) : obj);
-        s = trunc(s, MAX);
+        s = trunc(s, MAX_CHARS);
         if (s[0] != '"' && s.includes(OBJ)) {
           s = s.replace(OBJ, "<B>");
           if (s.includes(RB))
@@ -143,38 +171,39 @@ function displayItem(c) {
     let s = key +": "+ objToString(obj);
     objP.push(obj); prop.push(s);
   }
-  function addMethods(metA) {
+  function addMethods(...metA) {
     for (let m of metA) meth.push(m); 
   }
   function add_proto_() {
     if (typeof _ == "string") {
-        addProperty("length"); addMethods(["charAt", "concat", 
-        "indexOf", "repeat", "replace", "search", "split", "substring"]); 
+        addProperty("length"); addMethods("charAt", "concat", "includes", 
+        "indexOf", "repeat", "replace", "search", "split", "substring"); 
     } else if (_ instanceof Array) {
-        addProperty("length"); meth.push("includes"); 
-        addMethods(["indexOf", "join", "push", "pop", "reverse", "splice"]);
+        addProperty("length"); addMethods("includes", "indexOf", 
+        "join", "push", "pop", "reverse", "sort", "splice");
     } else if (_ instanceof Set) {
         addProperty("size");
-        addMethods(["add", "clear", "delete", "has", "values"]); 
+        addMethods("add", "clear", "delete", "has", "values");
     } else if (_ instanceof Map) {
         addProperty("size");
-        addMethods(["delete", "entries", "get", "has", "keys", "set"]); 
+        addMethods("delete", "entries", "get", "has", "keys", "set");
     } else if (_ instanceof RegExp) { 
-        addProperty("flags"); addMethods(["test", "exec"]); 
+        addProperty("flags"); addMethods("test", "exec");
     }
     /*else if (_ instanceof Error) { 
         addProperty("fileName"); addProperty("stack");
     }*/
   }
     //_ is global -- current object
-    selectItem(); _ = objA[current];
+    selectItem(); __ = _; _ = objA[current];
     objP.length = 1; let prop = [], meth = [];
     objP[0] = null; prop[0] = "* *"+_.constructor.name;
     if (_[Symbol.iterator]) {
         objP[0] = ITERABLE; prop[0] += " — Iterable";
     }
     add_proto_(); list1.focus();
-    for (let key in _) 
+    for (let key in _) {
+      if (objP.length > MAX_PROP) break;
       try {
         if (key == "webkitStorageInfo") continue;
         let obj = _[key];
@@ -187,6 +216,7 @@ function displayItem(c) {
         }
       } catch(error) { //silently ignore
       }
+    }
     arrayToList(prop, list2);
     arrayToList(meth, list3);
     let p = prop.length-1, m = meth.length;
@@ -196,4 +226,46 @@ function displayItem(c) {
     let n = hist.length;
     if (hist[n-1] !== _) hist.push(_); 
     if (n > 50) hist.splice(0, 20);
+}
+function inspect(parent, init, command) {
+    let t = document.createElement("table");
+    parent.appendChild(t); t.innerHTML =
+`
+<tbody>
+  <tr>
+    <th><button onClick='previous()' 
+      onMouseOver='makeVisible(prev, true)'
+      onMouseOut ='makeVisible(prev, false)'>◀</button>
+    <span id=prev>Display previous object</span>
+    &nbsp; Objects &nbsp;
+    <button onClick='remove()' 
+      onMouseOver='makeVisible(dele, true)' 
+      onMouseOut ='makeVisible(dele, false)'>✘</button>
+    <span id=dele>Delete current object</span>
+    </th>
+    <th>Properties</th>
+    <th>Methods</th>
+  </tr>
+  <tr>
+    <td><ul id=list1 
+        onClick='doClick(event, this)' 
+        tabindex="0" onKeyDown='doKey(event)'>
+    </ul></td>
+    <td><ul id=list2 
+        onClick='doClick(event, this)'>
+    </ul></td>
+    <td><ul id=list3 
+        onClick='doClick(event, this)'>
+    </ul></td>
+  </tr>
+  <tr>
+    <td><input id=inp style="width:198px;" 
+         onKeyUp='doEnter(event)'></td>
+    <td id=out colSpan=2>output goes here</td>
+  </tr>
+</tbody>
+`
+    init(); inp.value = command;
+    inp.selectionEnd = inp.value.length; 
+    inp.selectionStart = 0; inp.focus();
 }
