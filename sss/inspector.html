@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <script src="sss/inspector.js"></script>
+    <script src="inspector.js"></script>
     <title>Inspector </title>
 </head>
 
@@ -56,8 +56,8 @@
 <body>
 <p><span id=title style="font-weight: bold"></span> &nbsp;
 <a href="https://maeyler.github.io/JS/sss/">Read me</a>
+<input type=file multiple onChange='fileSelect(this)' />
 </p>
-
 
 <table id=tablo>
   <tr>
@@ -96,6 +96,10 @@
 
 <script>
 "use strict";
+function fileSelect(t) { //target is the button
+    let a = t.files; display(t);
+    display(a.length == 1? a[0] : a);
+}
 function lineNumber(t, evt) { //t is target, <ul> element
     let y = t.scrollTop + evt.layerY;
     let h = t.firstChild.clientHeight + 2; //16px
