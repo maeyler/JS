@@ -1,4 +1,4 @@
-[Inspector](../inspector.html) 
+[Inspector](../sss/inspector.html) 
 yazılımı ile nesnelerin içindeki değerleri görebilir ve metodlarını çağırabiliriz
 
 ![resim](screen%20V1.4.png)
@@ -30,17 +30,16 @@ list1 içinde seçilmiş nesneye `_` değişkeni olarak erişebiliriz
 **output** kutusunda ise yapılan son işlemin özeti görülür
 
 ### Ilk nesneler
-
 Sayfa açılınca önce inspector.js kodu yüklenir <br>
 HTML elemanları yapılır ve `init()` ile 7 adet nesne gösterilir:
 ```
 function init() {
   let s = "Small is beautiful", d = new Date(), 
       a = [0, 11, "22", "abc"], b = new Set(a),
-      c = {one: 123, two: "456", random: Math.random, 
-         sqrt: Math.sqrt, power: Math.pow, pi: Math.PI,
-         toString: (() => s)  //same as return s;
-      }
+      one = 123, two = "456", random = Math.random, 
+      sqrt = Math.sqrt, power = Math.pow, pi = Math.PI,
+      toString = (() => s),  //same as return s
+      c = {one, two, random, sqrt, power, pi, toString};
   for (let x of [s, d, a, b, c, document, window]) 
       display(x);
 }
@@ -55,12 +54,11 @@ function init() {
 ```
 
 ### Örnekler
-
 Inspector yazılımı özellikle mobil cihazlar için geliştirildi <br>
-Tarayıcıların console aracı ile bunlar zaten kolayca yapılır <br>
+Tarayıcıların console aracı ile bunlar PC'de kolayca yapılır <br>
+Mobil cihazlarda yapabilmek için console ayarında bir araç gerekiyor
 
 Zorluk sırasına göre birkaç örnek görelim:
-
 ```
 // işletim sistemi -- senkron
 navigator.platform
@@ -73,7 +71,7 @@ navigator.geolocation
 _.getCurrentPosition(display)
 
 // yerel metin dosyası -- hemen sonuç veren asenkron
-// `Choose Files` ile bir metin dosyası seçelim
+// 'Choose Files' ile bir metin dosyası seçelim
 // File seçili iken geri tuşuna bastıktan sonra:
 _.readAsText(__)
 // tekrar FileReader'a tıklayınca result görünecek
@@ -84,6 +82,7 @@ _.text()   //returns String
 ```
 
 ### Önceki sürümler
+Bu çalışmaya 2004 tarihli Small-Simpe-Safe yazılımını örnek alarak başladım
 
 [V0](SSS%20V0.html) HTML ve style komutları ile sayfanın görünümü yapıldı -- 3 saat
 

@@ -56,7 +56,8 @@ function doProperty(c) { //target == list2
     else display(obj);
 }
 function doClick(evt, target) {
-    let e = document.elementFromPoint(evt.pageX, evt.pageY);
+    let e = document.elementFromPoint(evt.clientX, evt.clientY);
+    console.log(e.innerText);
     if (target == list3) {
         doMethod(e.innerText); return;
     }
@@ -65,7 +66,6 @@ function doClick(evt, target) {
     console.assert(e.parentNode === target);
     let c = target.children.length;
     while (c--) if (target.children[c] === e) break;
-    console.log(c+" "+e.innerText);
     if (c < 0) return;
     if (target == list1) displayItem(c);
     else if (target == list2) doProperty(c);

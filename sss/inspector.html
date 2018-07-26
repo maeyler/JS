@@ -1,25 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link href="inspector.css" rel="stylesheet" media="all">
     <script src="inspector.js"></script>
     <title>Inspector </title>
-</head>
 
 <style>
   #docName {
     font-weight: bold;
   }
 </style>
+</head>
 
 <body>
 <p><span id=docName></span> &nbsp;
 <a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
 <input type=file multiple onChange='fileSelect(this)' />
 </p>
-</body>
 
 <script>
 "use strict";
@@ -43,11 +42,10 @@ function init() {
 }
     docName.innerText = document.title+" "+VERSION;
     try {
-        let body = document.documentElement;
-        inspect(body, init, "_.toString()");
+        inspect(document.body, init, "_.toString()");
     } catch(e) {
         reportError(e);
     }
 </script>
-
+</body>
 </html>
