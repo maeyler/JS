@@ -5,13 +5,51 @@
     <meta name="viewport" content="width=device-width">
     <title>Student Database </title>
 
+  <style>
+    .link {
+        color: blue;
+        cursor: pointer;
+        font-style: italic;
+    }
+    .course {
+        font: 10px arial, sans-serif;
+        color: white;
+        background: blue;
+        padding: 6px;
+        position: absolute;
+        height: 90px;
+        overflow-y: auto;
+    }
+  </style>
+
 <script>
 "use strict";
+function report(msg, id, list) {
+    out.innerHTML += "<br>"; msg += " ";
+    out.appendChild(document.createTextNode(msg));
+    let n1;
+    if (id) {
+        n1 = document.createElement("span");
+        n1.appendChild(document.createTextNode(id));
+        n1.classList.add("link");
+        out.appendChild(n1); msg += id;
+        //n1.addEventListener("click", doClick);
+    }
+    if (list) {
+        let n2 = document.createElement("span");
+        n2.appendChild(document.createTextNode(""));
+        n2.innerHTML += list.join("<br>");
+        n2.classList.add("course");
+        n2.style.visibility = "hidden";
+        if (n1) n1.appendChild(n2);
+    }
+    console.log(msg);
+}
 function readData(file) {
     console.log("readData "+file);
     fetch(url+file)
-        .then(r => r.text(), console.log)
-        .then(addStudents, console.log);
+        .then(r => r.text(), report)
+        .then(addStudents, report);
 }
 function parseStudent(b) {
     let list = [];
@@ -20,47 +58,64 @@ function parseStudent(b) {
     return {id, name, gpa, list};
 }
 function addStudents(txt) {
-    console.log("Chars: "+txt.length);
+    let msg = txt.length+" chars, ";
     let a = txt.split("\n");
-    console.log("Lines: "+a.length);
+    msg += a.length+" lines, ";
     for (let s of a) {
         let b = s.split("\t");
         keys.push(b[0]); vals.push(parseStudent(b));
     }
-    out.innerText += "\n"+keys.length+" students";
+    report(msg + keys.length+" students");
+}
+function doClick(evt) {
+    //console.log(evt);
+    let t = evt.target;
+    //document.elementFromPoint(evt.clientX, evt.clientY);
+    let s = t.innerText;
+    //if (s.length > 25) s = s.substring(0, 30)+"...";
+    if (/^\d+$/.test(s)) showStd(s); //s contains digits
+    else if (t = t.firstElementChild) {
+        t.style.visibility = "";
+        let hide = function () {
+            t.style.visibility = "hidden";
+        };
+        setTimeout(hide, 5000);
+    }
 }
 function findID(id) {
     let i = keys.indexOf(id);
     if (i < 0) return null;
     return vals[i];
 }
-function report(id) {
-    let t = "\n"+id+" ";
+function showStd(id) {
+    let t = id+" ";
     let std = findID(id);
-    if (std) t += stdToString(std);
-    else t += "not found";
-    out.innerText += t;
-}
-function stdToString(std) {
-    return std.name+" "+std.list.length+" courses "+std.gpa;
+    if (!std) {
+        report(t+"not found"); return;
+    }
+    t += std.name+" "+std.gpa;
+    report(t, std.list.length+" courses", std.list);
 }
 function studentsIn(code) {
     code = code.toUpperCase();
-    let t = "\n"+code+": ", a = [];
+    let a = [];
     for (let std of vals) 
-        if (std.list.includes(code)) a.push(std.name);
-    out.innerText += t+" ["+a+"]";
+        if (std.list.includes(code)) 
+            a.push(std.id+" "+std.name);
+    if (a.length > 0)
+        report(code+": ", a.length+" students", a);
+    else report("No students in "+code);
 }
 function randomStd() {
     let i = Math.trunc(keys.length * Math.random());
     let b = vals[i];
-    out.innerText += "\nRandom: "+b.id+" "+b.name;
+    report("Random: "+b.name, b.id);
 }
 function findBest() {
     let b = vals[0];
     for (let std of vals) 
         if (std.gpa > b.gpa) b = std;
-    out.innerText += "\nBest: "+b.id+" "+b.name;
+    report("Best: "+b.name, b.id);
 }
 </script>
 </head>
@@ -69,14 +124,17 @@ function findBest() {
 
 <h2 id=title></h2>
 
-<button onClick='randomStd()'>Random Student</button>
+<button onClick='randomStd()'>Random</button>
 <button onClick='findBest()'>Best GPA</button>
+<button onClick='out.innerText=""'>Clear</button>
 
-<p>Student id: <input type=number onChange="report(value)">
+<p>Student id: 
+<input type=number onChange="showStd(value)">
 </p>
-<p>Course code: <input type=text onChange="studentsIn(value)">
+<p>Course code: 
+<input type=text onChange="studentsIn(value)" value="math 206">
 </p>
-<p id=out>Result:</p>
+<p id=out onClick='doClick(event)'>Result:</p>
 
 <hr />
 <b>Sample code</b>
