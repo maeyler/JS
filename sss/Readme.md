@@ -59,7 +59,7 @@ function init() {
 Inspector yazılımı özellikle mobil cihazlar için geliştirildi <br>
 Tarayıcıların console aracı ile bunlar zaten kolayca yapılır <br>
 
-Zorluk sırasına göre dört örnek (üçü asenkron) görelim:
+Zorluk sırasına göre birkaç örnek görelim:
 
 ```
 // işletim sistemi -- senkron
@@ -72,8 +72,14 @@ navigator.getBattery()
 navigator.geolocation
 _.getCurrentPosition(display)
 
-// metin dosyası -- bir iki saniye süren Promise
-fetch("hard/test/test.txt")  //remote file
+// yerel metin dosyası -- hemen sonuç veren asenkron
+// `Choose Files` ile bir metin dosyası seçelim
+// File seçili iken geri tuşuna bastıktan sonra:
+_.readAsText(__)
+// tekrar FileReader'a tıklayınca result görünecek
+
+// uzak metin dosyası -- bir iki saniye süren Promise
+fetch("../hard/test/test.txt")  //remote file
 _.text()   //returns String
 ```
 
