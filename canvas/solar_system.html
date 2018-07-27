@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Solar System </title>
+
+<script>
+"use strict";
+const SIZE = 300, S2 = SIZE/2,  OFFSET = 5 + SIZE/3,
+    K = 2*Math.PI / 60; //speed
+var sun = new Image();
+var moon = new Image();
+var earth = new Image();
+sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
+moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
+earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
+function draw() {
+  const ctx = canvas.getContext("2d");
+  ctx.globalCompositeOperation = 'destination-over';
+  ctx.clearRect(0, 0, SIZE, SIZE); // clear canvas
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+  ctx.strokeStyle = 'rgba(0, 153, 255, 0.4)';
+  ctx.save();
+  ctx.translate(S2, S2);
+
+  // Earth
+  let time = new Date();
+  let t = K * time.getSeconds() 
+    + (K/1000) * time.getMilliseconds();
+  ctx.rotate(t);
+  ctx.translate(OFFSET, 0);
+  ctx.fillRect(0, -12, 50, 24); // Shadow
+  ctx.drawImage(earth, -12, -12);
+
+  // Moon
+  ctx.save();
+  ctx.rotate(12*t);  //12 times faster
+  ctx.translate(0, 28.5);
+  ctx.drawImage(moon, -3.5, -3.5);
+  ctx.restore();
+
+  ctx.restore();
+  
+  ctx.beginPath(); // Earth orbit
+  ctx.arc(S2, S2, OFFSET, 0, 2*Math.PI, false);
+  ctx.stroke();
+ 
+  ctx.drawImage(sun, 0, 0, SIZE, SIZE);
+
+  requestAnimationFrame(draw);
+}
+</script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<canvas id=canvas></canvas>
+
+<p id=out></p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations" 
+   target=_blank>Canvas Tutorial</a>
+</p>
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = draw.toString();
+    canvas.width = SIZE; canvas.height = SIZE;
+    requestAnimationFrame(draw);
+</script>
+
+</body>
+</html>

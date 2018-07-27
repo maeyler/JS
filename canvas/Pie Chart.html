@@ -26,8 +26,8 @@ function namesToHTML(data) {
     return s;
 }
 function pieChart(data, R = 110, C = 20) {
-    cnvs.width = 2*(R+C); cnvs.height = 2*(R+C);
-    const cx = cnvs.getContext("2d");
+    canvas.width = 2*(R+C); canvas.height = 2*(R+C);
+    const cx = canvas.getContext("2d");
     const k = 2 * Math.PI / 100;
     let a = -0.5 * Math.PI; // start at -pi/2
     for (let x of data) {
@@ -52,7 +52,7 @@ using JavaScript canvas
 
 <p id=out></p>
 <hr />
-<canvas id=cnvs></canvas>
+<canvas id=canvas></canvas>
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>

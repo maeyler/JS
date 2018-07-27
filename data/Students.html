@@ -49,6 +49,7 @@ function report(msg, id, list) {
     }
     console.log(msg);
 }
+const url = "https://maeyler.github.io/JS/data/";
 function readData(file) {
     console.log("readData "+file);
     fetch(url+file)
@@ -151,7 +152,6 @@ function findBest() {
     title.innerText = document.title;
     sample.innerText = readData+"\n"+addStudents;
     const keys = [], vals = [];
-    const url = origin=="null"? "https://maeyler.github.io/JS/data/" : "";
     readData("Students.txt")
 </script>
 
