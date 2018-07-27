@@ -134,11 +134,21 @@ function arrayToList(a, L) {
             s = s.replace(RB, "</B>");
           else s = s+"</B>";
         }
-        if (s.startsWith("* *")) //class name
-             list += "<li class=cname>" + s.substring(3);
-        else list += "<li>" + s;
+        if (!s.startsWith("* *"))
+            list += "<li>"+ s +"</li>";
+        else { //class name
+            list += "<li class=cname>" + s.substring(3);
+            let sc = superClasses(_).join("<br>");
+            list += "<span class=tip>"+ sc +"</span></li>";
+        }
     }
     L.innerHTML = list;
+}
+function superClasses(obj) {
+    let a = []
+    while (obj = obj.__proto__) 
+        a.push(obj.constructor.name)
+    return a
 }
 function display(f) {
     if (!f) return; let t = typeof f;

@@ -12,13 +12,18 @@
         font-style: italic;
     }
     .course {
+        visibility: hidden;
         font: 10px arial, sans-serif;
         color: white;
         background: blue;
+        cursor: text;
         padding: 6px;
         position: absolute;
         height: 90px;
         overflow-y: auto;
+    }
+    .link:hover .course { 
+        visibility: visible; 
     }
   </style>
 
@@ -40,7 +45,6 @@ function report(msg, id, list) {
         n2.appendChild(document.createTextNode(""));
         n2.innerHTML += list.join("<br>");
         n2.classList.add("course");
-        n2.style.visibility = "hidden";
         if (n1) n1.appendChild(n2);
     }
     console.log(msg);
@@ -51,10 +55,12 @@ function readData(file) {
         .then(r => r.text(), report)
         .then(addStudents, report);
 }
-function parseStudent(b) {
-    let list = [];
-    for (let i=3; i<b.length; i++) list.push(b[i]);
+function parseStudent(line) {
+    let b = line.split("\t");
     let id = b[0], name = b[1], gpa = b[2];
+    let list = [];
+    for (let i=3; i<b.length; i++) 
+        list.push(b[i]);
     return {id, name, gpa, list};
 }
 function addStudents(txt) {
@@ -62,8 +68,8 @@ function addStudents(txt) {
     let a = txt.split("\n");
     msg += a.length+" lines, ";
     for (let s of a) {
-        let b = s.split("\t");
-        keys.push(b[0]); vals.push(parseStudent(b));
+      let std = parseStudent(s);
+      keys.push(std.id); vals.push(std);
     }
     report(msg + keys.length+" students");
 }
@@ -132,7 +138,7 @@ function findBest() {
 <input type=number onChange="showStd(value)">
 </p>
 <p>Course code: 
-<input type=text onChange="studentsIn(value)" value="math 206">
+<input type=text onChange="studentsIn(value)" value="math 206 ">
 </p>
 <p id=out onClick='doClick(event)'>Result:</p>
 

@@ -40,9 +40,19 @@
     padding: 5px 5px;
     position: absolute;
   }
-  .cname {
+  .cname, .tip {
     font-weight: bold;
     text-align: center;
     background-color: #aaffaa;
+  }
+  .tip {
+    visibility: hidden;
+    color: black;
+    border: 1px solid;
+    padding: 6px;
+    position: absolute;
+  }
+  .cname:hover .tip { 
+    visibility: visible; 
   }
 
