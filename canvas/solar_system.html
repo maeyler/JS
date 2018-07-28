@@ -7,49 +7,60 @@
 
 <script>
 "use strict";
-const SIZE = 300, S2 = SIZE/2,  OFFSET = 5 + SIZE/3,
-    K = 2*Math.PI / 60; //speed
-var sun = new Image();
-var moon = new Image();
-var earth = new Image();
-sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
-moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
-earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
+const SIZE = 300;
+const sun = new Image();
+sun.src = '../images/Canvas_sun.png';
+var running;
+function runStop() {
+    if (running) {
+        button.value = "Run"; 
+        running = false;
+    } else {
+        button.value = "Stop"; 
+        running = true; draw();
+    }
+}
 function draw() {
-  const ctx = canvas.getContext("2d");
-  ctx.globalCompositeOperation = 'destination-over';
-  ctx.clearRect(0, 0, SIZE, SIZE); // clear canvas
+  const H = SIZE/2,  R = SIZE/3 + 5,
+      BLUE  = 'rgba(50, 200, 255, 0.8)', 
+      GRAY  = 'rgba(99, 99, 99, 0.4)',
+      K = 2*Math.PI / 60; // period = 60 sec
 
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-  ctx.strokeStyle = 'rgba(0, 153, 255, 0.4)';
-  ctx.save();
-  ctx.translate(S2, S2);
-
-  // Earth
   let time = new Date();
-  let t = K * time.getSeconds() 
-    + (K/1000) * time.getMilliseconds();
+  let sec = time.getSeconds();
+  let ms = time.getMilliseconds();
+  let t = K * sec + (K/1000) * ms
+  out.innerText = "Seconds = "+sec;
+  if (!trace.checked) 
+    ctx.drawImage(sun, 0, 0, SIZE, SIZE);
+  
+  // Earth
+  ctx.save();
+  ctx.translate(H, H);
   ctx.rotate(t);
-  ctx.translate(OFFSET, 0);
-  ctx.fillRect(0, -12, 50, 24); // Shadow
-  ctx.drawImage(earth, -12, -12);
+  ctx.translate(R, 0); //Earth orbit radius
+  ctx.beginPath();
+  ctx.arc(0, 0, 12, 0, 2*Math.PI);
+  ctx.fillStyle = BLUE;
+  ctx.fill();
 
   // Moon
   ctx.save();
   ctx.rotate(12*t);  //12 times faster
-  ctx.translate(0, 28.5);
-  ctx.drawImage(moon, -3.5, -3.5);
+  ctx.translate(0, 28.5); //Moon orbit radius
+  ctx.beginPath();
+  ctx.arc(0, 0, 3, 0, 2*Math.PI);
+  ctx.fillStyle = "gray";
+  ctx.fill();
   ctx.restore();
-
   ctx.restore();
   
   ctx.beginPath(); // Earth orbit
-  ctx.arc(S2, S2, OFFSET, 0, 2*Math.PI, false);
-  ctx.stroke();
- 
-  ctx.drawImage(sun, 0, 0, SIZE, SIZE);
-
-  requestAnimationFrame(draw);
+  ctx.arc(H, H, R, 0, 2*Math.PI);
+  ctx.strokeStyle = BLUE;
+  if (!trace.checked) ctx.stroke();
+  
+  if (running) requestAnimationFrame(draw);
 }
 </script>
 </head>
@@ -59,9 +70,11 @@ function draw() {
 <h2 id=title></h2>
 
 <canvas id=canvas></canvas>
-
-<p id=out></p>
-
+<p>
+<span id=out>t =</span>
+<input id=trace type=checkbox>Trace path
+<input type=button id=button value="Stop" onClick="runStop()">
+</p>
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
@@ -76,7 +89,9 @@ function draw() {
     title.innerText = document.title;
     sample.innerText = draw.toString();
     canvas.width = SIZE; canvas.height = SIZE;
-    requestAnimationFrame(draw);
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(sun, 0, 0, SIZE, SIZE);
+    runStop();
 </script>
 
 </body>

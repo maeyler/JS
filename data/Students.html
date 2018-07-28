@@ -79,7 +79,6 @@ function doClick(evt) {
     let t = evt.target;
     //document.elementFromPoint(evt.clientX, evt.clientY);
     let s = t.innerText;
-    //if (s.length > 25) s = s.substring(0, 30)+"...";
     if (/^\d+$/.test(s)) showStd(s); //s contains digits
     else if (t = t.firstElementChild) {
         t.style.visibility = "";
