@@ -6,16 +6,10 @@
     <link href="inspector.css" rel="stylesheet" media="all">
     <script src="inspector.js"></script>
     <title>Inspector </title>
-
-<style>
-  #docName {
-    font-weight: bold;
-  }
-</style>
 </head>
 
 <body>
-<p><span id=docName></span> &nbsp;
+<p><b id=docName></b> &nbsp;
 <a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
 <input type=file multiple onChange='fileSelect(this)' />
 </p>
@@ -25,19 +19,20 @@
 const READER = new FileReader();
 function fileSelect(t) { 
 //target t is the file selection HTMLInputElement
-    let a = t.files; display(t);
+    let a = t.files; //display(t);
     if (a.length == 0) return;
     display(READER);
     display(a.length == 1? a[0] : a);
 }
-function init() {
-  let s = "Small is beautiful", d = new Date(), 
-      a = [0, 11, "22", "abc"], b = new Set(a),
+let   s = "Small is beautiful", d = new Date(),
       one = 123, two = "456", random = Math.random, 
       sqrt = Math.sqrt, power = Math.pow, pi = Math.PI,
-      toString = (() => s),  //same as return s
-      c = {one, two, random, sqrt, power, pi, toString};
-  for (let x of [s, d, a, b, c, document, window]) 
+      toString = (() => s);  //same as return s
+var   a, b, c;
+function init() {
+    a = [0, 11, "22", "abc"]; b = new Set(a);
+    c = {one, two, random, sqrt, power, pi, toString};
+    for (let x of [s, d, a, b, c, document, window]) 
       display(x);
 }
     docName.innerText = document.title+" "+VERSION;
