@@ -16,24 +16,24 @@
 
 <script>
 "use strict";
-const READER = new FileReader();
+const F_READER = new FileReader();
 function fileSelect(t) { 
 //target t is the file selection HTMLInputElement
     let a = t.files; //display(t);
     if (a.length == 0) return;
-    display(READER);
+    display(F_READER);
     display(a.length == 1? a[0] : a);
 }
 let   s = "Small is beautiful", d = new Date(),
-      one = 123, two = "456", random = Math.random, 
-      sqrt = Math.sqrt, power = Math.pow, pi = Math.PI,
+      length = 123, name = "Circle", pi = Math.PI, 
+      sqrt = Math.sqrt, power = Math.pow, 
       toString = (() => s);  //same as return s
-var   a, b, c;
+var   a, b, c;  //global variables
 function init() {
     a = [0, 11, "22", "abc"]; b = new Set(a);
-    c = {one, two, random, sqrt, power, pi, toString};
-    for (let x of [s, d, a, b, c, document, window]) 
-      display(x);
+    c = {length, name, pi, sqrt, power, toString};
+    let cmd = [s, d, a, b, c, document, window, navigator];
+    for (let x of cmd) display(x);
 }
     docName.innerText = document.title+" "+VERSION;
     try {

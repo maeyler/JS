@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V1.6", ITERABLE = new Object();
+const VERSION = "V2.0", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
 var hist = [];    //object history -- global variable
@@ -29,10 +29,7 @@ function reportError(e) {
     out.style.backgroundColor = "pink";
 }
 function doMethod(met) { //target == list3
-    //let met = list3.children[c].innerText;
-    //_ = objA[current];
     let ff = _[met]; //simpler than reflection
-    if (!ff) ff = _.__proto__[met];
     if (typeof ff != "function") return;
     let n = ff.length;
     let s = "Enter ";
@@ -50,10 +47,9 @@ function doMethod(met) { //target == list3
 }
 function doProperty(c) { //target == list2
     if (c == 0 && _ instanceof Array) return;
-    let obj = objP[c];
-    if (obj === ITERABLE) 
-         display(objToArray(_));
-    else display(obj);
+    if (objP[c] === ITERABLE) 
+         display([..._]); //convert _ to Array
+    else display(objP[c]);
 }
 function doClick(evt, target) {
     let e = document.elementFromPoint(evt.clientX, evt.clientY);
@@ -110,21 +106,20 @@ function trunc(s, M) { //if s is long, truncate to M chars
     if (s.length > M+4) s = s.substring(0, M)+"...";
     return s;
 }
-function objToArray(obj) {
-    let a = []; for (let x of obj) a.push(x); return a;
-}
 function objToString(obj) {
     const LT = /</g;
     let s = obj.toString().replace(LT, "&lt;");
     if (typeof obj == "string") s = '"'+s+'"';
     else if (obj instanceof Array) s = '['+s+']';
-    else if (obj instanceof Set) s = '{'+objToArray(obj)+'}';
+    else if (obj instanceof Set) s = '{'+[...obj]+'}';
     return s;
 }
 function arrayToList(a, L) {
     const OBJ = "[object ", RB = "]";
     let list = "";
-    for (let obj of a) {
+    for (let j=0; j<a.length; j++) {
+        let obj = a[j];
+        if (obj == "") obj = " ";
         if (!obj) continue;
         let s = (L == list1? objToString(obj) : obj);
         s = trunc(s, MAX_CHARS);
@@ -138,6 +133,7 @@ function arrayToList(a, L) {
             list += "<li>"+ s +"</li>";
         else { //class name
             list += "<li class=cname>" + s.substring(3);
+            if (j > 0) continue; //show tip for the first item
             let sc = superClasses(_).join("<br>");
             list += "<span class=tip>"+ sc +"</span></li>";
         }
@@ -145,10 +141,10 @@ function arrayToList(a, L) {
     L.innerHTML = list;
 }
 function superClasses(obj) {
-    let a = []
-    while (obj = obj.__proto__) 
-        a.push(obj.constructor.name)
-    return a
+    let a = [];
+    while (obj = Object.getPrototypeOf(obj)) 
+        a.push(obj.constructor.name);
+    return a;
 }
 function display(f) {
     if (!f) return; let t = typeof f;
@@ -160,7 +156,6 @@ function display(f) {
     }
     let i = objA.indexOf(f);
     if (i < 0) objA.push(f); 
-    arrayToList(objA, list1);
     displayItem(i); return f;
 }
 function displayItem(c) {
@@ -177,60 +172,57 @@ function displayItem(c) {
     selectCurrent(true); 
   }
   function addProperty(key) {
+    if (objP.length > MAX_PROP) return;
     let obj = _[key];
     let s = key +": "+ objToString(obj);
-    objP.push(obj); prop.push(s);
+    objP.push(obj); prop.push(s); numP++;
   }
-  function addMethods(...metA) {
-    for (let m of metA) meth.push(m); 
-  }
-  function add_proto_() {
-    if (typeof _ == "string") {
-        addProperty("length"); addMethods("charAt", "concat", "includes", 
-        "indexOf", "repeat", "replace", "search", "split", "substring"); 
-    } else if (_ instanceof Array) {
-        addProperty("length"); addMethods("includes", "indexOf", 
-        "join", "push", "pop", "reverse", "sort", "splice");
-    } else if (_ instanceof Set) {
-        addProperty("size");
-        addMethods("add", "clear", "delete", "has", "values");
-    } else if (_ instanceof Map) {
-        addProperty("size");
-        addMethods("delete", "entries", "get", "has", "keys", "set");
-    } else if (_ instanceof RegExp) { 
-        addProperty("flags"); addMethods("test", "exec");
+  function process(proto) {
+  //http://stackoverflow.com/a/8024294/271577
+    if (proto != Object.getPrototypeOf(_)) try {
+      let aaP = null, aaS = "* *"+proto.constructor.name;
+      meth.push(aaS);
+      if (proto == _ && proto[Symbol.iterator]) {
+          aaP = ITERABLE; aaS += " — Iterable";
+      }
+      objP.push(aaP); prop.push(aaS);
+      let len = proto["length"]; //may throw TypeError
+      if (len && typeof len != "function" && proto == _) 
+          addProperty("length");
+    } catch(error) { //silently ignore
     }
-    /*else if (_ instanceof Error) { 
-        addProperty("fileName"); addProperty("stack");
-    }*/
-  }
-    //_ is global -- current object
-    selectItem(); __ = _; _ = objA[current];
-    objP.length = 1; let prop = [], meth = [];
-    objP[0] = null; prop[0] = "* *"+_.constructor.name;
-    if (_[Symbol.iterator]) {
-        objP[0] = ITERABLE; prop[0] += " — Iterable";
-    }
-    add_proto_(); list1.focus();
-    for (let key in _) {
-      if (objP.length > MAX_PROP) break;
+    if (Object.getPrototypeOf(proto) == null) 
+        return; //Object keys are not listed
+    for (let key of Object.getOwnPropertyNames(proto)) {
+      if (key.startsWith("webkit")) continue;
       try {
-        if (key == "webkitStorageInfo") continue;
-        let obj = _[key];
+        let obj = _[key]; //may throw TypeError
+        const LC = /[a-z0-9]/;
         if (typeof obj == "function") {
-            meth.push(key);
+            if (!LC.test(key[0])) continue;
+            meth.push(key); numM++;
         } else if (obj != null) {
-            const LC = /[a-z0-9]/;
+            if (key == "length") continue;
             //skip uppercase constants
-            if (LC.test(key)) addProperty(key);
+            if (!LC.test(key)) continue;
+            addProperty(key);
         }
       } catch(error) { //silently ignore
       }
     }
+  }
+  //_ is global -- current object
+    arrayToList(objA, list1);
+    selectItem(); __ = _; _ = objA[current];
+    objP.length = 0; //clear
+    let prop = [], meth = [], numP = 0, numM = 0;
+    list1.focus(); let proto = _;
+    do { process(proto);
+      proto = Object.getPrototypeOf(proto);
+    } while (proto);
     arrayToList(prop, list2);
     arrayToList(meth, list3);
-    let p = prop.length-1, m = meth.length;
-    let s = p+" properties and "+m+" methods";
+    let s = numP+" properties and "+numM+" methods";
     out.innerText = trunc(_.toString(), 25)+" — "+s; 
     out.style.backgroundColor = "";
     let n = hist.length;

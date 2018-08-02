@@ -33,24 +33,26 @@ list1 içinde seçilmiş nesneye `_` değişkeni olarak erişebiliriz
 Sayfa açılınca önce inspector.js kodu yüklenir <br>
 HTML elemanları yapılır ve `init()` ile 7 adet nesne gösterilir:
 ```
+let   s = "Small is beautiful", d = new Date(),
+      length = 123, name = "Circle", pi = Math.PI, 
+      sqrt = Math.sqrt, power = Math.pow, 
+      toString = (() => s);  //same as return s
+var   a, b, c;  //global variables
 function init() {
-  let s = "Small is beautiful", d = new Date(), 
-      a = [0, 11, "22", "abc"], b = new Set(a),
-      one = 123, two = "456", random = Math.random, 
-      sqrt = Math.sqrt, power = Math.pow, pi = Math.PI,
-      toString = (() => s),  //same as return s
-      c = {one, two, random, sqrt, power, pi, toString};
-  for (let x of [s, d, a, b, c, document, window]) 
-      display(x);
+    a = [0, 11, "22", "abc"]; b = new Set(a);
+    c = {length, name, pi, sqrt, power, toString};
+    let cmd = [s, d, a, b, c, document, window, navigator];
+    for (let x of cmd) display(x);
 }
 
 • s is a String with 18 chars 
-• d is a Date with nothing to display 
+• d is a Date with no properties
 • a is an Array with 2 numbers and 2 strings 
 • b is a Set with the same members as a 
-• c is an Object with 3 properties and 4 methods 
+• c is an Object with 3 properties and 3 methods 
 • document is the HTML document currently open 
 • window contains global variables related to this page
+* navigator gives information about the current browser
 ```
 
 ### Örnekler
