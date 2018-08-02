@@ -1,7 +1,7 @@
-[Inspector](../sss/inspector.html) 
+[Inspector](inspector.html) 
 yazılımı ile nesnelerin içindeki değerleri görebilir ve metodlarını çağırabiliriz
 
-![resim](screen%20V1.4.png)
+![resim](evolve/screen%20V1.4.png)
 
 Nesnelerin denetimi için ekranda üç liste ve iki metin kutusu görüyoruz:
 
@@ -33,16 +33,16 @@ list1 içinde seçilmiş nesneye `_` değişkeni olarak erişebiliriz
 Sayfa açılınca önce inspector.js kodu yüklenir <br>
 HTML elemanları yapılır ve `init()` ile 7 adet nesne gösterilir:
 ```
-let   s = "Small is beautiful", d = new Date(),
-      length = 123, name = "Circle", pi = Math.PI, 
-      sqrt = Math.sqrt, power = Math.pow, 
-      toString = (() => s);  //same as return s
-var   a, b, c;  //global variables
+var a, b, c;  //global variables
 function init() {
+    let s = "Small is beautiful", d = new Date(),
+       length = 123, name = "Circle", pi = Math.PI, 
+       sqrt = Math.sqrt, power = Math.pow, 
+       toString = (() => s), n = navigator;
     a = [0, 11, "22", "abc"]; b = new Set(a);
     c = {length, name, pi, sqrt, power, toString};
-    let cmd = [s, d, a, b, c, document, window, navigator];
-    for (let x of cmd) display(x);
+    for (let x of [s, d, a, b, c, document, window, n]) 
+        display(x);
 }
 
 • s is a String with 18 chars 

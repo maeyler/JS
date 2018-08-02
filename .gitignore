@@ -1,0 +1,29 @@
+# Java class files
+*.class
+SSS.exception
+Test page.html
+
+# Windows image file caches
+Thumbs.db
+thumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows shortcuts
+*.lnk
+
+# =========================
+# Operating System Files
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+

@@ -1,0 +1,58 @@
+  table {
+    padding: 2px;
+    border: 1px solid;
+    border-spacing: 1px;
+    background: yellow;
+  }
+  th {
+    font: 14px verdana, serif;
+    font-weight: bold;
+  }
+  ul { /*scroll doesn't work on td*/
+    padding: 0;
+    margin: 2px;
+    border: 1px solid;
+    width:  210px;
+    height: 260px;
+    background: white;
+    overflow-x: auto;
+    overflow-y: scroll;
+  }
+  li {
+    margin: 2px;
+    font: 12px arial, sans-serif;
+    list-style-type: none;
+    cursor: pointer;
+  }
+  li:hover {
+    color: white;
+    background-color: blue;
+  }
+  #out {
+    font: 13px arial, sans-serif;
+  }
+  #prev, #dele {
+    visibility: hidden;
+    font: 10px arial, sans-serif;
+    text-align: center;
+    color: white;
+    background-color: blue;
+    padding: 5px 5px;
+    position: absolute;
+  }
+  .cname, .tip {
+    font-weight: bold;
+    text-align: center;
+    background-color: #aaffaa;
+  }
+  .tip {
+    visibility: hidden;
+    color: black;
+    border: 1px solid;
+    padding: 6px;
+    position: absolute;
+  }
+  .cname:hover .tip { 
+    visibility: visible; 
+  }
+
