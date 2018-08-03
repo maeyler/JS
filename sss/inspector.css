@@ -7,6 +7,7 @@
   th {
     font: 14px verdana, serif;
     font-weight: bold;
+    cursor: default;
   }
   ul { /*scroll doesn't work on td*/
     padding: 0;
@@ -20,13 +21,18 @@
   }
   li {
     margin: 2px;
-    font: 12px arial, sans-serif;
     list-style-type: none;
     cursor: pointer;
+  }
+  li, #small {
+    font: 12px arial, sans-serif;
   }
   li:hover {
     color: white;
     background-color: blue;
+  }
+  button, checkbox {
+    cursor: pointer;
   }
   #out {
     font: 13px arial, sans-serif;

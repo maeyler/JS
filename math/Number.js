@@ -129,3 +129,26 @@ class Make { //Factory methods for numbers
         return new Complex(re, im);
     }
 }
+
+class Number2 { //testing another approach
+  constructor(t, a, b) { 
+    if (t[0] == "w") return new Whole(a); 
+    if (t[0] == "r") { 
+        let n=a, d=b; 
+        if (d < 0) { n = -n; d = -d; } 
+        const g = Rational.gcd(n, d); 
+        if (g == d) return new Whole(n/g); 
+        return new Rational(n/g, d/g); 
+    }; 
+    if (t[0] == "d") { 
+        if (x == Math.round(a))  
+             return new Whole(a); 
+        return new Decimal(a); 
+    }; 
+    if (t[0] == "c") { 
+        if (b == 0)  
+             return Make.decimal(a); 
+        return new Complex(a, b); 
+    }; 
+  } 
+}

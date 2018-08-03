@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <link href="inspector.css" rel="stylesheet" media="all">
     <script src="inspector.js"></script>
+    <script src="../math/Number.js"></script>
     <title>Inspector </title>
 </head>
 
@@ -37,7 +38,8 @@ function init() {
 }
     docName.innerText = document.title+" "+VERSION;
     try {
-        inspect(document.body, init, "_.toString()");
+        inspect(document.body, init);
+        inp.value = "new Number(c.pi)";
     } catch(e) {
         reportError(e);
     }

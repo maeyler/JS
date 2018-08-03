@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.1", ITERABLE = new Object();
+const VERSION = "V2.2", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
 var hist = [];    //object history -- global variable
@@ -71,7 +71,7 @@ function previous() {
     if (hist.length < 2) return;
     hist.pop(); display(hist.pop()); 
 }
-function remove() {
+function removeIt() {
     if (objA.length < 2) return;
     objA.splice(current, 1);
     list1.removeChild(list1.children[current]);
@@ -81,7 +81,7 @@ function doKey(evt) {
     //console.log(evt.key, current);
     switch (evt.key) {
       case "Delete":
-        remove(); return;
+        removeIt(); return;
       case "ArrowUp":
         evt.stopPropagation();
         displayItem(current-1); return;
@@ -172,7 +172,7 @@ function displayItem(c) {
     selectCurrent(true); 
   }
   function addProperty(key) {
-    if (objP.length > MAX_PROP) return;
+    //if (objP.length > MAX_PROP) return;
     let obj = _[key];
     let s = key +": "+ objToString(obj);
     objP.push(obj); prop.push(s); numP++;
@@ -193,14 +193,18 @@ function displayItem(c) {
     }
     if (Object.getPrototypeOf(proto) == null) 
         return; //Object keys are not listed
-    for (let key of Object.getOwnPropertyNames(proto)) {
+    let K = Object.getOwnPropertyNames(proto);
+    if (K.length > MAX_PROP) K.length = MAX_PROP;
+    let mmm = [];
+    for (let key of K) {
       if (key.startsWith("webkit")) continue;
       try {
         let obj = _[key]; //may throw TypeError
         const LC = /[a-z0-9]/;
         if (typeof obj == "function") {
+            if (key == "constructor") continue;
             if (!LC.test(key[0])) continue;
-            meth.push(key); numM++;
+            mmm.push(key); numM++;
         } else if (obj != null) {
             if (key == "length") continue;
             //skip uppercase constants
@@ -210,6 +214,10 @@ function displayItem(c) {
       } catch(error) { //silently ignore
       }
     }
+    //we cannot sort properties, Array keys are string
+    if (mmm.length == 0) return;
+    if (sorted.checked) mmm.sort();
+    meth = meth.concat(mmm);
   }
   //_ is global -- current object
     arrayToList(objA, list1);
@@ -229,7 +237,7 @@ function displayItem(c) {
     if (hist[n-1] !== _) hist.push(_); 
     if (n > 50) hist.splice(0, 20);
 }
-function inspect(parent, init, command) {
+function inspect(parent, init) {
     let t = document.createElement("table");
     parent.appendChild(t); t.innerHTML =
 `
@@ -240,13 +248,16 @@ function inspect(parent, init, command) {
       onMouseOut ='makeVisible(prev, false)'>◀</button>
     <span id=prev>Display previous object</span>
     &nbsp; Objects &nbsp;
-    <button onClick='remove()' 
+    <button onClick='removeIt()' 
       onMouseOver='makeVisible(dele, true)' 
       onMouseOut ='makeVisible(dele, false)'>✘</button>
     <span id=dele>Delete current object</span>
     </th>
     <th>Properties</th>
-    <th>Methods</th>
+    <th>Methods
+    <input id=sorted type=checkbox onClick="display(_)">
+    <span id=small>sort</span>
+    </th>
   </tr>
   <tr>
     <td><ul id=list1 
@@ -261,13 +272,13 @@ function inspect(parent, init, command) {
     </ul></td>
   </tr>
   <tr>
-    <td><input id=inp style="width:198px;" 
+    <td><input id=inp style="width:210px;" 
          onKeyUp='doEnter(event)'></td>
     <td id=out colSpan=2>output goes here</td>
   </tr>
 </tbody>
 `
-    init(); inp.value = command;
+    sorted.checked = true; init(); 
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
 }
