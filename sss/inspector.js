@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.2", ITERABLE = new Object();
+const VERSION = "V2.3", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
 var hist = [];    //object history -- global variable
@@ -171,8 +171,11 @@ function displayItem(c) {
     if (c >= objA.length) current = 0;
     selectCurrent(true); 
   }
+  function addMethod(m, key) {
+    if (meth.includes(key)) return;
+    m.push(key); numM++;
+  }
   function addProperty(key) {
-    //if (objP.length > MAX_PROP) return;
     let obj = _[key];
     let s = key +": "+ objToString(obj);
     objP.push(obj); prop.push(s); numP++;
@@ -204,12 +207,12 @@ function displayItem(c) {
         if (typeof obj == "function") {
             if (key == "constructor") continue;
             if (!LC.test(key[0])) continue;
-            mmm.push(key); numM++;
+            addMethod(mmm, key);
         } else if (obj != null) {
             if (key == "length") continue;
             //skip uppercase constants
-            if (!LC.test(key)) continue;
-            addProperty(key);
+            if (proto == _ || LC.test(key))
+                addProperty(key);
         }
       } catch(error) { //silently ignore
       }
@@ -229,6 +232,7 @@ function displayItem(c) {
       proto = Object.getPrototypeOf(proto);
     } while (proto);
     arrayToList(prop, list2);
+    addMethod(meth, "toString");
     arrayToList(meth, list3);
     let s = numP+" properties and "+numM+" methods";
     out.innerText = trunc(_.toString(), 25)+" — "+s; 
