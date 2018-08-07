@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link href="inspector.css" rel="stylesheet" media="all">
+    <script src="inspector.js"></script>
+    <title>Employee (classes) </title>
+</head>
+
+<body>
+<p style="width: 650px">From
+<a href="http://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model" 
+target=_blank>Object model</a> using
+<a href="https://medium.com/front-end-hacking/es6-lets-divide-our-phones-into-classes-4574bd0454bf" 
+target=_blank>Phones into classes</a>. &nbsp;
+<b>Ref: </b><span id=docName></span> &nbsp;
+<a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
+<!--a href="https://maeyler.github.io/JS/sss/Turkish">Turkish</a-->
+</p>
+
+<script>
+"use strict";
+class Employee {
+  constructor(n, d) {
+    this.name = n; this.dept = d;
+  }
+  toString() { 
+    return this.name+" — "+this.dept; 
+  }
+}
+class Manager extends Employee {
+  constructor(n) {
+    super(n, 'general');
+    this.reports = [];
+  }
+  toString() { 
+    return this.name+", the manager"; 
+  }
+}
+class WorkerBee extends Employee {
+  constructor(n, d, p) {
+    super(n, d);
+    this.projects = [];
+    this.projects.push(p);
+  }
+  joinProject(p) {
+    this.projects.push(p);
+    return this;
+  }
+}
+class SalesPerson extends WorkerBee {
+  constructor(n, q, p) {
+    super(n, 'sales', p);
+    this.quota = q;
+  }
+  setQuota(q) {
+    this.quota = q;
+    return this;
+  }
+}
+class Engineer extends WorkerBee {
+  constructor(n, m, p) {
+    super(n, 'engineering', p);
+    this.machine = m;
+  }
+  useMachine(m) {
+    this.machine = m;
+    return this;
+  }
+}
+
+var t = new Employee('Tim', 'general');
+var s = new Manager('Sally');
+var m = new WorkerBee('Mark', 'accounts', 'cleanup');
+var f = new SalesPerson('Fred', 105, 'cleanup');
+var j = new Engineer('Jane', 'CNC171', 'abc');
+function init() {
+    for (let x of [window, s, t, m, f, j])
+        display(x);
+}
+//
+    docName.innerText = "Inspector "+VERSION;
+    try {
+        inspect(document.body, init);
+        inp.value = "new SalesPerson('Zoe', 130, 'abc')";
+    } catch(e) {
+        reportError(e);
+    }
+</script>
+</body>
+</html>
