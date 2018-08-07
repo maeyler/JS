@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.3", ITERABLE = new Object();
+const VERSION = "V2.4", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
 var hist = [];    //object history -- global variable
@@ -159,6 +159,8 @@ function display(f) {
     displayItem(i); return f;
 }
 function displayItem(c) {
+  const DEPRECATED = ["anchor", "big", "blink", "bold", "fixed", "fontcolor", 
+    "fontsize", "italics", "link", "small", "strike", "sub", "substr", "sup"];
   function selectCurrent(dark) {
     let b = list1.children[current]; if (!b) return;
     b.style.color = (dark? "white" : "");
@@ -233,6 +235,10 @@ function displayItem(c) {
     } while (proto);
     arrayToList(prop, list2);
     addMethod(meth, "toString");
+    if (typeof _ == "string") { //remove DEPRECATED items
+        meth = meth.filter(m => !DEPRECATED.includes(m));
+        numM = meth.length - 2;
+    }
     arrayToList(meth, list3);
     let s = numP+" properties and "+numM+" methods";
     out.innerText = trunc(_.toString(), 25)+" — "+s; 
