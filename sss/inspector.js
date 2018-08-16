@@ -1,11 +1,12 @@
 "use strict";
-const VERSION = "V2.4", ITERABLE = new Object();
+const VERSION = "V2.5", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
 var hist = [];    //object history -- global variable
 var current = 0;  //current object index in list1 & objA
 var _  = "";  //current object
 var __ = "";  //previous object
+var NL = "\n";
 function makeVisible(t, val) {
     t.style.visibility = val? "visible" : "";
     if (val) setTimeout(hideTips, 2500);
@@ -30,7 +31,7 @@ function reportError(e) {
 }
 function doMethod(met) { //target == list3
     let ff = _[met]; //simpler than reflection
-    if (typeof ff != "function") return;
+    //if (typeof ff != "function") return;
     let n = ff.length;
     let s = "Enter ";
     if (n == 0) s += "optional arguments "; 

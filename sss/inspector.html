@@ -31,13 +31,12 @@ function fileSelect(t) {
 var a, b, c;  //global variables
 function init() {
     let s = "Small is beautiful", d = new Date(),
-       length = 123, name = "Circle", pi = Math.PI, 
-       sqrt = Math.sqrt, power = Math.pow, 
-       toString = (() => s), n = navigator;
+       len = 123, name = "Circle", pi = Math.PI, 
+       sqrt = Math.sqrt, power = Math.pow;
     a = [0, 11, "22", "abc"]; b = new Set(a);
-    c = {length, name, pi, sqrt, power, toString};
-    for (let x of [s, d, a, b, c, document, window, n]) 
-        display(x);
+    c = {len, name, pi, sqrt, power};
+    let A = [s, d, a, b, c, document, window, navigator];
+    for (let x of A) display(x);
 }
     docName.innerText = document.title+" "+VERSION;
     try {
