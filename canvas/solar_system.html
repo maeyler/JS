@@ -7,33 +7,50 @@
 
 <script>
 "use strict";
-const SIZE = 300;
+const SIZE = 300,
+  K = 2*Math.PI/60, // period = 60 sec
+  H = SIZE/2,  R = SIZE/3 + 5,
+  BLUE  = 'rgba(50, 200, 255, 0.8)', 
+  GRAY  = 'rgba(99, 99, 99, 0.4)';
 const sun = new Image();
 sun.src = '../images/Canvas_sun.png';
 var running;
 function runStop() {
     if (running) {
         button.value = "Run"; 
+        out.innerText = "";
         running = false;
     } else {
         button.value = "Stop"; 
         running = true; draw();
     }
 }
+function image() {
+    if (running) runStop();
+    let t = 0; 
+    //slightly more than full cycle == 60*K
+    while (t<63*K) { render(t); t+=0.01 }
+}
 function draw() {
-  const H = SIZE/2,  R = SIZE/3 + 5,
-      BLUE  = 'rgba(50, 200, 255, 0.8)', 
-      GRAY  = 'rgba(99, 99, 99, 0.4)',
-      K = 2*Math.PI / 60; // period = 60 sec
-
+  if (!running) return;
   let time = new Date();
   let sec = time.getSeconds();
   let ms = time.getMilliseconds();
   let t = K * sec + (K/1000) * ms
   out.innerText = "Seconds = "+sec;
-  if (!trace.checked) 
+  if (trace.checked) render(t);
+  else {
     ctx.drawImage(sun, 0, 0, SIZE, SIZE);
-  
+    render(t);
+    // Earth orbit
+    ctx.beginPath(); 
+    ctx.arc(H, H, R, 0, 2*Math.PI);
+    ctx.strokeStyle = BLUE;
+    ctx.stroke();
+  }
+  requestAnimationFrame(draw);
+}
+function render(t) {
   // Earth
   ctx.save();
   ctx.translate(H, H);
@@ -54,13 +71,6 @@ function draw() {
   ctx.fill();
   ctx.restore();
   ctx.restore();
-  
-  ctx.beginPath(); // Earth orbit
-  ctx.arc(H, H, R, 0, 2*Math.PI);
-  ctx.strokeStyle = BLUE;
-  if (!trace.checked) ctx.stroke();
-  
-  if (running) requestAnimationFrame(draw);
 }
 </script>
 </head>
@@ -71,9 +81,10 @@ function draw() {
 
 <canvas id=canvas></canvas>
 <p>
+<input type=button id=button value="Stop" onClick="runStop()" />
+<input id=trace type=checkbox>Trace </input>&nbsp;
+<input type=button value="Image" onClick="image()" />
 <span id=out>t =</span>
-<input id=trace type=checkbox>Trace path
-<input type=button id=button value="Stop" onClick="runStop()">
 </p>
 <hr />
 <b>Sample code</b>
