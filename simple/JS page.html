@@ -40,8 +40,9 @@ function makePage() {
       elt("div", "Ref: ", elt("a", "Creating nodes"))
     )
   )
-  document.getElementsByTagName("a")[0].href =
-"http://eloquentjavascript.net/14_dom.html#c_3rSOndXJQI"
+  let aa = document.getElementsByTagName("a")[0]
+  aa.href = "http://eloquentjavascript.net/14_dom.html#c_3rSOndXJQI"
+  aa.target="ExternalDocument"
 }
 makePage()
 </script>
