@@ -6,21 +6,20 @@
     <meta name="viewport" content="width=device-width">
     <title>Empty Page xxx </title>
 
-  <style>
-    .xxx { /* CSS code -- not used */
-        font-size: 12px;
-        background-color: blue;
+<style>
+    #out { /* CSS code used in out */
+        font-size: 18px;
+        background: blue;
         color: white;
         text-align: center;
-        padding: 5px 5px;
-        position: absolute;
+        padding: 10px;
     }
-  </style>
+</style>
 
 <script>
 "use strict";
 // JavaScript code used in button
-function xxxf() {
+function cnt() {
     console.log("Counter = "+count); 
     return count++; 
 }
@@ -31,15 +30,15 @@ function xxxf() {
 
 <h2 id=title></h2>
 
-<button onClick="xxxf()">xxx</button>
+<button onClick="cnt()">xxx</button>
 
 <p id=out></p>
 
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
-<hr />
 
+<hr />
 <p>Ref: <a href="https://www.w3schools.com/js/" 
    target="ExternalDocument">JS Tutorial</a>
 </p>
@@ -48,9 +47,9 @@ function xxxf() {
     //global variable id is the HTML element with id 
     //const title = document.getElementById("title");
     title.innerText = document.title;
-    sample.innerText = xxxf.toString();
+    sample.innerText = cnt.toString();
     out.innerHTML = "Modify all items marked xxx";
-    var count = 0; xxxf();
+    var count = 0; cnt();
 </script>
 
 </body>
