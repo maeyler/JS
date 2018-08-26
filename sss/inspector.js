@@ -22,12 +22,12 @@ function report(input, result) {
         msg += trunc(" ⇒ "+result, 2*MAX_CHARS); 
     }
     console.log(msg); out.innerText = msg; 
-    out.style.backgroundColor = "";
+    out.style.background = "";
 }
 function reportError(e) {
     console.log(e); 
     out.innerText = trunc(" "+e, 4*MAX_CHARS); 
-    out.style.backgroundColor = "pink";
+    out.style.background = "pink";
 }
 function doMethod(met) { //target == list3
     let ff = _[met]; //simpler than reflection
@@ -153,7 +153,7 @@ function display(f) {
     if (f instanceof Promise) { //nothing to display in f
         f.then(display, reportError); console.log(f);
         out.innerText = "A Promise was made";
-        out.style.backgroundColor = "cyan"; return;
+        out.style.background = "cyan"; return;
     }
     let i = objA.indexOf(f);
     if (i < 0) objA.push(f); 
@@ -165,7 +165,7 @@ function displayItem(c) {
   function selectCurrent(dark) {
     let b = list1.children[current]; if (!b) return;
     b.style.color = (dark? "white" : "");
-    b.style.backgroundColor = (dark? "blue" : "");
+    b.style.background = (dark? "blue" : "");
     //b.scrollIntoView();
   }
   function selectItem() {
@@ -243,7 +243,7 @@ function displayItem(c) {
     arrayToList(meth, list3);
     let s = numP+" properties and "+numM+" methods";
     out.innerText = trunc(_.toString(), 25)+" — "+s; 
-    out.style.backgroundColor = "";
+    out.style.background = "";
     let n = hist.length;
     if (hist[n-1] !== _) hist.push(_); 
     if (n > 50) hist.splice(0, 20);
