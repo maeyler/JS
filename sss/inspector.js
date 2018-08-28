@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.5", ITERABLE = new Object();
+const VERSION = "V2.6", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
 var hist = [];    //object history -- global variable
@@ -37,8 +37,7 @@ function doMethod(met) { //target == list3
     if (n == 0) s += "optional arguments "; 
     if (n == 1) s += "the argument ";
     if (n >= 2) s += n+" arguments separated by commas ";
-    let //arg = "("; while (--n > 0) arg += ", "; arg += ")";
-    arg = prompt(s+"in order to call "+met+"()");
+    let arg = prompt(s+"in order to call "+met+"()");
     if (arg != null) try {
         let cmd = "_."+met+"("+arg+")";
         report(cmd, eval(cmd));
@@ -112,7 +111,7 @@ function objToString(obj) {
     let s = obj.toString().replace(LT, "&lt;");
     if (typeof obj == "string") s = '"'+s+'"';
     else if (obj instanceof Array) s = '['+s+']';
-    else if (obj instanceof Set) s = '{'+[...obj]+'}';
+    //else if (obj instanceof Set) s = '{'+[...obj]+'}';
     return s;
 }
 function arrayToList(a, L) {
@@ -120,7 +119,7 @@ function arrayToList(a, L) {
     let list = "";
     for (let j=0; j<a.length; j++) {
         let obj = a[j];
-        if (obj == "") obj = " ";
+        if (obj === "") obj = " ";
         if (!obj) continue;
         let s = (L == list1? objToString(obj) : obj);
         s = trunc(s, MAX_CHARS);
