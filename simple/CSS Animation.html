@@ -10,12 +10,12 @@
 
 <h2 id=title></h2>
 
-<button onClick="this.animate(t1, 5000)">translateX</button>
-<button onClick="this.animate(t2, 5000)">rotate 2D</button>
+<button onClick="this.animate(t1, 5000)">translate</button>
+<button onClick="this.animate(t2, 5000)">rotate</button>
 <button onClick="this.animate(t3, 6000)">background</button>
-<button onClick="this.animate(t4, 6000)">fontSize</button>
+<button onClick="out.animate(t4, 6000)">fontSize</button>
 
-<p id=out></p>
+<p id=out>Animations in CSS are powerful and simple</p>
 
 <hr />
 <b>Sample code</b>
@@ -23,7 +23,7 @@
 
 <hr />
 <p>Ref: <a href="https://webkit.org/blog/8343/web-animations-in-webkit/" 
-   target="ExternalDocument">JS Tutorial</a>
+   target="ExternalDocument">Web Animations in WebKit</a>
 </p>
 
 <script>
@@ -32,9 +32,10 @@ const
   t1 = { transform: ["translateX(0)", "translateX(300px)", "translateX(0)"] },
   t2 = { transform: ["rotate(0)", "rotate(90deg)", "rotate(0)"] },
   t3 = { background: ["yellow", "cyan", "magenta", "yellow"] },
-  t4 = { fontSize: ["100%", "200%", "100%", "60%", "80%"] };
+  t4 = { fontSize: ["100%", "150%", "100%", "75%", "100%"] };
     title.innerText = document.title;
-    sample.innerText = 't3 = { background: ["yellow", "cyan", "magenta", "yellow"] }'
+    sample.innerText 
+      = 't3 = { background: ["yellow", "cyan", "magenta", "yellow"] }'
       + '\n<button onClick="this.animate(t3, 6000)">background</button>';
 </script>
 

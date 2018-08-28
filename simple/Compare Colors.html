@@ -8,34 +8,52 @@
 
 <script>
 "use strict";
+function twoDigits(s) {
+    s = Number(s).toString(16);
+    while (s.length < 2) s = "0"+s;
+    return s;
+}
+function getRGB(r,g,b) {
+    //return "rgb("+r+","+g+","+b+")";
+    return twoDigits(r)+twoDigits(g)+twoDigits(b);
+}
 function getColor() {
-    const r = R.value, g = G.value, b = B.value;
-    return "rgb("+r+","+g+","+b+")";
+    let r = R.value, g = G.value, b = B.value;
+    return getRGB(r,g,b);
 }
 function inverseC() {
-    const r = 255-R.value, g = 255-G.value, b = 255-B.value;
-    return "rgb("+r+","+g+","+b+")";
+    let r = 255-R.value, g = 255-G.value, b = 255-B.value;
+    return getRGB(r,g,b);
+}
+function useColor(hex, elt) {
+    let col = "#"+hex;
+    elt.style.background = col;
+    let nam = codeToName.get(hex);
+    if (nam) col += " "+nam;
+    return col;
 }
 function setColor() {
-    const c1 = getColor();
-    const c2 = inverseC();
-    //D1.style.color = c2;
-    D1.style.background = c1;
-    //D2.style.color = c1;
-    D2.style.background = c2;
-    console.log(c1); return c1; 
+    let c1 = useColor(getColor(), D1);
+    let c2 = useColor(inverseC(), D2);
+    out.innerText = "Color: "+c1+"   Inverse: "+c2;
 }
+const cName = ["Aqua", "Beige", "Black", "Blue", "Brown", "Coral", "Crimson", 
+    "Cyan", "DimGray", "Gold", "Gray", "Green", "Indigo ", "Ivory", "Lime", 
+    "Magenta", "Navy", "OldLace", "Olive", "Orange", "Pink", "Purple", "Red", 
+    "Silver", "Tan", "Turquoise", "Violet", "White", "Yellow"];
+const cCode = ["00FFFF", "F5F5DC", "000000", "0000FF", "A52A2A", "FF7F50", "DC143C", 
+    "00FFFF", "696969", "FFD700", "808080", "008000", "4B0082", "FFFFF0", "00FF00", 
+    "FF00FF", "000080", "FDF5E6", "808000", "FFA500", "FFC0CB", "800080", "FF0000", 
+    "C0C0C0", "D2B48C", "40E0D0", "EE82EE", "FFFFFF", "FFFF00"];
 </script>
 
 <style>
-    div {
-        height:120px;
-        width:360px;
+    body  {width:400px;}
+    input {width:100px;}
+    #D1, #D2 {
+        height:150px;
         text-align: center;
         vertical-align: middle;
-    }
-    input {
-        width:100px
     }
 </style>
 
@@ -43,7 +61,7 @@ function setColor() {
 
 <h2 id=title></h2>
 
-<p id=out></p>
+<pre id=out></pre>
 R<input id=R type="range" min=0 max=255 value=232 onChange=setColor()>
 G<input id=G type="range" min=0 max=255 value= 68 onChange=setColor()>
 B<input id=B type="range" min=0 max=255 value=127 onChange=setColor()>
@@ -61,11 +79,11 @@ B<input id=B type="range" min=0 max=255 value=127 onChange=setColor()>
 </p>
 
 <script>
-    //HTML element with id has global variable id
-    //const title = document.getElementById("title");
     title.innerText = document.title;
-    sample.innerText = setColor.toString();
-    out.innerText = D1.innerText+" "+D2.innerText;
+    sample.innerText = useColor+"\n"+setColor;
+    var codeToName = new Map();
+    for (let i=0; i<cName.length; i++) 
+        codeToName.set(cCode[i].toLowerCase(), cName[i]);
     setColor();
 </script>
 
