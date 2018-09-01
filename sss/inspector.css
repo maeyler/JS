@@ -13,11 +13,15 @@
     padding: 0;
     margin: 2px;
     border: 1px solid;
-    width:  210px;
-    height: 260px;
+    width:  202px;
+    height: 388px;
     background: white;
     overflow-x: auto;
     overflow-y: scroll;
+  }
+  #list2, #list3 {
+    width:  186px;
+    height: 178px;
   }
   li {
     margin: 2px;
@@ -33,6 +37,12 @@
   }
   button, checkbox {
     cursor: pointer;
+  }
+  p {
+    margin: 8px 0;    
+  }
+  #inp, #out {
+    width: 398px;
   }
   #out {
     font: 13px arial, sans-serif;

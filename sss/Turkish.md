@@ -1,7 +1,7 @@
 [Inspector](inspector.html) 
 yazılımı ile nesnelerin içindeki değerleri görebilir ve metodlarını çağırabiliriz
 
-![resim](evolve/screen%20V1.4.png)
+![resim](screen.png)
 
 Nesnelerin denetimi için ekranda üç liste ve iki metin kutusu görüyoruz:
 

@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.6", ITERABLE = new Object();
+const VERSION = "V2.7", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [];
 var hist = [];    //object history -- global variable
@@ -264,27 +264,33 @@ function inspect(parent, init) {
     <span id=dele>Delete current object</span>
     </th>
     <th>Properties</th>
-    <th>Methods
-    <input id=sorted type=checkbox onClick="display(_)">
-    <span id=small>sort</span>
-    </th>
   </tr>
   <tr>
-    <td><ul id=list1 
+    <td rowSpan=3><ul id=list1 
         onClick='doClick(event, this)' 
         tabindex="0" onKeyDown='doKey(event)'>
     </ul></td>
     <td><ul id=list2 
         onClick='doClick(event, this)'>
     </ul></td>
+  </tr>
+  <tr>
+    <th>Methods
+    <input id=sorted type=checkbox onClick="display(_)">
+    <span id=small>sort</span>
+    </th>
+  </tr>
+  <tr>
     <td><ul id=list3 
         onClick='doClick(event, this)'>
     </ul></td>
   </tr>
   <tr>
-    <td><input id=inp style="width:210px;" 
-         onKeyUp='doEnter(event)'></td>
-    <td id=out colSpan=2>output goes here</td>
+    <td colSpan=2><input id=inp onKeyUp='doEnter(event)'>
+    </td>
+  </tr>
+  <tr>
+    <td colSpan=2 id=out></td>
   </tr>
 </tbody>
 `

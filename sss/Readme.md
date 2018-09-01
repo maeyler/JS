@@ -1,7 +1,7 @@
 [Inspector](inspector.html) 
 is a web page that shows the properties and the methods of a given object.
 
-![resim](evolve/screen%20V1.4.png)
+![resim](screen.png)
 
 Three lists and two text boxes are shown on the screen for inspection:
 

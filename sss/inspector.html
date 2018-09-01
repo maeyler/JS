@@ -10,13 +10,10 @@
 </head>
 
 <body>
-<p style="width: 650px">
-<b id=docName></b> &nbsp;
+<p><b id=docName></b> &nbsp;
 <a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
-<input type=file multiple onChange='fileSelect(this)' /> &nbsp;
 <a href="https://maeyler.github.io/JS/sss/Turkish">Turkish</a>
 </p>
-
 <script>
 "use strict";
 const RDR2 = new FileReader();
@@ -46,5 +43,7 @@ function init() {
         reportError(e);
     }
 </script>
+<p><input type=file multiple onChange='fileSelect(this)' />
+</p>
 </body>
 </html>
