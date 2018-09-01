@@ -9,14 +9,10 @@
 </head>
 
 <body>
-<p style="width: 650px">From
-<a href="http://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model" 
+<p>From <a href="http://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model" 
 target="ExternalDocument">Object model</a> using
 <a href="https://medium.com/front-end-hacking/es6-lets-divide-our-phones-into-classes-4574bd0454bf" 
 target="ExternalDocument">Phones into classes</a>. &nbsp;
-<b>Ref: </b><span id=docName></span> &nbsp;
-<a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
-<!--a href="https://maeyler.github.io/JS/sss/Turkish">Turkish</a-->
 </p>
 
 <script>
@@ -69,7 +65,6 @@ class Engineer extends WorkerBee {
     return this;
   }
 }
-
 var t = new Employee('Tim', 'general');
 var s = new Manager('Sally');
 var m = new WorkerBee('Mark', 'accounts', 'cleanup');
@@ -79,8 +74,6 @@ function init() {
     for (let x of [window, s, t, m, f, j])
         display(x);
 }
-//
-    docName.innerText = "Inspector "+VERSION;
     try {
         inspect(document.body, init);
         inp.value = "new SalesPerson('Zoe', 130, 'abc')";
@@ -88,5 +81,15 @@ function init() {
         reportError(e);
     }
 </script>
+
+<p><b>Ref: </b><span id=docName></span> &nbsp;
+<a href="https://maeyler.github.io/JS/sss/" target="ExternalDocument">Read me</a> &nbsp;
+<a href="https://maeyler.github.io/JS/sss/Turkish" target="ExternalDocument" >Turkish</a>
+<p>
+
+<script>
+    docName.innerText = "Inspector "+VERSION;
+</script>
+
 </body>
 </html>
