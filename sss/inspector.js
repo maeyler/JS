@@ -251,7 +251,6 @@ function inspect(parent, init) {
     let t = document.createElement("table");
     parent.appendChild(t); t.innerHTML =
 `
-<tbody>
   <tr>
     <th><button onClick='previous()' 
       onMouseOver='makeVisible(prev, true)'
@@ -276,7 +275,7 @@ function inspect(parent, init) {
   </tr>
   <tr>
     <th>Methods
-    <input id=sorted type=checkbox onClick="display(_)">
+    <input id=sorted type=checkbox checked=true onClick="display(_)">
     <span id=small>sort</span>
     </th>
   </tr>
@@ -292,9 +291,8 @@ function inspect(parent, init) {
   <tr>
     <td colSpan=2 id=out></td>
   </tr>
-</tbody>
 `
-    sorted.checked = true; init(); 
+    init(); 
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
 }

@@ -12,16 +12,11 @@
   ul { /*scroll doesn't work on td*/
     padding: 0;
     margin: 2px;
+    min-width:  170px;
     border: 1px solid;
-    width:  202px;
-    height: 388px;
     background: white;
     overflow-x: auto;
-    overflow-y: scroll;
-  }
-  #list2, #list3 {
-    width:  186px;
-    height: 178px;
+    overflow-y: auto;
   }
   li {
     margin: 2px;
@@ -42,10 +37,16 @@
     margin: 8px 0;    
   }
   #inp, #out {
-    width: 398px;
+    width: 98%;
   }
   #out {
     font: 13px arial, sans-serif;
+  }
+  #list1 {
+    height: 392px;
+  }
+  #list2, #list3 {
+    height: 178px;
   }
   #prev, #dele {
     visibility: hidden;
