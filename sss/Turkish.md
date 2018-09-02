@@ -80,7 +80,7 @@ _.getCurrentPosition(display)
 _.readAsText(__)
 
 // uzak metin dosyası -- bir iki saniye süren Promise
-fetch("../test/test.txt")  //remote file
+fetch("../hard/test.txt")  //remote file
 _.text()   //returns String
 ```
 

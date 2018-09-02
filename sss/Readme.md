@@ -79,7 +79,7 @@ _.getCurrentPosition(display)
 _.readAsText(__)   //result contains the file
 
 // remote text file -- Promise may take seconds
-fetch("../test/test.txt")  //remote file
+fetch("../hard/test.txt")  //remote file
 _.text()   //returns String
 ```
 
