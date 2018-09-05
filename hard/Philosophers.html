@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Dining Philosophers </title>
+
+<style>
+    td {
+        font-size: 12px;
+        width: 90px;
+        text-align: center;
+    }
+    pre {
+        overflow-x: auto;
+    }
+</style>
+
+<script>
+"use strict";
+var running, clock, list;  //global
+var delay = 500; //msec
+const phil = new Array(4);
+const 
+  IMG_PREF = "<img src='../images/", IMG_SUFX = ".gif'>",
+  HUNGRY = 'hungry', WAITQUE = 'waitQue', WAITING = 'waiting', 
+  EATQUE = 'eatQue',  EATING = 'eating', FULL = 'full', 
+  GRABS = "grabs", EATS = "eats", ENDS = "ends", BUSY = 'o';
+
+function report(both) {
+    tim.innerText = "Clock = "+clock.toFixed();
+    if (both) out.innerText = list.join("\n");
+}
+function setRunning(run) {
+    running = run;
+    button.innerText = run? "Stop" : "Run"; 
+    out.innerText = run? "running" : "stopped";
+}
+function release(i = 0) {
+    phil[i].setState(FULL); setRunning(true); oneStep();
+}
+function doStep() {
+    if (running) setRunning(false); 
+    oneStep(); report(true);
+}
+function runStop() {
+    setRunning(!running);
+    if (running) {
+        init(); oneStep();
+    }
+}
+function init() {
+    clock = 0; list = [];
+    for (let p of phil) { 
+        p.left.innerText = "";
+        p.setState(HUNGRY);
+    }
+    list.sort((e1, e2)=>(e1.when-e2.when));
+    console.assert(list.length == phil.length);
+    report(!running);
+}
+function oneStep() {
+    if (!clock || !list) init();
+    let t0 = clock;
+    if (list.length == 0) {
+        runStop(); return;
+    }
+    //first bound event
+    let evt = list[0]; list.splice(0, 1);
+    clock = evt.when; evt.process();
+    
+    //conditional events
+    for (let p of phil) 
+      if (p.state == WAITQUE) {
+          if (p.right.innerText) continue;
+          p.setState(WAITING);
+          p.right.innerText = BUSY;
+      } else if (p.state == EATQUE) {
+          if (p.left.innerText) continue;
+          p.setState(EATING);
+          p.left.innerText = BUSY;
+      }
+    console.log(evt+" => "+evt.who.state); report();
+    if (running) setTimeout(oneStep, clock-t0);
+}
+function setImage(p, s) {
+    let img = IMG_PREF+p.state+IMG_SUFX;
+    p.label.innerHTML = img+"<br>"+s;
+}
+class Philosopher {
+  constructor(name, idx) {
+    this.name = name; 
+    this.count = 0;
+    this.state = HUNGRY; 
+    this.left  = document.getElementById("c"+idx);
+    this.label = document.getElementById("p"+idx);
+    let n = idx+1; if (n == phil.length) n = 0;
+    this.right = document.getElementById("c"+n);
+    setImage(this, name);
+  }
+  toString() { return this.name; }
+  setState(s) {
+    this.state = s; let e = "";
+    let t = delay*Math.random();
+    if (s == HUNGRY) {
+      t = 2*t; e = GRABS;
+    }
+    else if (s == WAITING) {
+      e = EATS;
+    }
+    else if (s == EATING) {
+      t = 2*t; e = ENDS;
+    }
+    else if (s == FULL) {
+      t = 4*t; e = HUNGRY; 
+      this.left.innerText = "";
+      this.right.innerText = "";
+      this.count++;
+    }
+    else return;
+    setImage(this, s);
+    let evt = new MyEvent(e, clock+t, this);
+    list.push(evt);
+    list.sort((e1, e2)=>(e1.when-e2.when));
+  }
+}
+class MyEvent {
+  constructor(what, when, who) {
+    this.what = what;
+    this.when = when;
+    this.who  = who;
+  }
+  toString() {
+    let w = this.when.toFixed();
+    return w+": "+this.who+" "+this.what; 
+  }
+  process() {
+    if (this.what == GRABS) {
+      this.who.state = WAITQUE;
+    }
+    else if (this.what == EATS) {
+      this.who.state = EATQUE;
+    }
+    else if (this.what == ENDS) {
+      this.who.setState(FULL);
+    }
+    else if (this.what == HUNGRY) {
+      this.who.setState(HUNGRY);
+    }
+  }
+}
+</script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<button id=button onClick="runStop()">Run</button>
+<button id=step   onClick="doStep()">Step</button>
+&emsp; <span id=tim></span>
+
+<table>
+  <tr>
+    <td id=c3>c3</td><td id=p2>p2</td><td id=c2>c2</td>
+  </tr><tr>
+    <td id=p3>p3</td><td>        </td><td id=p1>p1</td>
+  </tr><tr>
+    <td id=c0>c0</td><td id=p0>p0</td><td id=c1>c1</td>
+  </tr>
+</table>
+
+<p id=out>not started</p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<hr />
+<p>Ref: 
+<a href="https://www.wikiwand.com/en/Dining_philosophers_problem" 
+   target="ExternalDocument">Dining_philosophers</a>
+</p>
+
+<script>
+   title.innerText = document.title;
+   sample.innerText = Philosopher.toString();
+   let P = ["Aristotle", "Sokrates", "Pythagoras", "Archimedes"];
+   for (let i=0; i<4; i++) phil[i] = new Philosopher(P[i], i);
+</script>
+
+</body>
+</html>
