@@ -7,8 +7,9 @@
 
 <style>
     td {
-        font-size: 12px;
-        width: 90px;
+        font: 12px arial, sans-serif;
+        color: blue;
+        width: 100px;
         text-align: center;
     }
     pre {
@@ -18,11 +19,11 @@
 
 <script>
 "use strict";
-var running, clock, list;  //global
+var start, clock, list;  //global
 var delay = 500; //msec
 const phil = new Array(4);
 const 
-  IMG_PREF = "<img src='../images/", IMG_SUFX = ".gif'>",
+  IMG_PREF = "<img src='../images/", IMG_SUFX = ".png'>",
   HUNGRY = 'hungry', WAITQUE = 'waitQue', WAITING = 'waiting', 
   EATQUE = 'eatQue',  EATING = 'eating', FULL = 'full', 
   GRABS = "grabs", EATS = "eats", ENDS = "ends", BUSY = 'o';
@@ -32,39 +33,45 @@ function report(both) {
     if (both) out.innerText = list.join("\n");
 }
 function setRunning(run) {
-    running = run;
-    button.innerText = run? "Stop" : "Run"; 
-    out.innerText = run? "running" : "stopped";
+    let t = new Date().getTime();
+    if (run) {
+        start = t;
+        button.innerText = "Stop"; 
+        out.innerText = "running";
+        oneStep();
+    } else {
+        let s = ((t-start)/1000).toFixed();
+        start = undefined;
+        button.innerText = "Run";
+        let m = list.length? "stopped" : "DEADLOCK"; 
+        out.innerText = m+" -- in "+s+" sec"
+    }
 }
-function release(i = 0) {
-    phil[i].setState(FULL); setRunning(true); oneStep();
+function release(i = 0) { //default index is 0
+    phil[i].setState(FULL); 
+    setRunning(true); oneStep();
 }
 function doStep() {
-    if (running) setRunning(false); 
-    oneStep(); report(true);
-}
-function runStop() {
-    setRunning(!running);
-    if (running) {
-        init(); oneStep();
-    }
+    if (start) setRunning(false); 
+    oneStep();
 }
 function init() {
     clock = 0; list = [];
     for (let p of phil) { 
-        p.left.innerText = "";
+        p.count = 0;
         p.setState(HUNGRY);
+        p.left.innerText = "";
     }
     list.sort((e1, e2)=>(e1.when-e2.when));
     console.assert(list.length == phil.length);
-    report(!running);
 }
 function oneStep() {
-    if (!clock || !list) init();
-    let t0 = clock;
-    if (list.length == 0) {
-        runStop(); return;
+    if (start && !list.length) { //DEADLOCK
+        setRunning(false); return;
     }
+    if (!clock || !list.length) init();
+    let t0 = clock;
+
     //first bound event
     let evt = list[0]; list.splice(0, 1);
     clock = evt.when; evt.process();
@@ -80,12 +87,8 @@ function oneStep() {
           p.setState(EATING);
           p.left.innerText = BUSY;
       }
-    console.log(evt+" => "+evt.who.state); report();
-    if (running) setTimeout(oneStep, clock-t0);
-}
-function setImage(p, s) {
-    let img = IMG_PREF+p.state+IMG_SUFX;
-    p.label.innerHTML = img+"<br>"+s;
+    console.log(evt+" => "+evt.who.state); report(!start);
+    if (start) setTimeout(oneStep, clock-t0);
 }
 class Philosopher {
   constructor(name, idx) {
@@ -96,9 +99,13 @@ class Philosopher {
     this.label = document.getElementById("p"+idx);
     let n = idx+1; if (n == phil.length) n = 0;
     this.right = document.getElementById("c"+n);
-    setImage(this, name);
+    this.setImage("&emsp;");
   }
   toString() { return this.name; }
+  setImage(s) {
+    let img = IMG_PREF+this.state+IMG_SUFX;
+    this.label.innerHTML = this.name+"<br>"+img+"<br>"+s;
+  }
   setState(s) {
     this.state = s; let e = "";
     let t = delay*Math.random();
@@ -118,7 +125,7 @@ class Philosopher {
       this.count++;
     }
     else return;
-    setImage(this, s);
+    this.setImage(s);
     let evt = new MyEvent(e, clock+t, this);
     list.push(evt);
     list.sort((e1, e2)=>(e1.when-e2.when));
@@ -156,7 +163,7 @@ class MyEvent {
 
 <h2 id=title></h2>
 
-<button id=button onClick="runStop()">Run</button>
+<button id=button onClick="setRunning(!start)">Run</button>
 <button id=step   onClick="doStep()">Step</button>
 &emsp; <span id=tim></span>
 
