@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Permutations & Subsets </title>
+
+<style>
+    table {
+        width: 350px;
+    }
+</style>
+
+<script>
+"use strict";
+var a, c;
+function permute() { //a and c are arrays
+    if (a.length == 0) {
+        out1.innerText += "\n"+c.join("");
+    } else for (let i=0; i<a.length; i++) {
+        c.push(a[i]); a.splice(i, 1);
+        permute();
+        a.splice(i, 0, c.pop());
+    }
+}
+function subsets(i) { //a: string, c: set
+    if (i == a.length) {
+        let s = "\n{"+[...c].join(",")+"}";
+        out2.innerText += s;
+    } else {
+        c.add(a[i]);
+        subsets(i+1);
+        c.delete(a[i]);
+        subsets(i+1);
+    }
+}
+function main() {
+    out1.innerText = "Permutations:";
+    out2.innerText = "Subsets:";
+    a = inp.value;  //string
+    if (a.length > 5) {
+        a = a.substring(0, 5);
+        inp.value = a;
+    }
+    c = new Set(); subsets(0);
+    a = [...inp.value]; //array
+    c = []; permute();
+}
+</script>
+</head>
+
+<body>
+<h3>Counting &emsp; 
+<input type=text id=inp size=6 value="CAFE"
+    onChange="main()">
+</h3>
+<table>
+  <td id=out1></td>
+  <td id=out2></td>
+<table>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<script>
+   //title.innerText = document.title;
+   sample.innerText = permute+"\n"+subsets+"\n"+main;
+   main()
+</script>
+
+</body>
+</html>
+
