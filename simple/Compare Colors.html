@@ -35,7 +35,8 @@ function useColor(hex, elt) {
 function setColor() {
     let c1 = useColor(getColor(), D1);
     let c2 = useColor(inverseC(), D2);
-    out.innerText = "Color: "+c1+"   Inverse: "+c2;
+    let s = "Inverse: "+c2+"   Color: "+c1;
+    out.innerText = s;
 }
 const cName = ["Aqua", "Beige", "Black", "Blue", "Brown", "Coral", "Crimson", 
     "Cyan", "DimGray", "Gold", "Gray", "Green", "Indigo ", "Ivory", "Lime", 
@@ -48,12 +49,18 @@ const cCode = ["00FFFF", "F5F5DC", "000000", "0000FF", "A52A2A", "FF7F50", "DC14
 </script>
 
 <style>
-    body  {width:400px;}
-    input {width:100px;}
+    body  {width:360px;}
+    input {width:25%;}
     #D1, #D2 {
-        height:150px;
+        height:180px;
         text-align: center;
-        vertical-align: middle;
+        float: left;
+        width: 50%;
+    }
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
     }
 </style>
 
@@ -65,8 +72,10 @@ const cCode = ["00FFFF", "F5F5DC", "000000", "0000FF", "A52A2A", "FF7F50", "DC14
 R<input id=R type="range" min=0 max=255 value=232 onChange=setColor()>
 G<input id=G type="range" min=0 max=255 value= 68 onChange=setColor()>
 B<input id=B type="range" min=0 max=255 value=127 onChange=setColor()>
-<div id=D1>Select color </div>
-<div id=D2> and its inverse </div>
+<div class=row>
+  <div id=D2>Inverse color </div>
+  <div id=D1>Selected color </div>
+</div>
 
 <hr />
 <b>Sample code</b>

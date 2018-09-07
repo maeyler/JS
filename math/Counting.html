@@ -6,9 +6,15 @@
     <title>Permutations & Subsets </title>
 
 <style>
-    table {
-        width: 350px;
-    }
+  p {
+    float: left;
+    width: 50%;
+  }
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 </style>
 
 <script>
@@ -54,10 +60,10 @@ function main() {
 <input type=text id=inp size=6 value="CAFE"
     onChange="main()">
 </h3>
-<table>
-  <td id=out1></td>
-  <td id=out2></td>
-<table>
+<div class=row>
+  <p id=out1></p>
+  <p id=out2></p>
+</div>
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
