@@ -15,48 +15,50 @@
     pre {
         overflow-x: auto;
     }
+    input {
+        width: 90px;
+    }
 </style>
 
 <script>
 "use strict";
-var start, clock, list;  //global
-var delay = 500; //msec
+var started, clock, list;  //global
 const phil = new Array(4);
 const 
   IMG_PREF = "<img src='../images/", IMG_SUFX = ".png'>",
   HUNGRY = 'hungry', WAITQUE = 'waitQue', WAITING = 'waiting', 
-  EATQUE = 'eatQue',  EATING = 'eating', FULL = 'full', 
+  EATQUE = 'eatQue',  EATING = 'eating', THINKING = 'thinking', 
   GRABS = "grabs", EATS = "eats", ENDS = "ends", BUSY = 'o';
 
-function report(both) {
-    tim.innerText = "Clock = "+clock.toFixed();
-    if (both) out.innerText = list.join("\n");
+function start() {
+    started = new Date().getTime();
+    button.innerText = "stop"; 
+    out.innerText = "Running";
+    oneStep();
 }
-function setRunning(run) {
+function stop() {
     let t = new Date().getTime();
-    if (run) {
-        start = t;
-        button.innerText = "Stop"; 
-        out.innerText = "running";
-        oneStep();
-    } else {
-        let s = ((t-start)/1000).toFixed();
-        start = undefined;
-        button.innerText = "Run";
-        let m = list.length? "stopped" : "DEADLOCK"; 
-        out.innerText = m+" -- in "+s+" sec"
-    }
+    let s = ((t-started)/1000).toFixed();
+    started = undefined;
+    let dead = (list.length == 0);
+    button.innerText = dead? "release" : "start";
+    let m = dead? "DEADLOCK" : "Stopped"; 
+    out.innerText = m+" -- in "+s+" sec"
 }
 function release(i = 0) { //default index is 0
-    phil[i].setState(FULL); 
-    setRunning(true); oneStep();
+    phil[i].setState(THINKING); //release resources
+    button.innerText = "start"; 
+    out.innerText = list.join("\n");
+}
+function doRun() { //call start, stop, release
+    eval(button.innerText+"()"); 
 }
 function doStep() {
-    if (start) setRunning(false); 
+    if (started) stop(); 
     oneStep();
 }
 function init() {
-    clock = 0; list = [];
+    clock = 0; list = [];;
     for (let p of phil) { 
         p.count = 0;
         p.setState(HUNGRY);
@@ -66,10 +68,11 @@ function init() {
     console.assert(list.length == phil.length);
 }
 function oneStep() {
-    if (start && !list.length) { //DEADLOCK
-        setRunning(false); return;
+    if (!list) init();
+    if (list.length == 0) {  //no event
+        if (started) stop(); //DEADLOCK 
+        return;
     }
-    if (!clock || !list.length) init();
     let t0 = clock;
 
     //first bound event
@@ -87,8 +90,13 @@ function oneStep() {
           p.setState(EATING);
           p.left.innerText = BUSY;
       }
-    console.log(evt+" => "+evt.who.state); report(!start);
-    if (start) setTimeout(oneStep, clock-t0);
+      
+    //report
+    console.log(evt+" => "+evt.who.state);
+    tim.innerText = "Clock = "+evt;
+    if (started)
+         setTimeout(oneStep, clock-t0);
+    else out.innerText = list.join("\n");
 }
 class Philosopher {
   constructor(name, idx) {
@@ -118,7 +126,7 @@ class Philosopher {
     else if (s == EATING) {
       t = 2*t; e = ENDS;
     }
-    else if (s == FULL) {
+    else if (s == THINKING) {
       t = 4*t; e = HUNGRY; 
       this.left.innerText = "";
       this.right.innerText = "";
@@ -149,7 +157,7 @@ class MyEvent {
       this.who.state = EATQUE;
     }
     else if (this.what == ENDS) {
-      this.who.setState(FULL);
+      this.who.setState(THINKING);
     }
     else if (this.what == HUNGRY) {
       this.who.setState(HUNGRY);
@@ -163,9 +171,13 @@ class MyEvent {
 
 <h2 id=title></h2>
 
-<button id=button onClick="setRunning(!start)">Run</button>
-<button id=step   onClick="doStep()">Step</button>
-&emsp; <span id=tim></span>
+<button id=button onClick="doRun()">start</button>
+<button id=step   onClick="doStep()">step</button>
+&emsp; Delay: 
+<input id=inp type="range" min=1 max=20 value=5 
+onChange="delay=100*value">
+
+<pre id=tim>No event</pre>
 
 <table>
   <tr>
@@ -177,7 +189,7 @@ class MyEvent {
   </tr>
 </table>
 
-<p id=out>not started</p>
+<pre id=out>Not started</pre>
 
 <hr />
 <b>Sample code</b>
@@ -192,6 +204,7 @@ class MyEvent {
 <script>
    title.innerText = document.title;
    sample.innerText = Philosopher.toString();
+   var delay = 100*inp.value; //msec
    let P = ["Aristotle", "Sokrates", "Pythagoras", "Archimedes"];
    for (let i=0; i<4; i++) phil[i] = new Philosopher(P[i], i);
 </script>
