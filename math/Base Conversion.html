@@ -59,30 +59,28 @@ function report(s) {
 
 <body>
 <h2 id=title></h2>
-<p />
-Number: 
+<p>Number: 
 <input type=number id=num value=65536 onChange="encode()">
 <input type=button value="Encode" onClick="encode()">
-<p />
-Base 16: <input type=text id=hex onChange="decode(hex)">
+</p>
+<p>Base 16: <input type=text id=hex onChange="decode(hex)">
 <input type=button value="Decode" onClick="decode(hex)">
-<p />
-Base 36: <input type=text id=t36 onChange="decode(t36)">
+</p>
+<p>Base 36: <input type=text id=t36 onChange="decode(t36)">
 <input type=button value="Decode" onClick="decode(t36)">
-<p />
-Base 80: <input type=text id=t80 onChange="decode(t80)">
+</p>
+<p>Base 80: <input type=text id=t80 onChange="decode(t80)">
 <input type=button value="Decode" onClick="decode(t80)">
 
 <p id=out></p>
-<p />
-Base 16 is the well-known hexadecimal.<br />
+<p>Base 16 is the well-known hexadecimal.<br />
 Base 36 uses numeric digits and lower-case letters.<br />
 Base 80 uses a block of Unicode to reduce the string length further.<br />
 (The number of bytes is actually twice the number of chars in this block)
+</p>
 <hr />
 
 <b>Sample code</b>
-<p>
 <pre>
 function encodeB(n, base) {
     if (base == undefined) base = 16;
@@ -94,9 +92,10 @@ function decodeB(s, base) {
 }
 </pre>
 <hr />
-Reference: <br />
+<p>Reference: <br />
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt" target="ExternalDocument">Number.parseInt()</a><br />
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString" target="ExternalDocument">n.toString()</a>
+</p>
 
 <script>
     title.innerText = document.title;

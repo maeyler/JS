@@ -29,11 +29,12 @@ function checkRE() {
 <body>
 <h2 id=title></h2>
 
+<p>
 <input type=text id=pat  style="width:90px" onKeyUp="checkRE()"> Pattern 
 <select id=menu onChange="setValues()">
 <option>Letter<option>Number<option>Suffix<option>x+letter
 </select> Selection
-<p>
+</p><p>
 <input type=text id=inp  style="width:250px" onKeyUp="checkRE()"> Input
 </p>
 <p id=out></p>
@@ -42,7 +43,7 @@ function checkRE() {
 <b>Sample code</b>
 <pre id=sample></pre>
 <hr />
-Ref: <a href="https://emrahtema.github.io/Automata/regexp/EmrahTema_Regexp.html" target="ExternalDocument">Term project by Emrah Tema</a>
+<p>Ref: <a href="https://emrahtema.github.io/Automata/regexp/EmrahTema_Regexp.html" target="ExternalDocument">Term project by Emrah Tema</a></p>
 
 <script>
     const ppp = ["[a-z]", "[0-9]{4}", "d[iuü][km]", "x[a-z]"];
