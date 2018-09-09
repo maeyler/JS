@@ -15,7 +15,7 @@ function twoDigits(s) {
 }
 function getRGB(r,g,b) {
     //return "rgb("+r+","+g+","+b+")";
-    return twoDigits(r)+twoDigits(g)+twoDigits(b);
+    return "#"+twoDigits(r)+twoDigits(g)+twoDigits(b);
 }
 function getColor() {
     let r = R.value, g = G.value, b = B.value;
@@ -26,7 +26,7 @@ function inverseC() {
     return getRGB(r,g,b);
 }
 function useColor(hex, elt) {
-    let col = "#"+hex;
+    let col = hex;
     elt.style.background = col;
     let nam = codeToName.get(hex);
     if (nam) col += " "+nam;
@@ -69,9 +69,11 @@ const cCode = ["00FFFF", "F5F5DC", "000000", "0000FF", "A52A2A", "FF7F50", "DC14
 <h2 id=title></h2>
 
 <pre id=out></pre>
+<p>
 R<input id=R type="range" min=0 max=255 value=232 onChange=setColor()>
 G<input id=G type="range" min=0 max=255 value= 68 onChange=setColor()>
 B<input id=B type="range" min=0 max=255 value=127 onChange=setColor()>
+</p>
 <div class=row>
   <div id=D2>Inverse color </div>
   <div id=D1>Selected color </div>
@@ -92,7 +94,7 @@ B<input id=B type="range" min=0 max=255 value=127 onChange=setColor()>
     sample.innerText = useColor+"\n"+setColor;
     var codeToName = new Map();
     for (let i=0; i<cName.length; i++) 
-        codeToName.set(cCode[i].toLowerCase(), cName[i]);
+        codeToName.set("#"+cCode[i].toLowerCase(), cName[i]);
     setColor();
 </script>
 

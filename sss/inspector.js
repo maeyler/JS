@@ -52,8 +52,9 @@ function doProperty(c) { //target == list2
     else display(objP[c]);
 }
 function doClick(evt, target) {
-    let e = document.elementFromPoint(evt.clientX, evt.clientY);
-    console.log(e.innerText);
+    let e = evt.target;
+    //document.elementFromPoint(evt.clientX, evt.clientY);
+    //console.log(e.innerText);
     if (target == list3) {
         doMethod(e.innerText); return;
     }
