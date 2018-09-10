@@ -48,7 +48,7 @@
   #list2, #list3 {
     height: 178px;
   }
-  #prev, #dele {
+  #prev, #dele, #menu {
     visibility: hidden;
     font: 10px arial, sans-serif;
     text-align: center;

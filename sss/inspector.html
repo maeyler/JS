@@ -25,15 +25,39 @@ function fileSelect(t) {
     display(RDR2);
     display(a.length == 1? a[0] : a);
 }
+function appendAndDisplay(kind, prop, data) {
+    let e = document.createElement(kind);
+    e[prop] = data; document.body.append(e);
+    return e;
+}
 var a, b, c;  //global variables
+class Menu {
+  constructor() {}
+  allKeysIn(obj) {
+    let s = []; for (let k in obj) s.push(k);
+    return s;
+  }
+  allValuesOf(obj) {
+    let s = []; for (let k in obj) s.push(obj[k]);
+    return s;
+  }
+  displayText(t) {
+    return appendAndDisplay("pre", "innerText", t)
+  }
+  displayDataURL(d) {
+    return appendAndDisplay("img", "src", d)
+  }
+  toString() { return "[object Menu]" }
+}
 function init() {
     let s = "Small is beautiful", d = new Date(),
        len = 123, name = "Circle", pi = Math.PI, 
        sqrt = Math.sqrt, power = Math.pow;
     a = [0, 11, "22", "abc"]; b = new Set(a);
     c = {len, name, pi, sqrt, power};
-    let A = [s, d, a, b, c, document, window, navigator];
-    for (let x of A) display(x);
+    MENU = {s, d, a, b, c, window, navigator, document};
+    Reflect.setPrototypeOf(MENU, Menu.prototype);
+    display(MENU); 
 }
     docName.innerText = document.title+" "+VERSION;
     try {

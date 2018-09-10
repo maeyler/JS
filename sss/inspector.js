@@ -1,12 +1,12 @@
 "use strict";
-const VERSION = "V2.7", ITERABLE = new Object();
+const VERSION = "V2.8", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
-const objA = [], objP = [];
-var hist = [];    //object history -- global variable
+const objA = [], objP = [], NL = "\n";
+const hist = [];    //object history -- global variable
 var current = 0;  //current object index in list1 & objA
 var _  = "";  //current object
 var __ = "";  //previous object
-var NL = "\n";
+var MENU;  //installed by the caller
 function makeVisible(t, val) {
     t.style.visibility = val? "visible" : "";
     if (val) setTimeout(hideTips, 2500);
@@ -30,14 +30,13 @@ function reportError(e) {
     out.style.background = "pink";
 }
 function doMethod(met) { //target == list3
-    let ff = _[met]; //simpler than reflection
-    //if (typeof ff != "function") return;
-    let n = ff.length;
-    let s = "Enter ";
-    if (n == 0) s += "optional arguments "; 
-    if (n == 1) s += "the argument ";
-    if (n >= 2) s += n+" arguments separated by commas ";
-    let arg = prompt(s+"in order to call "+met+"()");
+    //n, s may interfere with local vars with the same name
+    let _n_ = _[met].length; //number of arguments in met
+    let _s_ = "Enter ";
+    if (_n_ == 0) _s_ += "optional arguments "; 
+    if (_n_ == 1) _s_ += "the argument ";
+    if (_n_ >= 2) _s_ += _n_+" arguments separated by commas ";
+    let arg = prompt(_s_+"in order to call "+met+"()");
     if (arg != null) try {
         let cmd = "_."+met+"("+arg+")";
         report(cmd, eval(cmd));
@@ -72,17 +71,21 @@ function previous() {
     if (hist.length < 2) return;
     hist.pop(); display(hist.pop()); 
 }
-function removeIt() {
+function removeIt(ctrl) {
     if (objA.length < 2) return;
-    objA.splice(current, 1);
-    list1.removeChild(list1.children[current]);
-    previous();
+    if (ctrl) {
+        objA.length = 1; displayItem(0);
+    } else {
+        objA.splice(current, 1);
+        //list1.removeChild(list1.children[current]);
+        previous();
+    }
 }
 function doKey(evt) {
     //console.log(evt.key, current);
     switch (evt.key) {
       case "Delete":
-        removeIt(); return;
+        removeIt(evt.ctrlKey); return;
       case "ArrowUp":
         evt.stopPropagation();
         displayItem(current-1); return;
@@ -255,15 +258,21 @@ function inspect(parent, init) {
   <tr>
     <th><button onClick='previous()' 
       onMouseOver='makeVisible(prev, true)'
-      onMouseOut ='makeVisible(prev, false)'>◀</button>
-    <span id=prev>Display previous object</span>
+      onMouseOut ='makeVisible(prev, false)'>◀
+    <span id=prev>Display previous object</span></button>
     &nbsp; Objects &nbsp;
-    <button onClick='removeIt()' 
+    <button onClick='removeIt(event.ctrlKey)' 
       onMouseOver='makeVisible(dele, true)' 
-      onMouseOut ='makeVisible(dele, false)'>✘</button>
-    <span id=dele>Delete current object</span>
+      onMouseOut ='makeVisible(dele, false)'>✘
+    <span id=dele>Delete current object<br>
+        (&lt;CTRL&gt; deletes all)</span></button>
     </th>
-    <th>Properties</th>
+    <th><button onClick='display(MENU)' 
+      onMouseOver='makeVisible(menu, true)'
+      onMouseOut ='makeVisible(menu, false)'>M
+    <span id=menu>Display Menu</span></button>
+    &nbsp; Properties
+    </th>
   </tr>
   <tr>
     <td rowSpan=3><ul id=list1 
@@ -294,6 +303,7 @@ function inspect(parent, init) {
   </tr>
 `
     init(); 
+    if (!MENU) menu.parentNode.style.visibility="hidden";
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
 }
