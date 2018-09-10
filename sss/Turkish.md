@@ -28,23 +28,23 @@ Girilen komut JS diline uygun olmalı (list3 için verilen kısıtlar geçerli) 
 list1 içinde seçilmiş nesneye `_` değişkeni olarak erişebiliriz <br>
 Bir önceki seçilmiş nesnenin adı ise `__`
 
-**output** kutusunda ise yapılan son işlemin özeti görülür
+**output** kutusunda yapılan son işlemin özeti görülür
 
 
 ### Ilk nesneler
 Sayfa açılınca önce inspector.js kodu yüklenir <br>
 HTML elemanları yapılır ve `init()` ile 8 adet nesne gösterilir:
 ```
-var a, b, c;  //global variables
+var MENU, a, b, c;  //global variables
 function init() {
     let s = "Small is beautiful", d = new Date(),
-       length = 123, name = "Circle", pi = Math.PI, 
-       sqrt = Math.sqrt, power = Math.pow, 
-       toString = (() => s), n = navigator;
+       len = 123, name = "Circle", pi = Math.PI, 
+       sqrt = Math.sqrt, power = Math.pow;
     a = [0, 11, "22", "abc"]; b = new Set(a);
-    c = {length, name, pi, sqrt, power, toString};
-    for (let x of [s, d, a, b, c, document, window, n]) 
-        display(x);
+    c = {len, name, pi, sqrt, power};
+    MENU = {s, d, a, b, c, window, navigator, document};
+    Reflect.setPrototypeOf(MENU, Menu.prototype);
+    display(MENU); 
 }
 
 • s is a String with 18 chars 
@@ -59,8 +59,8 @@ function init() {
 
 ### Örnekler
 Inspector yazılımı özellikle mobil cihazlar için geliştirildi <br>
-Tarayıcıların console aracı ile bunlar PC'de kolayca yapılır <br>
-Mobil cihazlarda yapabilmek için console ayarında bir araç gerekiyor
+Tarayıcıların console aracı ile bu işlemler PC'de kolayca yapılır <br>
+Aynı işi mobil cihazlarda yapabilmek için bunun gibi bir yazılım gerekiyor
 
 Zorluk sırasına göre birkaç örnek görelim:
 ```

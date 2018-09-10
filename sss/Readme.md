@@ -35,15 +35,16 @@ Previously selected object is denoted by `__`
 When the page is opened, inspector.js code is loaded <br>
 HTML elements are made, and `init()` displays 8 objects:
 ```
-var a, b, c;  //global variables
+var MENU, a, b, c;  //global variables
 function init() {
     let s = "Small is beautiful", d = new Date(),
        len = 123, name = "Circle", pi = Math.PI, 
        sqrt = Math.sqrt, power = Math.pow;
     a = [0, 11, "22", "abc"]; b = new Set(a);
     c = {len, name, pi, sqrt, power};
-    let A = [s, d, a, b, c, document, window, navigator];
-    for (let x of A) display(x);
+    MENU = {s, d, a, b, c, window, navigator, document};
+    Reflect.setPrototypeOf(MENU, Menu.prototype);
+    display(MENU); 
 }
 
 • s is a String with 18 chars 
