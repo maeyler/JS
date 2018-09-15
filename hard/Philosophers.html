@@ -101,6 +101,17 @@ function oneStep() {
          setTimeout(oneStep, clock-t0);
     else out.innerText = list.join("\n");
 }
+const RNG = {
+  seed : 1234,
+  init : function(s) { this.seed = s },
+  random : function() {
+  //https://www.ict.griffith.edu.au/anthony/info/C/RandomNumbers
+    const a = 48271, m = 2147483647, r = 3399, q = 44488;
+    this.seed = Math.trunc(this.seed % q * a - this.seed / q * r);
+    if (this.seed < 0) this.seed += m;
+    return this.seed/m;
+  }
+}
 class Philosopher {
   constructor(name, idx) {
     this.name = name; 
@@ -119,7 +130,7 @@ class Philosopher {
   }
   setState(s) {
     this.state = s; let e = "";
-    let t = delay*Math.random();
+    let t = delay*RNG.random();
     if (s == HUNGRY) {
       t = 2*t; e = GRABS;
     }
