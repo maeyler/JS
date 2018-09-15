@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.8", ITERABLE = new Object();
+const VERSION = "V2.8a", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -14,6 +14,7 @@ function makeVisible(t, val) {
 function hideTips() {
     prev.style.visibility = "";
     dele.style.visibility = "";
+    menu.style.visibility = "";
 }
 function report(input, result) { 
     let msg = trunc(input, MAX_CHARS);
@@ -110,8 +111,15 @@ function trunc(s, M) { //if s is long, truncate to M chars
     if (s.length > M+4) s = s.substring(0, M)+"...";
     return s;
 }
+function checkFile(f) {
+//File.prototype.toString = ()=>"File: "+this.name; not working
+    if (Reflect.ownKeys(f).includes("toString")) return;
+    f.toString = ()=>"File: "+f.name;
+    console.log("toString returns "+f);
+}
 function objToString(obj) {
     const LT = /</g;
+    if (obj instanceof File) checkFile(obj);
     let s = obj.toString().replace(LT, "&lt;");
     if (typeof obj == "string") s = '"'+s+'"';
     else if (obj instanceof Array) s = '['+s+']';

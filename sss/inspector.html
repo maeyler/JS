@@ -23,12 +23,16 @@ function fileSelect(t) {
     let a = t.files; //display(t);
     if (a.length == 0) return;
     display(RDR2);
-    display(a.length == 1? a[0] : a);
-}
-function appendAndDisplay(kind, prop, data) {
-    let e = document.createElement(kind);
-    e[prop] = data; document.body.append(e);
-    return e;
+    if (a.length == 1) {
+        let f = a[0]; display(f);
+        MENU.displayFile(f)
+    } else {
+        display(a);
+        let s = "";
+        for (let f of a) 
+            s += f.name+" "+f.size+" bytes "+NL;
+        MENU.displayText(s)
+    }
 }
 var a, b, c;  //global variables
 class Menu {
@@ -41,11 +45,35 @@ class Menu {
     let s = []; for (let k in obj) s.push(obj[k]);
     return s;
   }
-  displayText(t) {
-    return appendAndDisplay("pre", "innerText", t)
+  isTextFile(f) {
+    console.assert(f instanceof File);
+    return f.type.startsWith("text") || f.name.endsWith(".md")
+         || f.name.endsWith(".js") || f.name.endsWith(".java");
   }
-  displayDataURL(d) {
-    return appendAndDisplay("img", "src", d)
+  displayFile(f) {
+    console.assert(f instanceof File); let M = this;
+    console.log(f.name+" "+f.size+" bytes "+f.type);
+    if (f.type.startsWith("image")) {
+        RDR2.onload = function(evt) {
+            M.displayImage(RDR2.result)
+        };
+        RDR2.readAsDataURL(f);
+    } else if (this.isTextFile(f)) {
+        RDR2.onload = function(evt) {
+            M.displayText(RDR2.result)
+        };
+        RDR2.readAsText(f);
+    } else {
+        this.displayText("Unknown")
+    }
+  }
+  displayText(txt) {
+    disp1.innerText = txt; disp2.src = ""; 
+    return disp1
+  }
+  displayImage(url) {
+    disp1.innerText = ""; disp2.src = url; 
+    return disp2
   }
   toString() { return "[object Menu]" }
 }
@@ -60,6 +88,8 @@ function init() {
     display(MENU); 
 }
     docName.innerText = document.title+" "+VERSION;
+    // 'this' is undefined
+    //File.prototype.toString = () => this.name;
     try {
         inspect(document.body, init);
         inp.value = "new Number(c.pi)";
@@ -69,5 +99,7 @@ function init() {
 </script>
 <p><input type=file multiple onChange='fileSelect(this)' />
 </p>
+<pre id=disp1></pre>
+<img id=disp2 />
 </body>
 </html>
