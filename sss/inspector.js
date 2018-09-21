@@ -114,8 +114,8 @@ function trunc(s, M) { //if s is long, truncate to M chars
 function checkFile(f) {
 //File.prototype.toString = ()=>"File: "+this.name; not working
     if (Reflect.ownKeys(f).includes("toString")) return;
-    f.toString = ()=>"File: "+f.name;
-    console.log("toString returns "+f);
+    f.toString = () => "File: "+f.name;
+    //console.log("toString returns "+f);
 }
 function objToString(obj) {
     const LT = /</g;
