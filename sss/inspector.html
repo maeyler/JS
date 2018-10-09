@@ -35,22 +35,13 @@ function fileSelect(t) {
     }
 }
 var a, b, c;  //global variables
-class Menu {
-  constructor() {}
-  allKeysIn(obj) {
-    let s = []; for (let k in obj) s.push(k);
-    return s;
-  }
-  allValuesOf(obj) {
-    let s = []; for (let k in obj) s.push(obj[k]);
-    return s;
-  }
-  isTextFile(f) {
+//define Menu methods
+Menu.prototype.isTextFile = function (f) {
     console.assert(f instanceof File);
     return f.type.startsWith("text") || f.name.endsWith(".md")
          || f.name.endsWith(".js") || f.name.endsWith(".java");
   }
-  displayFile(f) {
+Menu.prototype.displayFile = function (f) {
     console.assert(f instanceof File); let M = this;
     console.log(f.name+" "+f.size+" bytes "+f.type);
     if (f.type.startsWith("image")) {
@@ -67,24 +58,24 @@ class Menu {
         this.displayText("Unknown")
     }
   }
-  displayText(txt) {
+Menu.prototype.displayText = function (txt) {
     disp1.innerText = txt; disp2.src = ""; 
     return disp1
   }
-  displayImage(url) {
+Menu.prototype.displayImage = function (url) {
     disp1.innerText = ""; disp2.src = url; 
     return disp2
   }
-  toString() { return "[object Menu]" }
-}
+
 function init() {
     let s = "Small is beautiful", d = new Date(),
        len = 123, name = "Circle", pi = Math.PI, 
        sqrt = Math.sqrt, power = Math.pow;
     a = [0, 11, "22", "abc"]; b = new Set(a);
     c = {len, name, pi, sqrt, power};
-    MENU = {s, d, a, b, c, window, navigator, document};
-    Reflect.setPrototypeOf(MENU, Menu.prototype);
+    let menu = {s, d, a, b, c, window, navigator};
+    MENU = new Menu(); //global
+    for (let k in menu) MENU[k] = menu[k];
     display(MENU); 
 }
     docName.innerText = document.title+" "+VERSION;

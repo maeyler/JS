@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.8a", ITERABLE = new Object();
+const VERSION = "V2.9", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -7,6 +7,19 @@ var current = 0;  //current object index in list1 & objA
 var _  = "";  //current object
 var __ = "";  //previous object
 var MENU;  //installed by the caller
+class Menu {
+  constructor() {}
+  allKeysIn(obj) {
+    let s = []; for (let k in obj) s.push(k);
+    return s;
+  }
+  allValuesOf(obj) {
+    let s = []; for (let k in obj) s.push(obj[k]);
+    return s;
+  }
+  toString() { return "[object Menu]" }
+}
+
 function makeVisible(t, val) {
     t.style.visibility = val? "visible" : "";
     if (val) setTimeout(hideTips, 2500);
