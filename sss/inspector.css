@@ -1,75 +1,75 @@
-  table {
-    padding: 2px;
-    border: 1px solid;
-    border-spacing: 1px;
-    background: yellow;
-  }
-  th {
-    font: 14px verdana, serif;
-    font-weight: bold;
-    cursor: default;
-  }
-  ul { /*scroll doesn't work on td*/
-    padding: 0;
-    margin: 2px;
-    min-width:  170px;
-    border: 1px solid;
-    background: white;
-    overflow-x: auto;
-    overflow-y: auto;
-  }
-  li {
-    margin: 2px;
-    list-style-type: none;
-    cursor: pointer;
-  }
-  li, #small {
-    font: 12px arial, sans-serif;
-  }
-  li:hover {
-    color: white;
-    background-color: blue;
-  }
-  button, checkbox {
-    cursor: pointer;
-  }
-  p {
-    margin: 8px 0;    
-  }
-  #inp, #out {
-    width: 98%;
-  }
-  #out {
-    font: 13px arial, sans-serif;
-  }
-  #list1 {
-    height: 392px;
-  }
-  #list2, #list3 {
-    height: 178px;
-  }
-  #prev, #dele, #menu {
-    visibility: hidden;
-    font: 10px arial, sans-serif;
-    text-align: center;
-    color: white;
-    background-color: blue;
-    padding: 5px 5px;
-    position: absolute;
-  }
-  .cname, .tip {
-    font-weight: bold;
-    text-align: center;
-    background-color: #aaffaa;
-  }
-  .tip {
-    visibility: hidden;
-    color: black;
-    border: 1px solid;
-    padding: 6px;
-    position: absolute;
-  }
-  .cname:hover .tip { 
-    visibility: visible; 
-  }
+table.inspector {
+  padding: 2px;
+  border: 1px solid;
+  border-spacing: 1px;
+  background: yellow;
+}
+table.inspector th {
+  font: 14px verdana, serif;
+  font-weight: bold;
+  cursor: default;
+}
+table.inspector ul { /*scroll doesn't work on td*/
+  padding: 0;
+  margin: 2px;
+  min-width:  170px;
+  border: 1px solid;
+  background: white;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+table.inspector li {
+  margin: 2px;
+  list-style-type: none;
+  cursor: pointer;
+}
+table.inspector li, #small {
+  font: 12px arial, sans-serif;
+}
+table.inspector li:hover {
+  color: white;
+  background-color: blue;
+}
+table.inspector button, checkbox {
+  cursor: pointer;
+}
+table.inspector p {
+  margin: 8px 0;    
+}
+table.inspector #inp, #out {
+  width: 98%;
+}
+table.inspector #out {
+  font: 13px arial, sans-serif;
+}
+table.inspector #list1 {
+  height: 392px;
+}
+table.inspector #list2, #list3 {
+  height: 178px;
+}
+table.inspector #prev, #dele, #menu {
+  visibility: hidden;
+  font: 10px arial, sans-serif;
+  text-align: center;
+  color: white;
+  background-color: blue;
+  padding: 5px 5px;
+  position: absolute;
+}
+table.inspector .cname, .tip {
+  font-weight: bold;
+  text-align: center;
+  background-color: #aaffaa;
+}
+table.inspector .tip {
+  visibility: hidden;
+  color: black;
+  border: 1px solid;
+  padding: 6px;
+  position: absolute;
+}
+table.inspector .cname:hover .tip { 
+  visibility: visible; 
+}
 

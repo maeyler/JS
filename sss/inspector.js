@@ -274,6 +274,7 @@ function displayItem(c) {
 }
 function inspect(parent, init) {
     let t = document.createElement("table");
+    t.className = 'inspector';
     parent.appendChild(t); t.innerHTML =
 `
   <tr>
