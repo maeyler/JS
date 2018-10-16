@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.9", ITERABLE = new Object();
+const VERSION = "V2.9a", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -17,7 +17,12 @@ class Menu {
     let s = []; for (let k in obj) s.push(obj[k]);
     return s;
   }
-  toString() { return "[object Menu]" }
+  deepEqual(a, b) { //compare two objects
+    return JSON.stringify(a) == JSON.stringify(b)
+  }
+  toString() { 
+    return "[object Menu] " +this.constructor.name 
+  }
 }
 
 function makeVisible(t, val) {
@@ -124,15 +129,19 @@ function trunc(s, M) { //if s is long, truncate to M chars
     if (s.length > M+4) s = s.substring(0, M)+"...";
     return s;
 }
-function checkFile(f) {
-//File.prototype.toString = ()=>"File: "+this.name; not working
+
+// 'this' is undefined in ()=>"File: "+this.name;
+File.prototype.toString = function() {
+    return "File: "+this.name
+}
+function checkFile(f) { //not used
     if (Reflect.ownKeys(f).includes("toString")) return;
     f.toString = () => "File: "+f.name;
     //console.log("toString returns "+f);
 }
 function objToString(obj) {
     const LT = /</g;
-    if (obj instanceof File) checkFile(obj);
+    //if (obj instanceof File) checkFile(obj);
     let s = obj.toString().replace(LT, "&lt;");
     if (typeof obj == "string") s = '"'+s+'"';
     else if (obj instanceof Array) s = '['+s+']';
