@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Sunflower </title>
+
+<script>
+"use strict";
+var radius, size, theta, dt, animQ;
+function update() {
+    g.beginPath();
+    g.fillStyle = '#111';
+    g.rect(0, 0, el.width, el.height);
+    g.fill();
+    dt = parseFloat(dtheta.value);
+    if (isNaN(dt) || dt == 0)
+        return;
+    console.log("update dt = ", dt);
+    dt = 2 * Math.PI * dt;
+    radius = 0; size = 3; theta = 0;
+    points.length = 0; animQ = true;
+    animation();
+}
+function animation() {
+    radius += size;
+    let x, y, gap;
+    do {
+        x =  el.width/2 + radius * Math.cos(theta);
+        y = el.height/2 + radius * Math.sin(theta);
+        gap = minDist(x, y) - size * 2;
+        if (gap > 2) {
+            radius -= gap / 2;
+        } else {
+            radius -= 1;
+        }
+    } while (gap > 0);
+    points.push({x, y});
+    doPaint(theta + 4.2, x, y, size * 0.032);
+    theta += dt;
+    size += 0.05;
+    let dOut = 60;
+    if (y < -dOut || y > el.height + dOut)
+        animQ = false;
+    if (x < -dOut || x > el.width + dOut)
+        animQ = false;
+    if (points.length >= 200)  //maxPoints)
+        animQ = false;
+    if (animQ)
+        requestAnimationFrame(animation);
+}
+function minDist(xn, yn) {
+    let min = 1000;
+    if (points.length == 0)
+        return 0;
+    for (let p of points) {
+        let d = dist(p.x - xn, p.y - yn);
+        if (d < min) min = d;
+    }
+    return min;
+}
+function doPaint(a, x, y, size) {
+    let h = image.height, w = image.width;
+    g.translate(x, y); g.rotate(a);
+    g.drawImage(image, -w*size/2, -h*size/2, w*size, h*size);
+    g.rotate(-a); g.translate(-x, -y);
+}
+function dist(dx, dy) {
+    return (Math.sqrt(dx * dx + dy * dy));
+}
+function stop() {
+    animQ = false;
+    console.log("stop ", points.length);
+}
+</script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<p>
+<input id="dtheta" type="number" style="width:80px" 
+onchange="update()" value="0.45" />
+<button onclick="update()" >Go</button>
+<button onclick="stop()" >Stop</button>
+<button onclick="animation()" >Step</button>
+</p>
+
+<canvas id="canvas1" width="360" height="360"></canvas>
+
+<p style="font: 10px Arial; color: blue">
+&copy; 2015 MathsIsFun.com v0.82
+</p>
+
+<p id=out></p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<hr />
+<p>Ref: <a href=
+"https://www.mathsisfun.com/numbers/nature-golden-ratio-fibonacci.html" 
+   target="ExternalDocument">MathsIsFun golden-ratio</a>
+</p>
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = animation.toString();
+    //out.innerHTML = "from MathsIsFun.com";
+    const el = document.getElementById('canvas1');
+    const g = el.getContext("2d");
+    const points = [];
+    image = new Image();
+    image.onload = update;
+    image.src = 'seed2.gif';
+</script>
+
+</body>
+</html>
+
