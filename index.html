@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width">
     <title>JS Örnekleri </title>
     <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/JS/sw.js')
+        .then((reg) => { console.log('Service Worker Registered', reg) })
+        .catch(console.log)
+    }
+  </script>
   <style>
     h3 { padding: 12px 0 0 20px; }
     p  { padding: 0 0 0 20px; }

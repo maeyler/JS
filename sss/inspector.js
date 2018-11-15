@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.9a", ITERABLE = new Object();
+const VERSION = "V2.10", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -130,9 +130,13 @@ function trunc(s, M) { //if s is long, truncate to M chars
     return s;
 }
 
+Request.prototype.toString = function() {
+    let s = this.url; let k = s.indexOf('/',8); 
+    return "[R] "+s.substring(k+1)
+}
 // 'this' is undefined in ()=>"File: "+this.name;
 File.prototype.toString = function() {
-    return "File: "+this.name
+    return "[F] "+this.name
 }
 function checkFile(f) { //not used
     if (Reflect.ownKeys(f).includes("toString")) return;
