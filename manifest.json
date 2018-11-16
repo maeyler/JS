@@ -5,6 +5,7 @@
   "start_url": "/JS/index.html",
   "display": "standalone",
   "background_color": "cyan",
+  "theme_color": "cyan",
   "icons": [
     {
       "src": "images/JS.png",
