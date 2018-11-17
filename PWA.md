@@ -4,11 +4,12 @@ Here is a brief explanation of how to convert this web site to a PWA
 ### A Good Example Explains It Best
 [Resilient Web Design](https://resilientwebdesign.com/) is a wonderful book that explains the history of the Web.
 
-When you open this page, a PWA-aware bowser (eg Chrome) will give the option to open it as an app.
+When you open this page, a PWA-aware browser (e.g. Chrome) will give the option to open it as an app.
 
 ### PWA -- Stage 1
 Two steps will make your web page look like a web app under Android/Chrome
-* Add `manifest.json` and insert this line to the main page: <br>
+
+1. Add `manifest.json` and insert this line to the main page: <br>
 `<link rel="manifest" href="manifest.json">`
 ```
 {
@@ -25,7 +26,7 @@ Two steps will make your web page look like a web app under Android/Chrome
   ]
 }
 ```
-* Add related icons -- Just one icon is enough.
+2. Add related icons -- Just one icon is enough.
 If a large icon (512x512) exists, it may be used as splash screen.
 
 ![JS icon](images/JS.png)
@@ -33,8 +34,9 @@ If a large icon (512x512) exists, it may be used as splash screen.
 ### PWA -- Stage 2
 Add service worker `navigator.serviceWorker.register('/JS/sw.js')`
 
-We need to use a cache so that the app can work off-line. Two more steps are needed:
-* Supply a listener for `install` events -- add the static files to the cache
+We will use the cache so that the app can work off-line. Two more steps are needed:
+
+3. Supply a listener for `install` events -- add the static files to the cache
 ```
 const CACHE ='JS'
 const FILES = ['/JS/', '/JS/sss/', '/JS/index.html', ...]
@@ -43,11 +45,11 @@ function installCB(e) {
     caches.open(CACHE)
     .then(cache => cache.addAll(FILES))
     .catch(console.log)
- )
+  )
 }
 self.addEventListener('install', installCB)
 ```
-* Supply a listener for `fetch` events -- return the file from the cache, if not found fetch the remote file
+4. Supply a listener for `fetch` events -- return the file from the cache, if not found fetch the remote file
 ```
 function cacheCB(e) { //cache first
   let req = e.request
@@ -61,7 +63,25 @@ self.addEventListener('fetch', cacheCB)
 ```
 
 ### Automated Cache
-(will continue)
+The solution outlined above will work for static files that do not change in time, e.g. archive files or book chapters. But if the content is variable (as in a growing web site) we use a different approach: Fetch the file first, then save it in the cache. No need to check if it is modified... If fetch fails we can return what we find in the cache, which may not be up-to-date.
+```
+function save(req, resp) {
+  return caches.open(CACHE)
+  .then(cache => {
+    cache.put(req, resp.clone());
+    return resp;
+  }) 
+  .catch(console.log)
+}
+function fetchCB(e) { //fetch first
+  let req = e.request
+  e.respondWith(
+    fetch(req).then(r2 => save(req, r2))
+    .catch(() => { return caches.match(req).then(r1 => r1) })
+  )
+}
+self.addEventListener('fetch', fetchCB)
+```
 
 ### Summary of the Files
 * `index.html` (modified)
