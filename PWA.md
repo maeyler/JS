@@ -31,6 +31,13 @@ If a large icon (512x512) exists, it may be used as splash screen.
 
 ![JS icon](images/JS.png)
 
+### Cache Usage
+When a web page makes a fetch request for a web resource, the browser sends a http GET message to the server and returns the raw bytes as its response. It may use an internal (hidden) cache in this process, but the developers have no access to that cache. 
+
+![Cache Usage](images/cache.jpg)
+
+When a *web app* makes a similar request, a service worker acts as a proxy in between. It may get its response from the cache or from the browser depending on the caching strategy used, as explained below.
+
 ### PWA -- Stage 2
 Add service worker `navigator.serviceWorker.register('/JS/sw.js')`
 
