@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-US">
 <head>
     <meta charset="UTF-8">
@@ -7,12 +7,13 @@
     <meta name="author" content="M A Eyler, Istanbul, 2018" />
     <meta name="description" content="BLM305 FSMV University" />
     <title>JS Örnekleri </title>
+    <link rel="icon" sizes="192x192" href="images/JS.png">
     <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('https://maeyler.github.io/JS/sw.js')
-        .then((reg) => { console.log('SW Registered', reg) })
+        .then((reg) => { console.log('SW Registered', reg.active) })
         .catch(console.log)
     }
   </script>
@@ -85,9 +86,12 @@ Ref: <a href="https://www.w3schools.com/js/"
   <li>Web tasarımında vazgeçilmez</li>
   <li>Her platformda çalışıyor</li>
 </ul>
-<p>
-<a href="https://maeyler.github.io/JS/PWA">Progressive Web App</a><br />
-<a href="https://maeyler.github.io/JS/Java%20to%20JS">Java'dan JS'e geçiş</a>
-</p>
+
+<h3>Ek Bilgiler</h3>
+<ul>
+  <li><a href="Java%20to%20JS">Java'dan JS'e geçiş</a>
+  <li><a href="PWA">PWA Nasıl Yapılır</a> &emsp; 
+      <a href="PWA_EN">PWA (English)</a>
+</ul>
   </body>
 </html>

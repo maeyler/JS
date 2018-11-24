@@ -1,15 +1,15 @@
-## Building a Progressive Web App
-Here is a brief explanation of how to convert this web site to a PWA
+## PWA Nasıl Yapılır
+Progressive Web App: Uygulama gibi davranan ve çevrim dışı (off-line) çalışabilen web sayfalarına PWA (web uygulaması) diyoruz. Bu sitenin ana sayfasını PWA haline getiren adımları burada özetliyoruz.
 
-### A Good Example Explains It Best
-[Resilient Web Design](https://resilientwebdesign.com/) is a wonderful book that explains the history of the Web.
+### Güzel Bir Örnek Her Şeyi Anlatıyor
+Web'in tarihçesini anlatan şu kitap, [Resilient Web Design](https://resilientwebdesign.com/) aynı zamanda iyi bir PWA olarak incelemeye değer.
 
-When you open this page, a PWA-aware browser (e.g. Chrome) will give the option to open it as an app.
+Chrome gibi bir tarayıcı ile açarak kitabı uygulama halinde kaydedebilirsiniz. Başka bir şey indirmeye gerek yok, çevrim dışı kullabilirsiniz. Kitabın içeriği değişse bile, tekrar çevrim içi olunca sayfalar güncellenecektir.
 
-### PWA -- Stage 1
-Two steps will make your web page look like a web app under Android/Chrome
+### PWA -- 1. Safha
+Sayfanın Android/Chrome altında web uygulaması olması için iki adım yeterli:
 
-1. Add `manifest.json` and insert this line to the main page: <br>
+1. `manifest.json` dosyası ile birlikte ana sayfaya tek satır: <br>
 `<link rel="manifest" href="manifest.json">`
 ```
 {
@@ -26,24 +26,25 @@ Two steps will make your web page look like a web app under Android/Chrome
   ]
 }
 ```
-2. Add related icons -- Just one icon is enough.
-If a large icon (512x512) exists, it may be used as splash screen.
+2. Gerekli icon'lar (bir tane yeterli)
+
+Büyük (512x512) icon varsa, uygulama yüklenirken sistem onu kullanabilir
 
 ![JS icon](images/JS.png)
 
-### Cache Usage
-When a web page makes a fetch request for a web resource, the browser sends a http GET message to the server and returns the raw bytes as its response. It may use an internal (hidden) cache in this process, but the developers have no access to that cache. 
+### Cache (ön-bellek) Kullanımı
+Bir web sayfası uzaktaki bir kaynağa (metin, resim, vb) erişmek istediğinde, tarayıcıya fetch talebi gönderir. Tarayıcı, 'http GET' mesajı ile uzaktaki kaynağı indirir ve gelen byte'ları sayfaya verir. Bu arada tarayıcının da bir ön-bellek kullandığını biliyoruz ama geliştiriciler bu belleğe erişemiyor.
 
 ![Cache Usage](images/cache.png)
 
-When a *web app* makes a similar request, a service worker acts as a proxy in between. It may get its response from the cache or from the browser depending on the caching strategy used, as explained below.
+Bir *web uygulaması* benzeri bir talep yaptığında, _service worker_ araya girer. Cevabı ya kendi ön-belleğinde bulur ya da tarayıcıdan ister.
 
-### PWA -- Stage 2
-Add service worker `navigator.serviceWorker.register('/JS/sw.js')`
+### PWA -- 2. Safha
+Masa üstünde uygulama statüsü kazanmak için ayrıca bir _service worker_ eklemek gerekiyor: `navigator.serviceWorker.register('/JS/sw.js')`
 
-We will use the cache so that the app can work off-line. Two more steps are needed:
+Uygulamayı çevrim dışı kullanabilmek için iki adım daha atalım:
 
-3. Supply a listener for `install` events -- add the static files to the cache
+3. `install` olayları için bir dinleyici: statik dosyaları en başta ön-belleğe alır
 ```
 const CACHE ='JS'
 const FILES = ['/JS/', '/JS/sss/', '/JS/index.html', ...]
@@ -56,7 +57,7 @@ function installCB(e) {
 }
 self.addEventListener('install', installCB)
 ```
-4. Supply a listener for `fetch` events -- return the file from the cache, if not found fetch the remote file
+4. `fetch` olayları için bir dinleyici: dosyayı önce ön-bellekte arar, bulamazsa fetch talebi gönderir
 ```
 function cacheCB(e) { //cache first
   let req = e.request
@@ -69,8 +70,9 @@ function cacheCB(e) { //cache first
 self.addEventListener('fetch', cacheCB)
 ```
 
-### Automated Cache
-The solution outlined above will work for static files that do not change in time, e.g. archive files or book chapters. But if the content is variable (as in a growing web site) we use a different approach: Fetch the file first, then save it in the cache. No need to check if it is modified... If fetch fails we can return what we find in the cache, which may not be up-to-date.
+### Otomatik Cache
+Yukarıda gösterilen "önce cache" yaklaşımı, zaman içinde değişmeyen statik kaynaklar için iyi bir çözüm. Mesela, arşiv dosyaları ya da kitap bölümleri gibi.
+Zaman içinde değişen bir içerik söz konusu ise, daha farklı davranılır: "önce fetch". Kaynak tarayıcıdan istenir ve gelen bilgi ön-belleğe kaydedilir. Çevrim dışı olduğu için cevap gelmezse ön-bellekteki dosya ile yetinilir.
 ```
 function save(req, resp) {
   return caches.open(CACHE)
@@ -90,13 +92,13 @@ function fetchCB(e) { //fetch first
 self.addEventListener('fetch', fetchCB)
 ```
 
-### Summary of the Files
-* `index.html` (modified)
-* `manifest.json` (PWA info)
+### Gerekli Dosyalar
+* `index.html` (değişecek)
+* `manifest.json` (PWA bilgisi)
 * `images/JS.png` (icon)
 * `sw.js` (service worker)
 
-### References
+### Referanslar
 * [Using Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers)
 * [Building a PWA](https://medium.freecodecamp.org/progressive-web-apps-102-building-a-progressive-web-app-from-scratch-397b72168040)
 
