@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>Geo Location </title>
+    <title>Google Maps </title>
+
+  <style>
+    #map {
+        width:  400px;
+        height: 500px;
+    }
+  </style>
 
 <script src="https://maps.google.com/maps/api/js?key=AIzaSyDDuGt0E5IEGkcE6ZfrKfUtE9Ko_de66pA"></script>
+
 <script>
 "use strict";
 var MAP; //global object from google.maps
+function mapType(sat) {
+    MAP.setMapTypeId(sat? 'satellite' : 'roadmap')
+}
 function locate(pos) {
   console.log(pos);
   let x = pos.coords.latitude, 
@@ -17,12 +28,12 @@ function locate(pos) {
 }
 function init(point) {
   const OPT = {
-    zoom: 15,
+    zoom: 16,
     center: point,
     disableDefaultUI: true,
-    mapTypeId: "satellite",
+    mapTypeId: "roadmap",
     zoomControl: true,
-    mapTypeControl: false,
+    mapTypeControl: true,
     scaleControl: false,
     streetViewControl: false,
     rotateControl: false,
@@ -30,14 +41,16 @@ function init(point) {
   }
   console.log(point);
   //map is a <div> for rendering the MAP
-  MAP = new google.maps.Map(map, OPT); 
+  MAP = new google.maps.Map(map, OPT);
+  google.maps.event.addListener(MAP, 'zoom_changed', 
+    () => { out.innerText = "Zoom = "+ MAP.zoom })
 }
 const MIN = 2, MAX = 19;
 var incr = 0;
 function stop() {
     but.value = "Run";
     but.onclick = start;
-    zzz.innerText = "";
+    //out.innerText = "";
     incr = 0;
 }
 function start() {
@@ -50,28 +63,21 @@ function zoom() {
     let z = MAP.zoom;
     MAP.setZoom(z + incr);
     z = MAP.zoom;
-    zzz.innerText = "Zoom = "+z;
+    //out.innerText = "Zoom = "+z;
     if (z >= MAX) incr = -1;
     if (z <= MIN) incr = 1;
     setTimeout(zoom, 700);
 }
 </script>
-
-  <style>
-    #map {
-        width: 360px;
-        height: 360px;
-    }
-  </style>
 </head>
 
 <body>
 
 <h2 id=title></h2>
 
-<span id=out></span>
-<input id=but type=button value="Run" onClick="start()">
-<span id=zzz></span>
+<input id=but type=button value="Run" onClick="start()"> &emsp;
+<span id=out></span> &emsp;
+<input type=checkbox onClick="mapType(checked)">Satellite
 
 <hr />
 <div id=map></div>
@@ -89,7 +95,7 @@ function zoom() {
 
 <script>
     title.innerText = document.title;
-    out.innerText = "Google Maps at work";
+    out.innerText = "";
     sample.innerText = locate+"\n"+init;
     //initial coordinates are given: 50. Yil Parki
     init({lat:40.970021, lng:29.057876});

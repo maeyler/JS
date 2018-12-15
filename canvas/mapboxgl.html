@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>MapBoxGL </title>
+
+  <style>
+    body { margin:10px; }
+    #map {
+        width:400px;
+        height:500px
+    }
+  </style>
+
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+
+<script>
+"use strict";
+var MAP; //global object from mapboxgl
+function mapType(sat) {
+    MAP.setStyle(sat?
+      'mapbox://styles/mapbox/satellite-v9' :
+      'mapbox://styles/mapbox/streets-v9')
+}
+function init(point) {
+  console.log(point);
+  MAP = new mapboxgl.Map({
+    container: 'map',
+    center: [point.lng, point.lat],
+    style: 'mapbox://styles/mapbox/streets-v9',
+    zoom: 15
+});
+}
+const MIN = 2, MAX = 19;
+var incr = 0;
+function stop() {
+    but.value = "Run";
+    but.onclick = start;
+    //out.innerText = "";
+    incr = 0;
+}
+function start() {
+    but.value = "Stop";
+    but.onclick = stop;
+    incr = 1; zoom();
+}
+function zoom() {
+    if (incr == 0) return;
+    let z = MAP.getZoom();
+    MAP.setZoom(z + incr);
+    z = MAP.getZoom();
+    //out.innerText = "Zoom = "+z;
+    if (z >= MAX) incr = -1;
+    if (z <= MIN) incr = 1;
+    setTimeout(zoom, 700);
+}
+</script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<input id=but type=button value="Run" onClick="start()"> &emsp;
+<span id=out></span>
+<input type=checkbox onClick="mapType(checked)">Satellite
+
+<hr />
+<div id=map></div>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="https://www.mapbox.com/help/how-web-apps-work/" 
+   target="ExternalDocument">Map webb apps</a> <br>
+<a href="https://www.mapbox.com/mapbox-gl-js/example/simple-map/" 
+   target="ExternalDocument">MapBox Example</a>
+</p>
+
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibWFleWxlciIsImEiOiJjanBtY29scnMwaDZ2M3dvOTZ2Nml1ZWl4In0.ACb7p1U9pDb7ZhCckCLn7g';
+</script>
+
+<script>
+    title.innerText = document.title;
+    out.innerText = "";
+    sample.innerText = init;
+    //initial coordinates are given: 50. Yil Parki
+    init({lat:40.970021, lng:29.057876});
+</script>
+
+</body>
+</html>
