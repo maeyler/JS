@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>NFA for (1+0)*10 </title>
+
+<script>
+"use strict";
+function union(a, b) {  //set operation using strings
+    let s = a
+    for (let c of b) if (!a.includes(c)) s += c
+    return s
+}
+function intersect(a, b) {
+    let s = ''
+    for (let c of b) if (a.includes(c)) s += c
+    return s
+}
+function delta(q, c) { // (1+0)*10
+    if (q=='a' && c=='0') return 'a'
+    if (q=='a' && c=='1') return 'ab'
+    if (q=='b' && c=='0') return 'c' 
+    return '';  //default -- no transition
+}
+function accept(w, F='c', q='a') {
+//w: input String
+//F: final state(s)
+//q: current state
+    let output = q
+    for (let c of w) {
+       let t = ''
+       for (let x of q) t = union(t, delta(x, c))
+       if (t == '') { q=''; break }
+       q = t; output += " -> "+t
+    }
+    let n = intersect(q, F).length
+    let r = n>0 ? "Accept" : "Reject"
+    return output+'  '+r
+}
+function test(w) {
+    let s = "  ";
+    for (let c of w) s += c+"    ";
+    console.log(s); out.innerHTML = s
+    s = accept(w);
+    console.log(s); out.innerHTML += '\n'+s
+}
+</script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<p>Non-deterministic Finite Automaton</p>
+
+<input id=inp type=text value=01001010
+  onChange="test(this.value)">
+
+<pre id=out></pre>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<hr />
+<!--p>Ref: <a href="https:xxx" 
+   target="ExternalDocument">xxx</a>
+</p-->
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = delta+'\n'+accept;
+    test(inp.value);
+</script>
+
+</body>
+</html>
