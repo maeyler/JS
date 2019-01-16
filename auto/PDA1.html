@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>PDA for Addition </title>
+
+<script>
+"use strict";
+function delta(c, p) { // Unary addition
+    if (c=='a' && p=='S') return "aSa";
+    if (c=='+' && p=='S') return "+aEa";
+    if (c=='a' && p=='E') return "aEa";
+    if (c=='=' && p=='E') return "=";
+    return '';  //default -- no transition
+}
+function accept(w, init='S') {
+    //w: input String
+    //init: start symbol
+    //S: stack as Array
+    let txt = "push "+init
+    let i = 0, m = w.length, S = [init]
+    while (i < m && S.length > 0) {
+        let c = w[i], p = S.pop()
+        if (c == p) { //input matches stack  
+            i++; txt += "\nmatch "+c
+        } else { //find a valid transition
+            let d = delta(c, p)
+            if (d == '') break
+            let A = d.split('').reverse()
+            for (let x of A) S.push(x)
+            txt += "\npush "+d
+        }
+        txt += " -> "
+        for (let j=S.length-1; j>=0; j--) 
+            txt += S[j]
+    }
+    input.selectionStart = i
+    input.selectionEnd = i+1
+    let a = (i == m && S.length == 0)
+    return txt+'  '+(a? "Accept" : "Reject")
+}
+function test() {
+    let s = accept(input.value);
+    console.log(s); out.innerHTML = s
+}
+</script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<p>Push-down automaton for unary addition</p>
+
+w = <input id=input type=text value="aa+aa=aaaa"
+  onChange="test()"> 
+
+<pre id=out></pre>
+
+<hr />
+<b>Grammar</b>
+
+<style>
+    #cfg { 
+        margin: 10px 50px; 
+        color: blue; 
+        font-weight: bold; 
+    }
+</style>
+<div id=cfg>
+  S → aSa | +aEa <br>
+  E → aEa | =
+</div>
+
+<pre id=sample></pre>
+
+<hr />
+<!--p>Ref: <a href="https:xxx" 
+   target="ExternalDocument">xxx</a>
+</p-->
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = delta+'\n'+accept;
+    test();
+</script>
+
+</body>
+</html>
