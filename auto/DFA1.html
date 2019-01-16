@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>DFA for (1+0)*10 </title>
+    <title>DFA for (1|0)*10 </title>
 
 <script>
 "use strict";
-function delta(q, c) { // (1+0)*10
+function delta(q, c) { // (1|0)*10
     if (q=='A' && c=='0') return 'A'
     if (q=='B' && c=='0') return 'C'
     if (q=='C' && c=='0') return 'A' 
@@ -15,24 +15,25 @@ function delta(q, c) { // (1+0)*10
     return '';  //default -- no transition
 }
 function accept(w, F='C', q='A') {
-//w: input String
-//F: final state(s)
-//q: current state
-    let output = q
-    for (let c of w) {
-       let t = delta(q, c)
-       if (t == '') { q=''; break }
-       q = t; output += " -> "+t
+    //w: input String
+    //F: final state(s)
+    //q: current state
+    let i = 0, txt = q
+    while (i < w.length) {
+        q = delta(q, w[i])
+        if (q == '') break
+        i++; txt += " -> "+q
     }
-    let r = F.includes(q) ? "Accept" : "Reject"
-    return output+'  '+r
+    input.selectionStart = i
+    input.selectionEnd = i+1
+    let a = (q!='' && F.includes(q))
+    return txt+'  '+(a? "Accept" : "Reject")
 }
-function test(w) {
-    let s = "  ";
-    for (let c of w) s += c+"    ";
+function test() {
+    let w = input.value, s = "  "
+    for (let c of w) s += c+"    "
+    s += '\n'+accept(w, final.value)
     console.log(s); out.innerHTML = s
-    s = accept(w);
-    console.log(s); out.innerHTML += '\n'+s
 }
 </script>
 </head>
@@ -41,15 +42,40 @@ function test(w) {
 
 <h2 id=title></h2>
 
-<p>Deterministic Finite Automaton</p>
+<p>Deterministic finite automaton</p>
 
-<input id=inp type=text value=01001010
-  onChange="test(this.value)">
+w = <input id=input type=text value=01001010
+  onChange="test()"> &emsp;
+F = <input id=final type=text value=C
+  onChange="test()" style="width:30px">
 
 <pre id=out></pre>
 
 <hr />
-<b>Sample code</b>
+<b>Logic</b>
+
+<style>
+    table { 
+        border-collapse: collapse; 
+        margin: 0 50px; 
+    }
+    th { 
+        color: blue; 
+        padding: 5px 12px; 
+    }
+    td { 
+        border: 1px solid blue; 
+        padding: 5px 12px; 
+        text-align: center; 
+    }
+</style>
+<table>
+<tr><th></th><th>0</th><th>1</th></tr>
+<tr><th>> A</th><td>A</td><td>B</td></tr>
+<tr><th>&emsp;B</th><td>C</td><td>B</td></tr>
+<tr><th>* C</th><td>A</td><td>B</td></tr>
+</table>
+
 <pre id=sample></pre>
 
 <hr />
@@ -58,9 +84,9 @@ function test(w) {
 </p-->
 
 <script>
-    title.innerText = document.title;
-    sample.innerText = delta+'\n'+accept;
-    test(inp.value);
+    title.innerText = document.title
+    sample.innerText = delta+'\n'+accept
+    test()
 </script>
 
 </body>

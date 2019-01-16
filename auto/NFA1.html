@@ -3,47 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>NFA for (1+0)*10 </title>
+    <title>NFA for (1|0)*10 </title>
 
 <script>
 "use strict";
-function union(a, b) {  //set operation using strings
+function union(a, b) { //set operation using strings
     let s = a
-    for (let c of b) if (!a.includes(c)) s += c
+    for (let x of b) if (!a.includes(x)) s += x
     return s
 }
 function intersect(a, b) {
     let s = ''
-    for (let c of b) if (a.includes(c)) s += c
+    for (let x of b) if (a.includes(x)) s += x
     return s
 }
-function delta(q, c) { // (1+0)*10
+function delta(q, c) { // (1|0)*10
     if (q=='a' && c=='0') return 'a'
     if (q=='a' && c=='1') return 'ab'
     if (q=='b' && c=='0') return 'c' 
     return '';  //default -- no transition
 }
-function accept(w, F='c', q='a') {
-//w: input String
-//F: final state(s)
-//q: current state
-    let output = q
-    for (let c of w) {
-       let t = ''
-       for (let x of q) t = union(t, delta(x, c))
-       if (t == '') { q=''; break }
-       q = t; output += " -> "+t
+function accept(w, F='c', Q='a') {
+    //w: input String
+    //F: final state(s)
+    //Q: current state(s)
+    let i = 0, txt = Q
+    while (i < w.length) {
+        let c = w[i], T=''
+        for (let q of Q) 
+            T = union(T, delta(q, c))
+        Q = T
+        if (Q == '') break
+        i++; txt += ", "+c+" -> "+Q+'\n'+Q
     }
-    let n = intersect(q, F).length
-    let r = n>0 ? "Accept" : "Reject"
-    return output+'  '+r
+    input.selectionStart = i
+    input.selectionEnd = i+1
+    let a = intersect(Q, F).length > 0
+    return txt+'  '+(a? "Accept" : "Reject")
 }
-function test(w) {
-    let s = "  ";
-    for (let c of w) s += c+"    ";
-    console.log(s); out.innerHTML = s
-    s = accept(w);
-    console.log(s); out.innerHTML += '\n'+s
+function test() {
+    let s = accept(input.value, final.value);
+    console.log(s);  out.innerHTML = s
 }
 </script>
 </head>
@@ -52,15 +52,40 @@ function test(w) {
 
 <h2 id=title></h2>
 
-<p>Non-deterministic Finite Automaton</p>
+<p>Non-deterministic finite automaton</p>
 
-<input id=inp type=text value=01001010
-  onChange="test(this.value)">
+w = <input id=input type=text value=01001010
+  onChange="test()"> &emsp;
+F = <input id=final type=text value=c
+  onChange="test()" style="width:30px">
 
 <pre id=out></pre>
 
 <hr />
-<b>Sample code</b>
+<b>Logic</b>
+
+<style>
+    table { 
+        border-collapse: collapse; 
+        margin: 0 50px; 
+    }
+    th { 
+        color: blue; 
+        padding: 5px 12px; 
+    }
+    td { 
+        border: 1px solid blue; 
+        padding: 5px 12px; 
+        text-align: center; 
+    }
+</style>
+<table>
+<tr><th></th><th>0</th><th>1</th></tr>
+<tr><th>> a</th><td>a</td><td>ab</td></tr>
+<tr><th>&emsp;b</th><td>c</td><td>ϕ</td></tr>
+<tr><th>* c</th><td>ϕ</td><td>ϕ</td></tr>
+</table>
+
 <pre id=sample></pre>
 
 <hr />
@@ -71,7 +96,7 @@ function test(w) {
 <script>
     title.innerText = document.title;
     sample.innerText = delta+'\n'+accept;
-    test(inp.value);
+    test();
 </script>
 
 </body>
