@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link href="Auto.css" rel="stylesheet" media="all">
+    <title>Languages & Automata </title>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<div class="tab">
+  <button class="tablink" onclick="openTab(this)">DFA</button>
+  <button class="tablink" onclick="openTab(this)">NFA</button>
+  <button class="tablink" onclick="openTab(this)">RegExp</button>
+  <button class="tablink" onclick="openTab(this)">CFG</button>
+  <button class="tablink" onclick="openTab(this)">PDA</button>
+  <button class="tablink" onclick="openTab(this)">RD</button>
+  <button class="tablink" onclick="openTab(this)">TM</button>
+</div>
+
+<div id="DFA" class="tabcontent">
+  <p>Deterministic finite automaton for <b>(1|0)*10</b></p>
+  <table>
+    <tr><th></th><th>0</th><th>1</th></tr>
+    <tr><th>> A</th><td>A</td><td>B</td></tr>
+    <tr><th>&emsp;B</th><td>C</td><td>B</td></tr>
+    <tr><th>* C</th><td>A</td><td>B</td></tr>
+  </table>
+  <p></p>
+</div>
+
+<div id="NFA" class="tabcontent">
+  <p>Non-deterministic finite automaton for <b>(1|0)*10</b></p>
+  <table>
+    <tr><th></th><th>0</th><th>1</th></tr>
+    <tr><th>> a</th><td>a</td><td>ab</td></tr>
+    <tr><th>&emsp;b</th><td>c</td><td>ϕ</td></tr>
+    <tr><th>* c</th><td>ϕ</td><td>ϕ</td></tr>
+  </table>
+  <p></p> 
+</div>
+
+<div id="RegExp" class="tabcontent">
+  <p>Regular expressions &emsp; &emsp;<a href="https://maeyler.github.io/Automata/regexp/EmrahTema_Regexp.html" 
+   target="ExternalDocument">by Emrah Tema</a></p>
+<p>
+  Pattern <input type=text id=pat  style="width:90px" onKeyUp="checkRE()">
+  &emsp; 
+  <select id=menu onChange="setValues()">
+    <option>Letter<option>Number<option>Suffix<option>x+letter
+  </select> 
+</p>
+</div>
+
+<div id="CFG" class="tabcontent">
+  <p>Context-free grammar for unary addition</p>
+  <p class=cfg>
+    S → aSa | +aEa <br>
+    E → aEa | =
+  </p>
+  Under construction 
+</div>
+
+<div id="PDA" class="tabcontent">
+  <p>Push-down automaton for unary addition</p>
+  <p class=cfg>
+    S → aSa | +aEa <br>
+    E → aEa | =
+  </p>
+</div>
+
+<div id="RD" class="tabcontent">
+  <p>Recursive-descent parser for arithmetic</p>
+  <p>Ref: <a href="https://maeyler.github.io/Automata/cfg/Bilal_RecursiveDescentParser.html#form" 
+   target="ExternalDocument">Parser by B E Harmansa</a>
+  </p>
+</div>
+
+<div id="TM" class="tabcontent">
+  <p>Turing machine</p>
+  <p>Ref: <a href="https://maeyler.github.io/Automata/turing/abdurrahmanRajab_turingMachineSimulator.html#funArea" 
+   target="ExternalDocument">Simulator by A Rajab</a>
+  </p>
+</div>
+
+<p>
+  <label for="input">w = </label>
+  <input id=input type=text> &emsp;
+  <label for="final">F = </label>
+  <input id=final type=text style="width:30px">
+<pre id=out></pre>
+</p>
+
+<!--hr />
+<b>Sample code</b>
+<pre id=sample></pre-->
+
+<script src="Auto.js"></script>
+<script>
+//Transition functions
+function deltaD(q, c) { // DFA (1|0)*10
+    if (q=='A' && c=='0') return 'A'
+    if (q=='B' && c=='0') return 'C'
+    if (q=='C' && c=='0') return 'A' 
+    if (c=='1') return 'B'
+    return '';  //default -- no transition
+}
+function deltaN(q, c) { // NFA (1|0)*10
+    if (q=='a' && c=='0') return 'a'
+    if (q=='a' && c=='1') return 'ab'
+    if (q=='b' && c=='0') return 'c' 
+    return '';  //default -- no transition
+}
+function deltaP(c, p) { // PDA addition
+    if (c=='a' && p=='S') return "aSa";
+    if (c=='+' && p=='S') return "+aEa";
+    if (c=='a' && p=='E') return "aEa";
+    if (c=='=' && p=='E') return "=";
+    return '';  //default -- no transition
+}
+
+//Tab selection code
+var tName, tNum
+function setText(x, str) {
+  let s = ""
+  if (str) x.value = str;
+  else s = "none";
+  x.style.display = s //(str ? "" : "none");
+  x.previousElementSibling.style.display = s
+}
+function openTab(button) {
+  tName = button.innerText
+  for (let i=0; i<LINKS.length; i++) {
+    let x = LINKS[i]
+    x.className = "tablink"
+    if (x.innerText == tName) {
+        x.className += " active"; tNum = i;
+    } 
+  }
+  for (let x of CONTENT) {
+    x.style.display = (x.id == tName ? "block" : "none");
+  }
+  if (SAMPLE[tNum].name != tName) console.error(tName, tNum)
+  //else console.log(SAMPLE[tNum])
+  setText(input, SAMPLE[tNum].str1)
+  setText(final, SAMPLE[tNum].str2)
+  out.innerText = ''
+  let c = SAMPLE[tNum].callback
+  if (c) {
+    input.onkeyup = c; final.onkeyup = c; c.call()
+  }
+  //sample.innerText = (c ? '' : c)
+}
+  title.innerText = document.title;
+  //Sample data
+  const pattern = ["[a-z]", "[0-9]{4}", "d[iuü][km]", "x[a-z]"];
+  const words = 
+    ["Bir iki üç dört beş altı ", "Bugün 23/6/2018 saat 14",
+     "Geldim gördüm buldum...", "Excellent expression tax "];
+  const SAMPLE = [
+    new Sample('DFA', '01001010', 'C', testD),
+    new Sample('NFA', '01001010', 'c', testN),
+    new Sample('RegExp', words[0], '', checkRE),
+    new Sample('CFG', 'aa+aa=aaaa'),
+    new Sample('PDA', 'aa+aa=aaaa', '', testP),
+    new Sample('RD'),
+    new Sample('TM')
+  ]
+  const CONTENT = document.getElementsByClassName('tabcontent');
+  const LINKS   = document.getElementsByClassName('tablink')
+  openTab(LINKS[0])
+</script>
+
+</body>
+</html>
