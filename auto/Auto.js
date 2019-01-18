@@ -8,19 +8,21 @@ class Sample {
     }
 }
 
+function markErr(i) {
+    input.selectionStart = i
+    input.selectionEnd = i+1
+}
+
 //DFA
 function acceptD(w, F='C', q='A') {
-    //w: input String
-    //F: final state(s)
-    //q: current state
     let i = 0, txt = q
     while (i < w.length) {
         q = deltaD(q, w[i])
-        if (q == '') break
+        if (q == '') {
+           markErr(i); break
+        }
         i++; txt += " -> "+q
     }
-    input.selectionStart = i
-    input.selectionEnd = i+1
     let a = (q!='' && F.includes(q))
     return txt+'  '+(a? "Accept" : "Reject")
 }
@@ -43,20 +45,17 @@ function intersect(a, b) {
     return s
 }
 function acceptN(w, F='c', Q='a') {
-    //w: input String
-    //F: final state(s)
-    //Q: current state(s)
     let i = 0, txt = Q
     while (i < w.length) {
         let c = w[i], T=''
         for (let q of Q) 
             T = union(T, deltaN(q, c))
         Q = T
-        if (Q == '') break
+        if (Q == '') {
+           markErr(i); break
+        }
         i++; txt += ", "+c+" -> "+Q+'\n'+Q
     }
-    input.selectionStart = i
-    input.selectionEnd = i+1
     let a = intersect(Q, F).length > 0
     return txt+'  '+(a? "Accept" : "Reject")
 }
@@ -79,11 +78,28 @@ function checkRE() {
     }
 }
 
+//
+function generate(w, init='S') {
+    let txt = init, g = init
+    for (let i=0; i<w.length; i++) {
+        let c = w[i], p = g[i]
+        if (c == p) continue
+        let d = deltaP(c, p)
+        if (d == '') {
+          markErr(i); break
+        }
+        g = g.replace(p, d)
+        txt += "\n=> "+g
+    }
+    return txt+'\n'+(w==g ? "Accept" : "Reject")
+}
+function testG() {
+    let s = generate(input.value);
+    console.log(s); out.innerHTML = s
+}
+
 //PDA
 function acceptP(w, init='S') {
-    //w: input String
-    //init: start symbol
-    //S: stack as Array
     let txt = "push "+init
     let i = 0, m = w.length, S = [init]
     while (i < m && S.length > 0) {
@@ -92,7 +108,9 @@ function acceptP(w, init='S') {
             i++; txt += "\nmatch "+c
         } else { //find a valid transition
             let d = deltaP(c, p)
-            if (d == '') break
+            if (d == '') {
+              markErr(i); break
+            }
             let A = d.split('').reverse()
             for (let x of A) S.push(x)
             txt += "\npush "+d
@@ -101,8 +119,6 @@ function acceptP(w, init='S') {
         for (let j=S.length-1; j>=0; j--) 
             txt += S[j]
     }
-    input.selectionStart = i
-    input.selectionEnd = i+1
     let a = (i == m && S.length == 0)
     return txt+'  '+(a? "Accept" : "Reject")
 }

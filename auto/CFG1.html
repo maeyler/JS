@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>CFG for Addition </title>
+
+<script>
+"use strict";
+function delta(c, p) { // Unary addition
+    if (c=='a' && p=='S') return "aSa";
+    if (c=='+' && p=='S') return "+aEa";
+    if (c=='a' && p=='E') return "aEa";
+    if (c=='=' && p=='E') return "=";
+    return '';  //default -- no transition
+}
+function generate(w, init='S') {
+    //w: input String
+    //init: start symbol
+    //g: generated String
+    let txt = init, g = init
+    for (let i=0; i<w.length; i++) {
+        let c = w[i], p = g[i]
+        if (c == p) continue
+        let d = delta(c, p)
+        if (d == '') {
+          input.selectionStart = i
+          input.selectionEnd = i+1
+          break
+        }
+        g = g.replace(p, d)
+        txt += "\n=> "+g
+    }
+    return txt+'\n'+(w==g ? "Accept" : "Reject")
+}
+function test() {
+    let s = generate(input.value);
+    console.log(s); out.innerHTML = s
+}
+</script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<p>Push-down automaton for unary addition</p>
+
+w = <input id=input type=text value="aa+aa=aaaa"
+  onChange="test()"> 
+
+<pre id=out></pre>
+
+<hr />
+<b>Grammar</b>
+
+<style>
+    #cfg { 
+        margin: 10px 50px; 
+        color: blue; 
+        font-weight: bold; 
+    }
+</style>
+<div id=cfg>
+  S → aSa | +aEa <br>
+  E → aEa | =
+</div>
+
+<pre id=sample></pre>
+
+<hr />
+<!--p>Ref: <a href="https:xxx" 
+   target="ExternalDocument">xxx</a>
+</p-->
+
+<script>
+    title.innerText = document.title;
+    sample.innerText = delta+'\n'+generate;
+    test();
+</script>
+
+</body>
+</html>

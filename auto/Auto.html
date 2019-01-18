@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <meta name="theme-color" content="cyan" />
+    <meta name="author" content="M A Eyler, Istanbul, 2018" />
+    <meta name="description" content="BLM320 FSMV University" />
     <link href="Auto.css" rel="stylesheet" media="all">
+    <link rel="icon" sizes="192x192" href="../images/JS.png">
     <title>Languages & Automata </title>
 </head>
 
@@ -61,7 +65,6 @@
     S → aSa | +aEa <br>
     E → aEa | =
   </p>
-  Under construction 
 </div>
 
 <div id="PDA" class="tabcontent">
@@ -163,8 +166,8 @@ function openTab(button) {
   const SAMPLE = [
     new Sample('DFA', '01001010', 'C', testD),
     new Sample('NFA', '01001010', 'c', testN),
-    new Sample('RegExp', words[0], '', checkRE),
-    new Sample('CFG', 'aa+aa=aaaa'),
+    new Sample('RegExp', 'not used', '', setValues),
+    new Sample('CFG', 'aa+aa=aaaa', '', testG),
     new Sample('PDA', 'aa+aa=aaaa', '', testP),
     new Sample('RD'),
     new Sample('TM')
