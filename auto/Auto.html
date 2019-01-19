@@ -18,7 +18,7 @@
 <div class="tab">
   <button class="tablink" onclick="openTab(this)">DFA</button>
   <button class="tablink" onclick="openTab(this)">NFA</button>
-  <button class="tablink" onclick="openTab(this)">RegExp</button>
+  <button class="tablink" onclick="openTab(this)">RE</button>
   <button class="tablink" onclick="openTab(this)">CFG</button>
   <button class="tablink" onclick="openTab(this)">PDA</button>
   <button class="tablink" onclick="openTab(this)">RD</button>
@@ -47,7 +47,7 @@
   <p></p> 
 </div>
 
-<div id="RegExp" class="tabcontent">
+<div id="RE" class="tabcontent">
   <p>Regular expressions &emsp; &emsp;<a href="https://maeyler.github.io/Automata/regexp/EmrahTema_Regexp.html" 
    target="ExternalDocument">by Emrah Tema</a></p>
 <p>
@@ -143,7 +143,8 @@ function openTab(button) {
         x.className += " active"; tNum = i;
     } 
   }
-  for (let x of CONTENT) {
+  for (let i=0; i<CONTENT.length; i++) {
+    let x = CONTENT[i]
     x.style.display = (x.id == tName ? "block" : "none");
   }
   if (SAMPLE[tNum].name != tName) console.error(tName, tNum)
@@ -166,7 +167,7 @@ function openTab(button) {
   const SAMPLE = [
     new Sample('DFA', '01001010', 'C', testD),
     new Sample('NFA', '01001010', 'c', testN),
-    new Sample('RegExp', 'not used', '', setValues),
+    new Sample('RE', 'not used', '', setValues),
     new Sample('CFG', 'aa+aa=aaaa', '', testG),
     new Sample('PDA', 'aa+aa=aaaa', '', testP),
     new Sample('RD'),

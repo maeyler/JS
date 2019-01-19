@@ -8,6 +8,7 @@ body {
 }
 .tablink {
   float: left;
+  width: 14.28%;
   border: none;
   outline: none;
   cursor: pointer;
@@ -17,10 +18,11 @@ body {
   font-size: 15px;
 }
 .tablink:hover {
-  background: #8ff;
+  background: cyan;
 }
 .tablink.active {
-  background: #0ff;
+  color: white;
+  background: #00a;
 }
 .tabcontent {
   display: none;

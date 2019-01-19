@@ -78,7 +78,7 @@ function checkRE() {
     }
 }
 
-//
+//CFG
 function generate(w, init='S') {
     let txt = init, g = init
     for (let i=0; i<w.length; i++) {
