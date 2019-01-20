@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title></title>
+  <style>
+    body {
+        max-width: 420px;
+        margin: 0;
+    }
+    p {
+        margin: 0;
+    }
+    #main {
+        text-align: center;    
+        background: #9cf;
+        font-size: 24px;
+        margin: 0;
+    }
+    #saat {
+        font-size: 48px;
+        padding-top: 20px;
+    }
+    #yer {
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+    b {
+        font-size: 18px;
+    }
+    pre {
+        font-size: 14px;
+    }
+    #detail {
+        float: left;
+        margin: 12px;
+    }
+    #prayer {
+        float: right;
+        margin: 12px;
+    }
+  </style>
+</head>
+
+<body>
+<div id=main>
+<p id=saat>time</p>
+<p><span id=hava>weather</span>
+<img id="icon"></p>
+<p id=yer>location</p>
+</div>
+
+<div id=detail>
+<b>Detail</b>
+<pre id=detay>detail</pre>
+</div>
+<div id=prayer>
+<b>Sun</b>
+<pre id=namaz>prayer</pre>
+</div>
+
+<script>
+"use strict";
+const KEY="999d50c94b878b4f0728577fa6a63b1c"
+var hm, lat, lon;  //global values
+function twoDigits(t) {
+    if (t>9) return ""+t;
+    return "0"+t;
+}
+function toHM(t, round) {
+    let d = t ? new Date(t*1000) : new Date()
+    if (round && d.getSeconds()>29)
+        d = new Date((t+30)*1000) //round
+    let h = d.getHours()
+    let m = d.getMinutes()
+    return twoDigits(h)+":"+twoDigits(m)
+//    let s = new Date(t*1000).toString()
+//    return s.split(' ')[4].substring(0,5)
+}
+function setHourMin() {
+    hm = toHM()  //current time
+    document.title = "Clock "+hm
+}
+function count() {
+    let d = new Date();
+    let sec = twoDigits(d.getSeconds());
+    if (sec == "00") setHourMin();
+    saat.innerText = hm+":"+sec;
+    setTimeout(count, 1000);
+}
+function getLocation(p) {
+    lat = p.coords.latitude; lon = p.coords.longitude;
+    console.log(lat, lon); getWeather()
+}
+function getWeather() {
+    const url = "https://api.openweathermap.org/data/2.5/weather?"
+    let u = url+"lat="+lat+"&lon="+lon+"&APPID="+KEY;
+    //console.log(u); u = u.replace('/weather','/forecast')
+    hava.innerText = "getting weather"
+    detay.innerText = ''
+    namaz.innerText = ''
+    /* replace this code by fetch()
+    let xhttp = new XMLHttpRequest()
+    xhttp.responseType = "text"
+    xhttp.onreadystatechange = () => {
+       if (xhttp.readyState == 4 && xhttp.status == 200) 
+          showWeather(JSON.parse(xhttp.responseText))
+       else hava.innerText = "XX"
+    }
+    xhttp.open("GET", u, true); xhttp.send()
+    */
+    fetch(u).then(r => r.json()).then(showWeather)
+}
+function showWeather(data) {
+    let w = data.weather[0]; showIcon(w.icon)
+    let celsius = convert(data.main.temp).toFixed(0)
+    let hh = w.main+"  "+celsius+"°", ss = data.sys
+    let yy = data.name+', '+ss.country
+    hava.innerText = hh; yer.innerText = yy
+    console.log(hh, yy)
+    lat = data.coord.lat; lon = data.coord.lon
+    let loc = "["+lat.toFixed(2)+", "+lon.toFixed(2)+"]"
+    detay.innerText = hh+'\n'+yy+'\n'+loc
+        +'\nWind  '+data.wind.speed+' m/s'
+        +'\nPressure '+data.main.pressure+' hpa'
+        +'\nHumidity '+data.main.humidity+'%'
+    let s1 = ss.sunrise, s2 = ss.sunset, nn = (s1+s2)/2
+    console.log(s1, ss, s2)
+    namaz.innerText = 'Rise '+toHM(s1, 1)
+        +'\nNoon '+toHM(nn, 1)+'\nSet  '+toHM(s2, 1)
+}
+function showIcon(i) {
+    const URL = "https://openweathermap.org/img/w/"
+    icon.src = URL+i+".png"
+}
+function convert(kelvin){
+    return (kelvin - 273.15);
+    //return celsius*1.8 + 32
+}
+    window.onfocus = setHourMin;
+    setHourMin(); count(); showIcon('01n')
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getLocation);
+    }
+
+</script>
+
+</body>
+</html>
