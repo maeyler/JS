@@ -65,9 +65,13 @@ function testN() {
 }
 
 //RegExp
-function setValues() {
-    pat.value = pattern[menu.selectedIndex];
-    input.value = words[menu.selectedIndex];
+function setValues(arg) {
+    let k = menu.selectedIndex
+    //alert(arg+"   "+k)
+    if (arg === true) {
+      pat.value = pattern[k];
+      input.value = words[k];
+    }
     checkRE();
 }
 function checkRE() {

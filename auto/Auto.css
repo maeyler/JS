@@ -43,6 +43,12 @@ td {
   padding: 5px 12px; 
   text-align: center; 
 }
+#final {
+  width: 30px;
+}
+#pat {
+  width: 90px;
+}
 .cfg { 
   margin: 10px 50px; 
   color: blue; 

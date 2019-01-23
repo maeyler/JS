@@ -51,9 +51,9 @@
   <p>Regular expressions &emsp; &emsp;<a href="https://maeyler.github.io/Automata/regexp/EmrahTema_Regexp.html" 
    target="ExternalDocument">by Emrah Tema</a></p>
 <p>
-  Pattern <input type=text id=pat  style="width:90px" onKeyUp="checkRE()">
+  Pattern <input type=text id=pat onKeyUp="checkRE()">
   &emsp; 
-  <select id=menu onChange="setValues()">
+  <select id=menu onChange="setValues(true)">
     <option>Letter<option>Number<option>Suffix<option>x+letter
   </select> 
 </p>
@@ -93,9 +93,9 @@
   <label for="input">w = </label>
   <input id=input type=text> &emsp;
   <label for="final">F = </label>
-  <input id=final type=text style="width:30px">
-<pre id=out></pre>
+  <input id=final type=text>
 </p>
+<pre id=out></pre>
 
 <!--hr />
 <b>Sample code</b>
@@ -154,7 +154,7 @@ function openTab(button) {
   out.innerText = ''
   let c = SAMPLE[tNum].callback
   if (c) {
-    input.onkeyup = c; final.onkeyup = c; c.call()
+    input.onkeyup = c; final.onkeyup = c; c.call(null, true)
   }
   //sample.innerText = (c ? '' : c)
 }
