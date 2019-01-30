@@ -1,0 +1,16 @@
+{
+  "name": "Hava Durumu",
+  "short_name": "Hava",
+  "description": "Current weather",
+  "start_url": "/JS/data/WL.html",
+  "display": "standalone",
+  "background_color": "cyan",
+  "theme_color": "cyan",
+  "icons": [
+    {
+      "src": "WL.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

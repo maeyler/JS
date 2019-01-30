@@ -11,14 +11,17 @@ function save(req, resp) {
     cache.put(req, resp.clone());
     return resp;
   }) 
-  .catch(console.log)
+  .catch(console.err)
+}
+function report(req) {
+  console.log(CACHE+' matches '+req.url)
+  return req
 }
 function fetchCB(e) { //fetch first
   let req = e.request
-  console.log(CACHE, req.url);
   e.respondWith(
     fetch(req).then(r2 => save(req, r2))
-    .catch(() => { return caches.match(req).then(r1 => r1) })
+    .catch(() => caches.match(req).then(report))
   )
 }
 self.addEventListener('fetch', fetchCB)

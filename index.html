@@ -11,10 +11,12 @@
     <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
+      if (navigator.serviceWorker.controller)
+        console.log('SW is alredy running')
+      else navigator.serviceWorker
         .register('https://maeyler.github.io/JS/sw.js')
         .then((reg) => { console.log('SW Registered', reg.active) })
-        .catch(console.log)
+        .catch(console.error)
     }
   </script>
   <style>
