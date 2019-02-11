@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Linear Equations </title>
+    <link rel="stylesheet" href="Matrix.css" media="all">
+    <script src="../math/Number.js"></script>
+    <script src="Matrix.js"></script>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<!--button onClick="cnt()">xxx</button-->
+
+<b>Problem</b>
+<div class=center>
+<table id=inp></table>
+</div>
+
+<hr />
+
+<b>Solution</b>
+<div class=center>
+<table id=out onClick='doClick(event)' onDblclick='double(event)'> 
+</table>
+</div>
+
+<hr />
+
+<pre id=sample></pre>
+<p></p>
+
+<script>
+"use strict";
+const
+   A = [ [ 1, 4, 1 ], [ 2, 2, 1 ], [ 3, 0, 3 ] ],
+   B = [ [ 2, 2, 1, 1, 2 ], [ 1, 4, 0, 1,-1 ], 
+         [ 3, 1, 2,-2,-2 ], [ 3, 0, 1, 2, 7 ] ],
+   C = [ [ 2, 2, 1, 1 ], [ 1, 4, 0, 1 ], [ 3, 1, 2,-2 ], [ 3, 0, 1, 2 ] ];
+/*
+2 	2 	1 	1 	2
+1 	4 	0 	1 	-1
+3 	1 	2 	-2 	-2
+3 	0 	1 	2 	7
+
+2	2	1	1 
+1	4	0	1 
+3	1	2   -2 
+3	0	1	2
+*/
+function deselect() {
+    if (selected == undefined) return
+    out.rows[selected].className = ''
+    selected = undefined
+}
+function select(i) {
+    if (selected == i) return
+    console.log("select row "+i); 
+    deselect(); selected = i
+    out.rows[i].className = 'active'
+}
+function indexOf(elt) {
+    for (let i=0; i<out.rows.length; i++)
+        if (out.rows[i] == elt) return i
+    return -1
+}
+function double(evt) {
+    console.log(evt.type)
+}
+function doClick(evt) {
+    let i = indexOf(evt.target.parentNode)
+    console.log(evt.type, i)
+    if (i > 0) select(i); else deselect()
+}
+    title.innerText = document.title
+    var selected
+    let m = Matrix.fromArray2D(B)
+    let s = m.toHTML()
+    inp.innerHTML = s
+    out.innerHTML = s
+    //sample.innerText = m.solve()
+    out.innerHTML = m.toHTML()
+</script>
+
+</body>
+</html>

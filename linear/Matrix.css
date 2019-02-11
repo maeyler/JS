@@ -1,0 +1,70 @@
+body {
+    max-width: 640px;
+}
+button {
+    cursor: pointer;
+    margin: 1em;
+}
+div {
+    margin: 1.5em;
+}
+table {
+    display: inline-table;
+    border-collapse: collapse;
+}
+th { 
+    color: blue; 
+    padding: 8px; 
+}
+td { 
+    border: 1px solid blue; 
+    padding: 8px 24px; 
+}
+tr:hover {
+    background: #ffc;
+    cursor: pointer;
+}
+tr.active {
+    background: #ff6;
+}
+pre {
+    font-size: 14px;
+}
+.center {
+    text-align: center; 
+}
+.buyuk {
+    font-size: 18px;
+}
+.tahmin {
+    display: inline-block;
+    width: 25%;
+    background: #ffa; 
+    font: 12px arial, sans-serif;
+    padding: 6px 0;
+    border-bottom: 1px solid black;    
+}
+.kapat {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#main {
+    background: #9cf;
+    font-size: 24px;
+}
+.tip {
+    visibility: hidden;
+    position: absolute;
+    font: 11px arial, sans-serif;
+    color: black;
+    background: yellow;
+    border: 1px solid;
+    padding: 6px;
+}
+button:hover .tip { 
+    visibility: visible; 
+}
+span:hover .tip { 
+    visibility: visible; 
+}
