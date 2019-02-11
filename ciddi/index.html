@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demlik Durumu </title>
+
+  <style>
+    body {
+        width: 100%;
+    }
+    h2 {
+        margin-top: 2vw;
+        margin-bottom: 0;
+    }
+    img {
+        width: 100%;
+        margin: 0;
+    }
+    .large {
+        font: 5vw arial, sans-serif;
+        text-align: center;    
+        margin: 0;
+    }
+    .demlik {
+        width: 19vw;
+        display: inline-block;
+        cursor: pointer;
+    }
+    #main {
+        text-align: center;    
+    }
+    #saat {
+        font-size: 18vw;
+        text-align: center;    
+        color: blue;
+        margin: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title>Demlik Durumu &emsp;
+<button onClick="reset()">Reset</button></h2>
+
+<div>
+<div id=saat>time</div>
+
+<div class=demlik onClick="doClick(d1, t1)">
+  <img id=d1>
+  <p id=t1 class=large></p>
+</div>
+<div class=demlik onClick="doClick(d2, t2)">
+  <img id=d2>
+  <p id=t2 class=large></p>
+</div>
+<div class=demlik onClick="doClick(d3, t3)">
+  <img id=d3>
+  <p id=t3 class=large></p>
+</div>
+<div class=demlik onClick="doClick(d4, t4)">
+  <img id=d4>
+  <p id=t4 class=large></p>
+</div>
+<div class=demlik onClick="doClick(d5, t5)">
+  <img id=d5>
+  <p id=t5 class=large></p>
+</div>
+<hr />
+</div>
+
+<p id=out></p>
+
+
+<script>
+"use strict";
+var timeout = new Map()
+function twoDigits(t) {
+    if (t>9) return ""+t;
+    return "0"+t;
+}
+function timeToString(t) {
+    let seconds = (t == undefined)
+    if (seconds) t = Date.now()
+    let d = new Date(t)
+    let a = []
+    a.add = (x) => { a.push(twoDigits(x)) }
+    a.add(d.getHours())
+    a.add(d.getMinutes())
+    if (seconds)
+        a.add(d.getSeconds())
+    return a.join(':')
+}
+function doClear(txt) {
+    let out = timeout.get(txt)
+    if (!out) return
+    clearTimeout(out)
+    timeout.delete(txt)
+}
+function setColor(txt, b, c, t) {
+  function doColor() {
+    txt.style.background = b; txt.style.color = c
+  }
+    if (!t) doColor()
+    else timeout.set(txt, setTimeout(doColor, t))
+}
+function setState(img, txt, s) {
+    if (s) {
+      img.src = 'demlik.jpg'
+      let dem = 25*60*1000 //25 minutes
+      txt.innerText = timeToString(Date.now() + dem)
+      setColor(txt, "#cc0", "black")  //immediate
+      setColor(txt, "#a7120b", "white", dem) //25 minutes
+      setColor(txt, "#444", "white", 60*60*1000) //1 hour
+      console.log(saat.innerText, txt.id+" dolu")
+    } else {
+      img.src = 'bombos.jpg'
+      txt.innerText = '.'
+      setColor(txt, "white", "black")
+      doClear(txt)
+      console.log(saat.innerText, txt.id+" boş")
+    }
+}
+function doClick(img, txt) {
+    let s = img.src.endsWith('bombos.jpg')
+    setState(img, txt, s)
+}
+function reset() {
+    console.log("Reset");
+    for (let i=1; i<=5; i++) {
+        let img = eval('d'+i)
+        let txt = eval('t'+i)
+        setState(img, txt, false)
+    }
+}
+function count() {
+    saat.innerText = timeToString()
+    setTimeout(count, 1000);
+}
+    //out.innerHTML = "Çay işi ciddi ve zor bir iştir"
+    window.onfocus = count
+    count(); reset()
+</script>
+
+</body>
+</html>
