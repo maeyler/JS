@@ -128,6 +128,20 @@ class Make { //Factory methods for numbers
              return Make.decimal(re);
         return new Complex(re, im);
     }
+    static fromString(s) {
+        if (typeof s == "number") 
+            return Make.decimal(s);
+        let a = s.split('/')
+        if (a.length > 1) 
+            return Make.rational(Number(a[0]), Number(a[1]))
+        a = s.split('+i')
+        if (a.length > 1) 
+            return Make.complex(Number(a[0]), Number(a[1]))
+        a = s.split('-i')
+        if (a.length > 1) 
+            return Make.complex(Number(a[0]), -Number(a[1]))
+        return Make.decimal(Number(s));
+    }
 }
 
 class Number2 { //testing another approach

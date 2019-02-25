@@ -17,7 +17,7 @@
   <button onClick="startEditor()">Edit
     <span class=tip>Modify the matrix using text editor
     </span>
-  </button> &emsp;
+  </button>
   <button onClick="doSolve()">Solve
     <span class=tip>Solve the equations using elimination
     </span>
@@ -35,7 +35,8 @@
 <textarea id=txt rows=6>
 2    1  -1   8
 -3  -1   2  -11
--1  1/2  1  -3/2</textarea>
+-1  1/2  1  -3/2
+</textarea>
 </div>
 <div class=center>
 <table id=inp></table>
@@ -44,12 +45,16 @@
 <hr />
 
 <b>Solution</b> &emsp;
-  <button onClick="readInput()">Back
+  <button onClick="readInput()">Reset
     <span class=tip>Back to the original problem
     </span>
   </button>
+  <button id=undo onClick="undoLast()">Undo
+    <span class=tip>Back to the previous step
+    </span>
+  </button>
 <div class=center>
-<table id=out onClick='doClick(event)' onDblclick='double(event)'> 
+<table id=sol onClick='doClick(event)' onDblclick='double(event)'> 
 </table>
 </div>
 
@@ -75,14 +80,13 @@
     <button onClick="doAddRow()">Add
       <span class=tip>Add to this row the number times the row entered</span>
     </button>
-    <button onClick="doExchange()">Swap
-      <span class=tip>Exchange this row by the row entered</span>
+    <button onClick="doSwap()">Swap
+      <span class=tip>Swap this row by the row entered</span>
     </button>
   </div>
 </div>
 
-<pre id=sample></pre>
-<p></p>
+<pre id=out></pre> 
 
 <script>
 "use strict";
@@ -103,41 +107,59 @@ const
 3  0  1  2
 */
 
-function displayMat() {
-    out.innerHTML = mat.toHTML(); deselect()
+var command = []  //stack for Undo
+function displayMatrix() {
+    sol.innerHTML = mat.toHTML(); deselect()
+    undo.disabled = (command.length == 0)
+    out.innerText = command.join('\n')
+}
+function focus_select(elt) {
+    elt.selectionStart = 0
+    elt.selectionEnd = elt.value.length
+    elt.focus()
 }
 function startEditor() {
-    editor.style.display='block'; deselect()
+    editor.style.display='block'
+    focus_select(txt); deselect()
+    document.onkeydown = ''
 }
 function hideEditor() {
     editor.style.display='none'
+    document.onkeydown = docKey
 }
 function readInput() {
+    let s = txt.value, n = s.length-1
+    //remove non-numeric trailing chars
+    while (s[n]<'0' || s[n]>'9') n-- 
+    console.log("read input "+(n+1)+" chars")
+    txt.value = s.substring(0, n+1)
     mat = Matrix.fromString(txt.value)
     inp.innerHTML = mat.toHTML()
-    hideEditor(); displayMat()
+    hideEditor(); command = []
+    displayMatrix()
 }
 function deselect() {
-    if (selected == undefined) return
-    out.rows[selected].className = ''
+    if (!selected) return
+    sol.rows[selected].className = ''
     selected = undefined
     diyalog.style.display='none'
+    document.onkeydown = docKey
 }
 function select(i) {
-    if (selected == i) return
-    //console.log("select row "+i); 
-    deselect(); selected = i
-    out.rows[i].className = 'active'
+    if (selected == i || i > mat.M) return
+    if (selected)
+      sol.rows[selected].className = ''
+    sol.rows[i].className = 'active'
+    selected = i
     const RR = "Row Operation on "
     diaTitle.innerHTML = RR + mat.row[i-1].name
-    numInput.selectionStart = 0
-    numInput.selectionEnd = numInput.value.length
     diyalog.style.display = 'block'
-    numInput.focus(); hideEditor()
+    document.onkeydown = ''
+    focus_select(numInput); hideEditor()
 }
 function indexOf(elt) {
-    for (let i=0; i<out.rows.length; i++)
-        if (out.rows[i] == elt) return i
+    for (let i=0; i<sol.rows.length; i++)
+        if (sol.rows[i] == elt) return i
     return -1
 }
 function double(evt) {
@@ -145,36 +167,75 @@ function double(evt) {
 }
 function doClick(evt) {
     let i = indexOf(evt.target.parentNode)
-    //console.log(evt.type, i)
+    //console.log(evt, i)
     if (i <= 0) { deselect(); return }
     if (selected) rowInput.value = i
     else select(i)
 }
+function docKey(evt) {
+    if (selected) return
+    let k = evt.key
+    if (k>'0' && k<'9') {
+      select(Number(k)); evt.preventDefault()
+    }
+    /* this code interacts with inputKey()
+    console.log(selected, k)
+    if (k == 'Escape') hideEditor()
+    else if (k>'0' && k<'9') select(k)
+    else if (k<'a' || k>'z') return
+    else if (k == 'e') startEditor()
+    else if (k == 's') doSolve()
+    else if (k == 'r') readInput()
+    evt.preventDefault()
+    */
+}
+function inputKey(evt) {
+    if (!selected) return
+    let k = evt.key
+    if (k == 'Escape') deselect()
+    else if (k<'a' || k>'z') return
+    else if (k == 's') doSwap()
+    else if (k == 'm') doMultiply()
+    else if (k == 'a') doAddRow()
+    evt.preventDefault()
+}
+function doCommand(x) {
+    if (x == null) return
+    command.push(x)
+    console.log(x)
+    displayMatrix()
+}
+function undoLast() {
+    let x = command.pop()
+    console.log("UNDO "+x)
+    x.undo(); displayMatrix()
+}
 function doMultiply() {
     let c = Make.fromString(numInput.value)
-    mat.multiply(selected-1, c)
-    displayMat()
+    doCommand(mat.multiply(selected-1, c))
 }
 function doAddRow() {
     let c = Make.fromString(numInput.value)
     let k = rowInput.value-1
-    mat.addRow(selected-1, c, k)
-    displayMat()
+    doCommand(mat.addRow(selected-1, c, k))
 }
-function doExchange() {
+function doSwap() {
     let k = rowInput.value-1
-    mat.exchange(selected-1, k)
-    displayMat()
+    doCommand(mat.swap(selected-1, k))
 }
 function doSolve() {
-    mat.solve(); displayMat()
+    command = mat.solve(); displayMatrix()
+    let k = command.length
+    console.log("Solution in "+k+" steps, det = "+mat.det)
 }
     title.innerText = document.title
-    var selected, mat
+    var selected, mat  //global values
+    numInput.onkeydown = inputKey
+    rowInput.onkeydown = inputKey
+    document.onkeydown = docKey
     readInput() 
-    //mat = Matrix.fromArray2D(B)
-    //sample.innerText = mat.solve()
-    //displayMat()
+    //mat = Matrix.fromArray2D(B); 
+    //displayMatrix()
 </script>
 
 </body>

@@ -3,10 +3,18 @@ body {
 }
 button {
     cursor: pointer;
-    margin: 1em;
+    margin: 5px 2vw;
+}
+textarea {
+    width: 95%;
+    margin-top: 5px;
+}
+input {
+    width: 15%;
+    margin: 5px;
 }
 div {
-    margin: 1.5em;
+    margin: 1vw;
 }
 table {
     display: inline-table;
@@ -14,11 +22,11 @@ table {
 }
 th { 
     color: blue; 
-    padding: 8px; 
+    padding: 1vw; 
 }
 td { 
     border: 1px solid blue; 
-    padding: 8px 24px; 
+    padding: 5px 3vw; 
 }
 tr:hover {
     background: #ffc;
@@ -36,23 +44,6 @@ pre {
 .buyuk {
     font-size: 18px;
 }
-.tahmin {
-    display: inline-block;
-    width: 25%;
-    background: #ffa; 
-    font: 12px arial, sans-serif;
-    padding: 6px 0;
-    border-bottom: 1px solid black;    
-}
-.kapat {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-#main {
-    background: #9cf;
-    font-size: 24px;
-}
 .tip {
     visibility: hidden;
     position: absolute;
@@ -60,7 +51,7 @@ pre {
     color: black;
     background: yellow;
     border: 1px solid;
-    padding: 6px;
+    padding: 5px;
 }
 button:hover .tip { 
     visibility: visible; 
@@ -68,3 +59,27 @@ button:hover .tip {
 span:hover .tip { 
     visibility: visible; 
 }
+.diyalog {
+    display: none;
+    position: absolute;
+    left: 10%;
+    width: 80%;
+    max-width: 340px;
+    margin-top: 6px;
+    padding: 5px;
+    font: 13px arial, sans-serif;
+    background: #def;
+    box-sizing: border-box;
+    border: 3px double black;    
+}
+.kabul {
+    position: absolute;
+    top: 0;
+    right: 10%;
+}
+.kapat {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
