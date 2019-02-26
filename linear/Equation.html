@@ -22,6 +22,9 @@
     <span class=tip>Solve the equations using elimination
     </span>
   </button>
+  <select id=menu onChange="setSample()">
+    <option>3x4<option>3x6<option>4x5<option>8x9
+  </select> 
 
 <div id=editor class=diyalog>
   Use space as separator. <br>
@@ -90,22 +93,34 @@
 
 <script>
 "use strict";
-const
-   A = [ [ 1, 4, 1 ], [ 2, 2, 1 ], [ 3, 0, 3 ] ],
-   B = [ [ 2, 2, 1, 1, 2 ], [ 1, 4, 0, 1,-1 ], 
-         [ 3, 1, 2,-2,-2 ], [ 3, 0, 1, 2, 7 ] ],
-   C = [ [ 2, 2, 1, 1 ], [ 1, 4, 0, 1 ], [ 3, 1, 2,-2 ], [ 3, 0, 1, 2 ] ];
-/*
-2  2  1  1  2
-1  4  0  1  -1
-3  1  2  -2  -2
-3  0  1  2  7
+const SAMPLE = [
+`1  4  1  1
+2   2  1  5
+-3  0  3  3`,
 
-2  2  1  1
-1  4  0  1
-3  1  2  -2
-3  0  1  2
-*/
+`2   1  -1  1 0 0
+-3  -1   2  0 1 0
+-1  1/2  1  0 0 1`,
+
+`2 2  1  1  2
+1  4  0  1 -1
+3  1  2 -2 -2
+3  0  1  2  7`,
+
+`2	2	0	2	3	1	1	-2	3
+1	4	2	0	1	-2	0	1	3
+-2	1	3	3	-2	1	0	1	-3
+5	3	2	1	0	3	2	1	2
+2	1	1	0	-2	-1	1	1	0
+1	0	1	3	0	3	1	2	5
+3	1	0	2	-2	-2	2	-2	-2
+3	0	0	1	0	5	1	2	3`
+]
+function setSample() {
+    let k = menu.selectedIndex
+    txt.value = SAMPLE[k]
+    readInput()
+}
 
 var command = []  //stack for Undo
 function displayMatrix() {
@@ -208,7 +223,7 @@ function doCommand(x) {
 function undoLast() {
     let x = command.pop()
     console.log("UNDO "+x)
-    x.undo(); displayMatrix()
+    x.undo(mat); displayMatrix()
 }
 function doMultiply() {
     let c = Make.fromString(numInput.value)
@@ -228,14 +243,13 @@ function doSolve() {
     let k = command.length
     console.log("Solution in "+k+" steps, det = "+mat.det)
 }
+
     title.innerText = document.title
     var selected, mat  //global values
     numInput.onkeydown = inputKey
     rowInput.onkeydown = inputKey
     document.onkeydown = docKey
     readInput() 
-    //mat = Matrix.fromArray2D(B); 
-    //displayMatrix()
 </script>
 
 </body>

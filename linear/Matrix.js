@@ -48,13 +48,14 @@ class Swap {
    constructor(ri, rk) {
       this.ri = ri; this.rk = rk
    }
-   exec() {
+   exec(m) {
       let d = this.ri.data
       this.ri.data = this.rk.data
       this.rk.data = d 
+      m.det = m.det.mult(MINUS)
    }
-   undo() {
-      this.exec() //swap again
+   undo(m) {
+      this.exec(m) //swap again
    }
    toString() { 
       return "swap "+this.ri.name+" <=> "+this.rk.name
@@ -64,11 +65,13 @@ class Mult {
    constructor(ri, c) {
       this.ri = ri; this.c = c
    }
-   exec() {
+   exec(m) {
       this.ri.multiply(this.c)
+      m.det = m.det.mult(this.c.inverse());
    }
-   undo() {
+   undo(m) {
       this.ri.multiply(this.c.inverse())
+      m.det = m.det.mult(this.c);
    }
    toString() { 
       return "mult "+this.ri.name+" by "+this.c
@@ -78,10 +81,10 @@ class Add {
    constructor(ri, c, rk) {
       this.ri = ri; this.c = c; this.rk = rk 
    }
-   exec() {
+   exec(m) {
       this.ri.addRow(this.c, this.rk)
    }
-   undo() {
+   undo(m) {
       this.ri.addRow(this.c.mult(MINUS), this.rk)
    }
    toString() { 
@@ -134,22 +137,20 @@ class Matrix  {
    swap(i, k) {
       if (i == k) return null
       let op = new Swap(this.row[i], this.row[k])
-      this.det = this.det.mult(MINUS)
-      op.exec(); return op
+      op.exec(this); return op
       //console.log("swap "+ri.name+" <=> "+rk.name)
    }
    multiply(i, c) {
       let v = c.value()
       if (v == 0 || v == 1) return null
       let op = new Mult(this.row[i], c)
-      this.det = this.det.mult(c.inverse());
-      op.exec(); return op
+      op.exec(this); return op
       //console.log("mult "+ri.name+" by "+c);
    }
    addRow(i, c, k) { //c: Number  i, k: int
       if (i == k || c.value() == 0) return null
       let op = new Add(this.row[i], c, this.row[k])
-      op.exec(); return op
+      op.exec(this); return op
       //console.log("add to "+ri.name+"  "+c+" x "+rk.name);
    }
    solve() {

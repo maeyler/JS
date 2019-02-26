@@ -1,9 +1,9 @@
 body {
     max-width: 640px;
 }
-button {
+button, select {
     cursor: pointer;
-    margin: 5px 2vw;
+    margin: 5px 8px;
 }
 textarea {
     width: 95%;
@@ -64,7 +64,7 @@ span:hover .tip {
     position: absolute;
     left: 10%;
     width: 80%;
-    max-width: 340px;
+    max-width: 400px;
     margin-top: 6px;
     padding: 5px;
     font: 13px arial, sans-serif;
