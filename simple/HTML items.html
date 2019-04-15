@@ -7,13 +7,6 @@
     <title>Some HTML Items </title>
 </head>
 
-<script>
-"use strict";
-function report(s) {
-    out.innerText = s; console.log(s);
-}
-</script>
-
 <body>
 <h2 id=title></h2>
 
@@ -48,6 +41,10 @@ function report(s) {
 <hr />
 
 <script>
+"use strict";
+function report(s) {
+    out.innerText = s; console.log(s);
+}
     title.innerText = document.title;
     sample.innerText = toWord.toString();
 </script>

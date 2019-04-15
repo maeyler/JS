@@ -6,22 +6,6 @@
     <title>Date and Color </title>
 </head>
 
-<script>
-"use strict";
-//My first non-trivial JS code
-//June 8, 2018 MAE
-//
-function setDate(s) {
-    console.log("date: "+s);
-    out.innerText = "Current date is "+s;
-}
-function setColor(c) {
-    console.log("color: "+c);
-    title.style.color = c;
-    out.style.color = c;
-}
-</script>
-
 <body>
 <h2 id=title></h2>
 
@@ -40,6 +24,19 @@ function setColor(c) {
 </p>
 
 <script>
+"use strict";
+//My first non-trivial JS code
+//June 8, 2018 MAE
+//
+function setDate(s) {
+    console.log("date: "+s);
+    out.innerText = "Current date is "+s;
+}
+function setColor(c) {
+    console.log("color: "+c);
+    title.style.color = c;
+    out.style.color = c;
+}
     title.innerText = document.title;
     sample.innerText = setDate+"\n"+setColor;
     setDate("??");

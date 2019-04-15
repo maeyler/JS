@@ -4,7 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title></title>
+  <style>
+    #out {
+        font-size: 48px;
+        background-color: blue;
+        color: white;
+        text-align: center;
+        padding: 80px;
+    }
+  </style>
 </head>
+
+<body>
+
+<p id=out></p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
 
 <script>
 "use strict";
@@ -27,28 +45,6 @@ function count() {
     out.innerText = hm+":"+sec;
     setTimeout(count, 1000);
 }
-</script>
-
-<style>
-    #out {
-        font-size: 48px;
-        background-color: blue;
-        color: white;
-        text-align: center;
-        padding: 80px;
-    }
-</style>
-
-<body>
-
-<p id=out></p>
-
-<hr />
-<b>Sample code</b>
-<pre id=sample></pre>
-<hr />
-
-<script>
     sample.innerText = count.toString();
     window.onfocus = setHourMin;
     setHourMin(); count();

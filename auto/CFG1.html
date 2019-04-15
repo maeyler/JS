@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>CFG for Addition </title>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<p>Context-free grammar for unary addition</p>
+
+w = <input id=input type=text value="aa+aa=aaaa"
+  onChange="test()"> 
+
+<pre id=out></pre>
+
+<hr />
+<b>Grammar</b>
+
+<style>
+    #cfg { 
+        margin: 10px 50px; 
+        color: blue; 
+        font-weight: bold; 
+    }
+</style>
+<div id=cfg>
+  S → aSa | +aEa <br>
+  E → aEa | =
+</div>
+
+<pre id=sample></pre>
+
+<hr />
+<!--p>Ref: <a href="https:xxx" 
+   target="ExternalDocument">xxx</a>
+</p-->
 
 <script>
 "use strict";
@@ -37,43 +71,7 @@ function test() {
     let s = generate(input.value);
     console.log(s); out.innerHTML = s
 }
-</script>
-</head>
 
-<body>
-
-<h2 id=title></h2>
-
-<p>Push-down automaton for unary addition</p>
-
-w = <input id=input type=text value="aa+aa=aaaa"
-  onChange="test()"> 
-
-<pre id=out></pre>
-
-<hr />
-<b>Grammar</b>
-
-<style>
-    #cfg { 
-        margin: 10px 50px; 
-        color: blue; 
-        font-weight: bold; 
-    }
-</style>
-<div id=cfg>
-  S → aSa | +aEa <br>
-  E → aEa | =
-</div>
-
-<pre id=sample></pre>
-
-<hr />
-<!--p>Ref: <a href="https:xxx" 
-   target="ExternalDocument">xxx</a>
-</p-->
-
-<script>
     title.innerText = document.title;
     sample.innerText = delta+'\n'+generate;
     test();

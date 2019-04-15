@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width">
     <title>Empty Page xxx </title>
 
-<style>
+  <style>
     #out { /* CSS code used in out */
         font-size: 18px;
         background: blue;
@@ -14,16 +14,7 @@
         text-align: center;
         padding: 10px;
     }
-</style>
-
-<script>
-"use strict";
-// JavaScript code used in button
-function cnt() {
-    console.log("Counter = "+count); 
-    return count++; 
-}
-</script>
+  </style>
 </head>
 
 <body>
@@ -44,6 +35,12 @@ function cnt() {
 </p>
 
 <script>
+"use strict";
+// JavaScript code used in button
+function cnt() {
+    console.log("Counter = "+count); 
+    return count++; 
+}
     //global variable id is the HTML element with id 
     //const title = document.getElementById("title");
     title.innerText = document.title;
