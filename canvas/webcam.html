@@ -4,28 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Camera</title>
-
 </head>
 
 <body>
-
 <h2 id=title></h2>
-
-  <div id="camera">
+<div id="camera">
     <video id="video">Video stream not available.</video>
-    <br>
-    <button onclick="takepicture()">Take photo</button>
-    <button onclick="videoOff()">Stop</button>
-  </div>
-  <div id="output">
     <canvas id="canvas"></canvas>
-    <!--img id="photo" alt="screen capture"-->
-  </div>
-  <p>
-  <hr />
+    <img id="photo" alt="screen capture">
+    <br>
+    <button id="button1"></button>
+</div>
+<p id="output"></p>
+<hr />
 <b>Sample code</b>
 <pre id=sample></pre>
-
 <hr />
 <p>Ref: <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Taking_still_photos" 
    target="ExternalDocument">Taking still photos</a>
@@ -33,62 +26,65 @@
 
 <script>
 "use strict";
-  var width = 400;  // We will scale the photo width to this
-  var height;       // This will be computed based on the input stream
-  var streaming;
-  var localstream;
+var width = 400;  // scale the photo width to this
+var height;       // To be computed based on the input stream
+var streaming = false;
 
-function videoOff() {
-  video.pause();
-  video.src = "";
-  localstream.getTracks()[0].stop();
-  camera.style.display = "none";
-  console.log("Video off");
+function error(s) {
+    output.innerText = s; alert(s); throw s
 }
-function takepicture() {
-    var context = canvas.getContext('2d');
-    if (width && height) {
-      canvas.width = width;
-      canvas.height = height;
-      context.drawImage(video, 0, 0, width, height);
+function videoOff() {
+    streaming = false;
+    video.pause();
+    video.src = "";
+    let tracks = video.srcObject.getTracks()
+    for (let t of tracks) t.stop();
+}
+function takePhoto() {
+    if (!streaming || !height) return;
+    let context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, width, height);
+    videoOff();
+    button1.innerText = "Video"
+    button1.onclick = startup
+    video.style.display = "none"
+    photo.style.display = "";
     
-      //var data = canvas.toDataURL('image/png');
-      //photo.setAttribute('src', data);
-      console.log("Take picture");
-    } else {
-      //clearphoto();
-    }
+    let data = canvas.toDataURL('image/png');
+    photo.setAttribute('src', data);
+    console.log("takePhoto");
+}
+function videoOn(stream) {
+    streaming = true;
+    video.srcObject = stream;
+    video.play();
 }
 function startup() {
-  title.innerText = document.title;
-  sample.innerText = takepicture.toString();
-  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    .then(function(stream) {
-        video.srcObject = stream;
-        video.play();
-        localstream = stream;
-    })
-    .catch(function(err) {
-        console.log("An error occurred: " + err);
-    });
-  video.addEventListener('canplay', function(ev){
-      if (!streaming) {
-        height = video.videoHeight / (video.videoWidth/width);
-      
-        //video.setAttribute('width', width);
-        video.setAttribute('height', height);
-        canvas.setAttribute('width', width);
-        canvas.setAttribute('height', height);
-        streaming = true;
-      }
-    }, false);
-  /*startbutton.addEventListener('click', function(ev){
-      takepicture();
-      ev.preventDefault();
-    }, false);*/
+    if (streaming) return;
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then(videoOn).catch(error);
+    button1.innerText = "Photo"
+    button1.onclick = takePhoto
+    video.style.display = ""
+    photo.style.display = "none";
+    console.log("startup");
+}
+function calculate(ev) {
 }
 
-    startup();
+  title.innerText = document.title;
+  sample.innerText = takePhoto.toString();
+  canvas.style.display = "none";
+  video.addEventListener('canplay', (ev) => {
+      console.log("canplay event");
+      if (height) return; //calculate once
+      height = video.videoHeight / (video.videoWidth/width);
+      //video.setAttribute('width', width);
+      video.setAttribute('height', height);
+      canvas.setAttribute('width', width);
+      canvas.setAttribute('height', height);
+    }, false);
+  startup();
 </script>
 
 </body>
