@@ -12,7 +12,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       if (navigator.serviceWorker.controller)
-        console.log('SW is alredy running')
+        console.log('service worker already running')
       else navigator.serviceWorker
         .register('https://maeyler.github.io/JS/sw.js')
         .then((reg) => { console.log('SW Registered', reg.active) })

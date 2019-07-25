@@ -81,15 +81,21 @@ function displayHTML(txt) {
     ifrm.srcdoc = txt; adjustFrameSize()
 }
 function displayText(txt) {
-    ifrm.srcdoc = "<pre id=pre1 style='margin:0'>"+txt+"</pre>"
+    ifrm.srcdoc = "<pre style='margin:0'>"+txt+"</pre>"
 }
 function displayImage(url) {
-    ifrm.srcdoc = "<img id=img1 src='"+url+"'>"
+    ifrm.srcdoc = "<img src='"+url+"'>"
 }
 function displayURL(url) {
     ifrm.removeAttribute("srcdoc")
-    ifrm.src = url  //not working if url requires sameorigin
+    ifrm.src = url  //url must be sameorigin
     adjustFrameSize()
+}
+function enterKey(evt) {
+    if (evt.key == "Enter") {
+        evt.stopPropagation()
+        displayURL(urlb.value)
+    }
 }
 
 function init() {
@@ -114,12 +120,13 @@ function init() {
 
 <p><input type=file multiple onChange='fileSelect(this)' />
 </p>
-<p>URL: 
-  <input type=text id=urlb value="https://maeyler.github.io/JS/" />
-  <button onClick="displayURL(urlb.value)">Go</button>
-  <button onClick="adjustFrameSize()">Fix</button>
+<p>URL:
+  <input type=text id=urlb onKeyUp='enterKey(event)'
+    style="width:70%" value="https://maeyler.github.io/JS/" />
+  <!--button onClick="displayURL(urlb.value)">Go</button>
+  <button onClick="adjustFrameSize()">Fix</button-->
 </p>
-<hr>
+<hr color="blue" size="2">
 <div>
   <iframe id=ifrm
     style="margin:0; width:100%; border:none;"   

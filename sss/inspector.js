@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.11b", ITERABLE = new Object();
+const VERSION = "V2.11", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -106,10 +106,10 @@ function doKey(evt) {
       case "Delete":
         removeIt(evt.ctrlKey); return;
       case "ArrowUp":
-        evt.stopPropagation();
+        evt.preventDefault()  //evt.stopPropagation();
         displayItem(current-1); return;
       case "ArrowDown":
-        evt.stopPropagation();
+        evt.preventDefault()  //evt.stopPropagation();
         displayItem(current+1); return;
       case "ArrowLeft": case "Backspace":
         previous(); return;
