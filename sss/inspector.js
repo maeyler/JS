@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.10", ITERABLE = new Object();
+const VERSION = "V2.11a", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable

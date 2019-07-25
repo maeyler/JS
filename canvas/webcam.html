@@ -71,6 +71,19 @@ function startup() {
 }
 function calculate(ev) {
 }
+/*  <select id="menu1" onChange="console.log(value)"></select>
+async function makeMenu() {
+  let devices = await navigator.mediaDevices.enumerateDevices();
+  devices = devices.filter(d => d.kind == 'videoinput');
+  console.log(devices.length+" devices");
+  if (devices.length == 0) error("no video inpput found");
+  let options = devices.map(d => {
+    return `<option value="${d.deviceId}">${d.label}</option>`;
+  });
+  for (let d of devices) console.log(d)
+  menu1.innerHTML = options.join(''); 
+  console.log(menu1.innerHTML);
+}*/
 
   title.innerText = document.title;
   sample.innerText = takePhoto.toString();
