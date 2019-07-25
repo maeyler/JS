@@ -60,7 +60,7 @@ class Main extends Menu {
     }
   }
 }
-function AdjustFrameSize() {
+function adjustFrameSize() {
     if (ifrm.srcdoc) ifrm.src = ""
     if (!ifrm.contentDocument) return //local file
     let b = ifrm.contentDocument.body
@@ -78,7 +78,7 @@ function isTextFile(f) {
          || f.name.endsWith(".json") || f.name.endsWith(".java");
 }
 function displayHTML(txt) {
-    ifrm.srcdoc = txt
+    ifrm.srcdoc = txt; adjustFrameSize()
 }
 function displayText(txt) {
     ifrm.srcdoc = "<pre id=pre1 style='margin:0'>"+txt+"</pre>"
@@ -89,6 +89,7 @@ function displayImage(url) {
 function displayURL(url) {
     ifrm.removeAttribute("srcdoc")
     ifrm.src = url  //not working if url requires sameorigin
+    adjustFrameSize()
 }
 
 function init() {
@@ -113,14 +114,16 @@ function init() {
 
 <p><input type=file multiple onChange='fileSelect(this)' />
 </p>
-<p>URL: <input type=text id=urlb />
-    <button onClick="displayURL(urlb.value)">Go</button>
+<p>URL: 
+  <input type=text id=urlb value="https://maeyler.github.io/JS/" />
+  <button onClick="displayURL(urlb.value)">Go</button>
+  <button onClick="adjustFrameSize()">Fix</button>
 </p>
 <hr>
 <div>
   <iframe id=ifrm
-    style="margin:0; width:100%; border: none;"   
-    scrolling="no" onload="AdjustFrameSize()">
+    style="margin:0; width:100%; border:none;"   
+    scrolling="no" onload="adjustFrameSize()">
   </iframe>
 </div>
 
