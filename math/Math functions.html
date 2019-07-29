@@ -7,38 +7,6 @@
     <title>Sample Math Functions </title>
 </head>
 
-<script>
-"use strict";
-function round(x) {
-  let v = Math.round(x.value);
-  x.value = v; return v;
-}
-function action(a) {
-  let xv = Number(X.value), yv = Number(Y.value); 
-  let res, act;
-  if (a[0] == "M") { //Math.fun
-    const fun = ff.value;
-    res = Math[fun].call(null, xv, yv);
-    const t = (Math[fun].length == 1? "(X)" : "(X, Y)");
-    a = 'Math.'+fun+t; fX.value = t;
-  } if (a[0] == "S") { //Sqrt
-    res = root(xv); act = Math.sqrt(xv);
-  } else if (a[0] == "E"){ //Exp
-    res = expon(xv); act = Math.exp(xv);
-  } else if (a[0] == "G") { //GCD
-    xv = round(X); yv = round(Y);
-    res = gcd(xv, yv);
-  } else if (a[0] == "X") { //X^Y
-    yv = round(Y);
-    res = power(xv, yv); act = Math.pow(xv, yv);
-  }
-  a = a.replace("X", xv).replace("Y", yv);
-  let s = a+" = "+res;
-  if (act) s += "\nActual: "+act;
-  out.innerText = s; console.log(s);
-}
-</script>
-
 <style>
     #fM { font:12px arial,sans-serif }
     #ff { width:40px }
@@ -67,6 +35,35 @@ function action(a) {
 </p>
 
 <script>
+"use strict";
+function round(x) {
+  let v = Math.round(x.value);
+  x.value = v; return v;
+}
+function action(a) {
+  let xv = Number(X.value), yv = Number(Y.value); 
+  let res, act;
+  if (a[0] == "M") { //Math.fun
+    let fun = ff.value;
+    res = Math[fun].call(null, xv, yv);
+    let t = (Math[fun].length == 1? "(X)" : "(X, Y)");
+    a = 'Math.'+fun+t; fX.value = t;
+  } if (a[0] == "S") { //Sqrt
+    res = root(xv); act = Math.sqrt(xv);
+  } else if (a[0] == "E"){ //Exp
+    res = expon(xv); act = Math.exp(xv);
+  } else if (a[0] == "G") { //GCD
+    xv = round(X); yv = round(Y);
+    res = gcd(xv, yv);
+  } else if (a[0] == "X") { //X^Y
+    yv = round(Y);
+    res = power(xv, yv); act = Math.pow(xv, yv);
+  }
+  a = a.replace("X", xv).replace("Y", yv);
+  let s = a+" = "+res;
+  if (act) s += "\nActual: "+act;
+  out.innerText = s; console.log(s);
+}
     title.innerText = document.title;
     action('Math');  //evaluate
     const list = `

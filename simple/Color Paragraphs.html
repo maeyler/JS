@@ -6,18 +6,6 @@
     <title>Color Paragraphs </title>
 </head>
 
-<script>
-"use strict";
-function color(c) {
-    const para = document.getElementsByTagName("p");
-    let i = para.length;
-    out.innerText = i; //debug
-    while (i--) para[i].style.color = c; 
-    out.innerText += " paragraphs colored to "+c;
-    console.log(c);
-}
-</script>
-
 <body>
 <h2 id=title></h2>
 
@@ -26,7 +14,7 @@ function color(c) {
 <p>Second Paragraph</p>
 
 <input id=inp value=Red onChange="color(value)"
-   onMouseOver="style.color=value" onMouseOut="style.color='Black'">
+   onMouseOver="style.color=value" onMouseOut="style.color=''">
 <button onClick="color(inp.value)">Apply</button>
 
 <p id=out>Third Paragraph</p>
@@ -37,6 +25,13 @@ function color(c) {
 <hr />
 
 <script>
+"use strict";
+function color(c) {
+    let pa = document.getElementsByTagName("p");
+    for (let e of pa) e.style.color = c; 
+    out.innerText = pa.length+" paragraphs to "+c;
+    console.log(c);
+}
     title.innerText = document.title;
     sample.innerText = color.toString();
 </script>

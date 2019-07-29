@@ -8,7 +8,7 @@ JavaScript'e geçenlere (en başta kendime) bu dönüşümü elle yapmalarını 
 ![Java class](images/Decimal%20Java.png)  ![JavaScript](images/Decimal%20JS.png)
 
 1. `package` kavramı yok, sil (_namespace_ var ama şimdilik uzak duralım)
-2. `public` kavramı yok, sil (nesnelerin içini saklamak da mümkün)
+2. `public` kavramı yok, sil
 3. `int, float, String` gibi türleri sil (büyük rahatlık ama riskli)
 4. _field_ (=property) tanımlarını sil (bu daha da riskli görünüyor)
 5. _property_ kullanırken, `this.` ekle (Java'da izin var ama kullanmıyorduk)

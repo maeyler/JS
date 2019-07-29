@@ -6,43 +6,6 @@
     <title>Make a Table </title>
 </head>
 
-<script>
-"use strict";
-//June 8, 2018 MAE -- basis for 
-//https://maeyler.github.io/Visual-Mujam/
-//
-function makeRows(m, n) {
-    let row = "<th></th>";
-    for (let j = 1; j <= n; j++) 
-        row += "<th>"+j+"</th>";
-    let text = "<tr>"+row+"</tr>";
-    for (let i = 1; i <= m; i++) {
-       row = "<th>"+i+"</th>";
-       for (let j = 1; j <= n; j++) {
-          const p = n*(i-1)+j;
-          const s = "<span class=tip>C"+p+"</span>"
-          row += "<td>"+i+","+j+s+"</td>";
-       }
-       text += "<tr>"+row+"</tr>";
-    }
-    const t = text.length+" chars";
-    console.log("makeRows: "+m+"x"+n+" "+t);
-    tablo.innerHTML = text; out.innerText = t; 
-}
-function tableFromMenu() {
-    const a = size.value.split("x");
-    makeRows(a[0], a[1]);
-    rows.value = a[0];
-    cols.value = a[1];
-}
-function tableFromInput() {
-    const m = rows.value;
-    const n = cols.value;
-    makeRows(m, n);
-    size.value = m+"x"+n;
-}
-</script>
-
 <style>
     table { border-collapse: collapse; }
     th { color: blue; padding: 5px 5px; }
@@ -96,6 +59,40 @@ function tableFromInput() {
 <hr />
 
 <script>
+"use strict";
+//June 8, 2018 MAE -- basis for 
+//https://maeyler.github.io/Visual-Mujam/
+//
+function makeRows(m, n) {
+    let row = "<th></th>";
+    for (let j = 1; j <= n; j++) 
+        row += "<th>"+j+"</th>";
+    let text = "<tr>"+row+"</tr>";
+    for (let i = 1; i <= m; i++) {
+       row = "<th>"+i+"</th>";
+       for (let j = 1; j <= n; j++) {
+          let p = n*(i-1)+j;
+          let s = "<span class=tip>C"+p+"</span>"
+          row += "<td>"+i+","+j+s+"</td>";
+       }
+       text += "<tr>"+row+"</tr>";
+    }
+    let t = text.length+" chars";
+    console.log("makeRows: "+m+"x"+n+" "+t);
+    tablo.innerHTML = text; out.innerText = t; 
+}
+function tableFromMenu() {
+    let a = size.value.split("x");
+    makeRows(a[0], a[1]);
+    rows.value = a[0];
+    cols.value = a[1];
+}
+function tableFromInput() {
+    let m = rows.value;
+    let n = cols.value;
+    makeRows(m, n);
+    size.value = m+"x"+n;
+}
     title.innerText = document.title;
     sample.innerText = makeRows.toString();
     makeRows(3, 5);

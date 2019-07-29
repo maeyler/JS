@@ -7,40 +7,6 @@
     <title>Numbers </title>
 </head>
 
-<script>
-"use strict";
-var stk = []; //stack of numbers
-function pushNumber(x) {
-    stk.push(x); display();
-}
-function rational() {
-    const n = Number(num.value), d = Number(den.value);
-    pushNumber(Make.rational(n, d));
-}
-function complex() {
-    const r = Number(re.value), i = Number(im.value);
-    pushNumber(Make.complex(r, i));
-}
-function add() {
-    const a = stk.pop(), b = stk.pop();
-    pushNumber(a.add(b));
-}
-function mult() {
-    const a = stk.pop(), b = stk.pop();
-    pushNumber(a.mult(b));
-}
-function inverse() {
-    pushNumber(stk.pop().inverse());
-}
-function display() { //the stack
-    let s = [], n = stk.length;
-    while (n)
-        s.push(stk[--n]);
-    console.log(s.toString());
-    out.innerText = s.join("\n");
-}
-</script>
-
 <body>
 <h2 id=title></h2>
 <p>
@@ -66,6 +32,37 @@ Stack:
 <hr />
 
 <script>
+"use strict";
+var stk = []; //stack of numbers
+function pushNumber(x) {
+    stk.push(x); display();
+}
+function rational() {
+    let n = Number(num.value), d = Number(den.value);
+    pushNumber(Make.rational(n, d));
+}
+function complex() {
+    let r = Number(re.value), i = Number(im.value);
+    pushNumber(Make.complex(r, i));
+}
+function add() {
+    let a = stk.pop(), b = stk.pop();
+    pushNumber(a.add(b));
+}
+function mult() {
+    let a = stk.pop(), b = stk.pop();
+    pushNumber(a.mult(b));
+}
+function inverse() {
+    pushNumber(stk.pop().inverse());
+}
+function display() { //the stack
+    let s = [], n = stk.length;
+    while (n)
+        s.push(stk[--n]);
+    console.log(s.toString());
+    out.innerText = s.join("\n");
+}
     title.innerText = document.title;
     sample.innerText = Make.toString();
     rational(); complex();

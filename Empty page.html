@@ -21,7 +21,7 @@
 
 <h2 id=title></h2>
 
-<button onClick="cnt()">xxx</button>
+<button onClick="count()">xxx</button>
 
 <p id=out></p>
 
@@ -37,16 +37,16 @@
 <script>
 "use strict";
 // JavaScript code used in button
-function cnt() {
-    console.log("Counter = "+count); 
-    return count++; 
+function count() {
+    console.log("counter = "+counter); 
+    return counter++; 
 }
     //global variable id is the HTML element with id 
     //const title = document.getElementById("title");
     title.innerText = document.title;
-    sample.innerText = cnt.toString();
-    out.innerHTML = "Modify all items marked xxx";
-    var count = 0; cnt();
+    sample.innerText = count.toString();
+    out.innerText = "Modify all items marked xxx";
+    var counter = 0; count();
 </script>
 
 </body>

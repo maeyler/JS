@@ -4,29 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>JS Console </title>
-</head>
-
-<script>
-"use strict";
-function magic() {
-    let s = code.value, t;
-    try {
-      t = Function(s).call();
-      console.log("Result: "+t); 
-      out.style.color = "blue";
-    } catch (error) {
-      t = error;
-      console.log("Error: "+t); 
-      out.style.color = "red";
-    }
-    out.innerText = t; 
-    return t; 
-}
-</script>
-
 <style>
     textarea { width:280px; height:200px; }
 </style>
+</head>
 
 <body>
 
@@ -63,6 +44,21 @@ return "f(a) = "+f(a) +"\n"
 </p>
 
 <script>
+"use strict";
+function magic() {
+    let s = code.value, t;
+    try {
+      t = Function(s).call();
+      console.log("Result: "+t); 
+      out.style.color = "blue";
+    } catch (error) {
+      t = error;
+      console.log("Error: "+t); 
+      out.style.color = "red";
+    }
+    out.innerText = t; 
+    return t; 
+}
     title.innerText = document.title;
     sample.innerText = magic.toString();
     magic();

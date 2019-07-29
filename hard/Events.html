@@ -4,7 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Event Handlers </title>
+<style>
+  #bar {
+    border-top: 2px solid blue;
+    width: 0; height: 3px; 
+  }
+  #touch, #long { 
+    font: 13px arial, sans-serif;
+    width: 340px; height: 180px;
+  }
+  #long {
+    margin: 0;
+    overflow-y: scroll;
+  }
+  dot { 
+    position: absolute; display: block;
+    border: 2px solid red; border-radius: 50px;
+    width: 100px; height: 100px; 
+  }
+</style>
 </head>
+
+<body>
+
+<h2 id=title></h2>
+
+<p id=touch>
+We are listening to click events and to touch events on 
+this element. Multiple touches are recognized and the red 
+circle(s) are movable if a touch screen is available.
+<br><br>
+Scroll events below are reflected on the blue bar.
+<br><br>
+The total number of event calls 
+on either listener is reported below.
+</p>
+<p id=out></p>
+
+<div id=bar></div>
+<p id=long></p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="http://eloquentjavascript.net/15_event.html" 
+   target="ExternalDocument">Eloquent JavaScript</a>
+</p>
 
 <script>
 "use strict";
@@ -47,58 +95,7 @@ function scroller(evt) {
     out.innerText = (count+":  scroll "+w); 
     count++; bar.style.width = w;
 }
-</script>
 
-<style>
-  #bar {
-    border-top: 2px solid blue;
-    width: 0; height: 3px; 
-  }
-  #touch, #long { 
-    font: 13px arial, sans-serif;
-    width: 340px; height: 180px;
-  }
-  #long {
-    margin: 0;
-    overflow-y: scroll;
-  }
-  dot { 
-    position: absolute; display: block;
-    border: 2px solid red; border-radius: 50px;
-    width: 100px; height: 100px; 
-  }
-</style>
-
-<body>
-
-<h2 id=title></h2>
-
-<p id=touch>
-We are listening to click events and to touch events on 
-this element. Multiple touches are recognized and the red 
-circle(s) are movable if a touch screen is available.
-<br><br>
-Scroll events below are reflected on the blue bar.
-<br><br>
-The total number of event calls 
-on either listener is reported below.
-</p>
-<p id=out></p>
-
-<div id=bar></div>
-<p id=long></p>
-
-<hr />
-<b>Sample code</b>
-<pre id=sample></pre>
-<hr />
-
-<p>Ref: 
-<a href="http://eloquentjavascript.net/15_event.html" 
-   target="ExternalDocument">Eloquent JavaScript</a>
-</p>
-
-<script>
     title.innerText = document.title;
     sample.innerText = scroller.toString();
     out.innerText = "Start";

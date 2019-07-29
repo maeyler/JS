@@ -6,43 +6,6 @@
     <title>Array and Set </title>
 </head>
 
-<script>
-"use strict";
-function modify() {
-    const i = Number(ie.value); const x = xe.value; 
-    xe.value = a[i]; a[i] = x; reportA("a["+i+"] = "+x);
-}
-function remove() {
-    const i = Number(ie.value);
-    xe.value = a[i]; a.splice(i, 1); reportA("remove "+i);
-}
-function push() {
-    const x = xe.value; const i = Number(ie.value);
-    a.push(x); reportA("push "+x);
-}
-function popA() {
-    xe.value = a.pop(); reportA("pop ");
-}
-function reportA(str) {
-    outA.innerText = "a = [ "+ a.join(", ")+" ] "+a.length;
-    console.log(str);
-}
-function addS() {
-    let t = te.value, n = s.size; s.add(t);
-    if (n < s.size) reportS("add "+t);
-    else reportS("cannot add");
-}
-function delS() {
-    const t = te.value; 
-    if (s.delete(t)) reportS("delete "+t);
-    else reportS("cannot delete");
-}
-function reportS(str) {
-    outS.innerText = "s = { "+Array.from(s).join(", ")+" } "+s.size;
-    console.log(str);
-}
-</script>
-
 <body>
 <h2>Array Demo</h2>
 
@@ -77,6 +40,40 @@ t = <input type=text id=te value=53 style="width:99px">
 </p>
 
 <script>
+"use strict";
+function modify() {
+    let i = Number(ie.value); let x = xe.value; 
+    xe.value = a[i]; a[i] = x; reportA("a["+i+"] = "+x);
+}
+function remove() {
+    let i = Number(ie.value);
+    xe.value = a[i]; a.splice(i, 1); reportA("remove "+i);
+}
+function push() {
+    let x = xe.value; let i = Number(ie.value);
+    a.push(x); reportA("push "+x);
+}
+function popA() {
+    xe.value = a.pop(); reportA("pop ");
+}
+function reportA(str) {
+    outA.innerText = "a = [ "+ a.join(", ")+" ] "+a.length;
+    console.log(str);
+}
+function addS() {
+    let t = te.value, n = s.size; s.add(t);
+    if (n < s.size) reportS("add "+t);
+    else reportS("cannot add");
+}
+function delS() {
+    let t = te.value; 
+    if (s.delete(t)) reportS("delete "+t);
+    else reportS("cannot delete");
+}
+function reportS(str) {
+    outS.innerText = "s = { "+Array.from(s).join(", ")+" } "+s.size;
+    console.log(str);
+}
     const a = [234, "abc", "son"];  //initially
     const s = new Set([234, "abc", "son"]);
     reportA("start"); reportS("start"); 

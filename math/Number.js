@@ -58,13 +58,13 @@ class Complex {
         this.r2 = r*r + i*i;
     }
     add(n) {
-        const c = Complex.fromNumber(n);
+        let c = Complex.fromNumber(n);
         return Make.complex(this.re + c.re, this.im + c.im);
     }
     mult(n) {
-        const c = Complex.fromNumber(n);
-        const r = this.re*c.re - this.im*c.im;
-        const i = this.re*c.im + this.im*c.re;
+        let c = Complex.fromNumber(n);
+        let r = this.re*c.re - this.im*c.im;
+        let i = this.re*c.im + this.im*c.re;
         return Make.complex(r, i);
     }
     inverse() {
@@ -75,7 +75,7 @@ class Complex {
         return Math.sqrt(this.r2);
     }
     angle() { //in degrees
-        const eps = 1E-10;  let a;
+        let eps = 1E-10;  let a;
         if (Math.abs(this.re) < eps) {
             a = (this.im < -eps? -90 : 90);
         } else {
@@ -93,13 +93,13 @@ class Complex {
         return "0";
     }
     toString() {
-        const s = (this.re == 0? "" : ""+this.re);
+        let s = (this.re == 0? "" : ""+this.re);
         if (this.im == 1) return s+"+i";
         if (this.im ==-1) return s+"-i";
         return s+this.signedIm(this.im);
     }
     static fromPolar(r, a) {
-        const d = a/180*Math.PI;
+        let d = a/180*Math.PI;
         return Make.complex(r * Math.cos(d), r * Math.sin(d));
     }
     static fromNumber(n) {
@@ -114,7 +114,7 @@ class Make { //Factory methods for numbers
     }
     static rational(n, d) {
         if (d < 0) { n = -n; d = -d; }
-        const g = Rational.gcd(n, d);
+        let g = Rational.gcd(n, d);
         if (g == d) return new Whole(n/g);
         return new Rational(n/g, d/g);
     }
@@ -150,7 +150,7 @@ class Number2 { //testing another approach
     if (t[0] == "r") { 
         let n=a, d=b; 
         if (d < 0) { n = -n; d = -d; } 
-        const g = Rational.gcd(n, d); 
+        let g = Rational.gcd(n, d); 
         if (g == d) return new Whole(n/g); 
         return new Rational(n/g, d/g); 
     }; 
