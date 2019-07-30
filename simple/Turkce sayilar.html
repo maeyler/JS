@@ -7,15 +7,6 @@
     <script src="TurkceSayi.js"></script>
 </head>
 
-<script>
-"use strict";
-function convert() {
-    let s = toWord(X.value);
-    console.log(X.value+" -> "+s);
-    out.innerText = s;
-}
-</script>
-
 <body>
 
 <h2 id=title></h2>
@@ -32,6 +23,12 @@ value=1234560 onChange="convert()">
 <hr />
 
 <script>
+"use strict";
+function convert() {
+    let s = toWord(X.value);
+    console.log(X.value+" -> "+s);
+    out.innerText = s;
+}
     title.innerText = document.title;
     sample.innerText = toWord.toString();
     convert();

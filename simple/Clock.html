@@ -32,14 +32,14 @@ function twoDigits(t) {
     return "0"+t;
 }
 function setHourMin() {
-    const d = new Date();
+    let d = new Date();
     hm = twoDigits(d.getHours())+":"
         +twoDigits(d.getMinutes());
     document.title = "Clock "+hm; 
     //console.log(hm);
 }
 function count() {
-    const d = new Date();
+    let d = new Date();
     let sec = twoDigits(d.getSeconds());
     if (sec == "00") setHourMin();
     out.innerText = hm+":"+sec;
