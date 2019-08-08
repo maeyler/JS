@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>GitHub Users</title>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<input type=text id=usr value="yazeedb" onChange="readUser()">
+<p id=out></p>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="https://developer.github.com/v3/users/" 
+   target=ExternalDocument>GitHub Developer</a>
+</p>
+
+<script>
+"use strict";
+const NL = "\n", BR = "<BR>", 
+    URL = "https://api.github.com/users/"
+function report(t) {
+    out.innerText = t; console.log(t)
+}
+function userData(u) {
+    if (!u.login) {
+      report(usr.value+" not found"); return
+    } 
+    //u.login is the same as usr.value
+    let s = u.name 
+    if (u.location) s += ", "+u.location
+    console.log(s)
+    let h = "//github.com/"+u.login
+    s += BR+ "<a href=https:"+h
+    s += " target=ExternalDocument>"+h+"</a>"
+    s += BR+ u.public_repos+" repos"+BR
+    fetch(URL+u.login+"/repos")
+      .then(r => r.json()) 
+      .then(a => {
+        if (a.length) {
+          let b = a.map(x => x.name)
+          s += b.join(", ")
+        //for (let x of a) s += x.name+", "
+        }
+        out.innerHTML = s
+      }) 
+      .catch(report)
+}
+function readUser() {
+    fetch(URL+usr.value)
+      .then(r => r.json()) 
+      .then(userData) 
+      .catch(report)
+}
+
+    title.innerText = document.title
+    sample.innerText = readUser +NL+ userData
+    out.innerText = "Reading data"
+    readUser()
+</script>
+
+</body>
+</html>
