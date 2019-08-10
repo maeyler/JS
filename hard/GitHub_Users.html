@@ -17,26 +17,30 @@
 <pre id=sample></pre>
 <hr />
 <p>Ref: <a href="https://developer.github.com/v3/users/" 
-   target=ExternalDocument>GitHub Developer</a>
+   target=ExternalDocument>GitHub Developer</a>&emsp;
+   <a href="https://yazeedb.com/posts/learn-closures-in-6-minutes" 
+   target=ExternalDocument>JS Closures</a>
 </p>
 
 <script>
 "use strict";
 const NL = "\n", BR = "<BR>", 
     URL = "https://api.github.com/users/"
-function report(t) {
+function error(t) {
+    out.style.color = 'red'
     out.innerText = t; console.log(t)
 }
 function userData(u) {
-    if (!u.login) {
-      report(usr.value+" not found"); return
+    if (!u || !u.login) {
+      error(usr.value+' not found')
+      return
     } 
     //u.login is the same as usr.value
     let s = u.name 
     if (u.location) s += ", "+u.location
     console.log(s)
-    let h = "//github.com/"+u.login
-    s += BR+ "<a href=https:"+h
+    let h = "github.com/"+u.login
+    s += BR+ "<a href=https://"+h
     s += " target=ExternalDocument>"+h+"</a>"
     s += BR+ u.public_repos+" repos"+BR
     fetch(URL+u.login+"/repos")
@@ -47,15 +51,15 @@ function userData(u) {
           s += b.join(", ")
         //for (let x of a) s += x.name+", "
         }
+        out.style.color = 'black'
         out.innerHTML = s
       }) 
-      .catch(report)
+      .catch(error)
 }
 function readUser() {
     fetch(URL+usr.value)
-      .then(r => r.json()) 
-      .then(userData) 
-      .catch(report)
+      .then(r => r.ok? r.json() : null) 
+      .then(userData).catch(error)
 }
 
     title.innerText = document.title
