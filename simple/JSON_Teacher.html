@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JSON Teacher</title>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<input type=text id=usr onChange='self.evaluate()' size=40
+   value='[2, 0, {a:0, b:{}, c:false, d:[]}, "00", true]' >
+<pre id=out></pre>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="https://www.json.org/" 
+   target="ExternalDocument">JSON Definition</a>
+</p>
+
+<script>
+"use strict";
+function evaluate() {
+  try {
+    let v = eval('('+usr.value+')')
+    out.style.color = 'blue'
+    out.innerText = 'toJSON(v)\n'+toJSON(v)+'\n'
+        +JSON.stringify(v)+'\nJSON.stringify(v)'
+    return v
+  } catch(err) {
+    out.style.color = 'red'
+    out.innerText = err  //'invalid entry'
+  }
+}
+function toJSON(v) {
+    if (v === null) return "null"
+    switch (typeof v) {
+      case "function": return ''
+      case "boolean": ;
+      case "number": return v
+      case "string": return '"'+v+'"'
+      case "object": 
+        if (Array.isArray(v)) {
+          let a = v.map(x => toJSON(x))
+          return '['+a.join(',')+']'
+        } else { //other object
+          let a = []
+          for (let k in v)
+            a.push(toJSON(k)+':'+toJSON(v[k]))
+          return '{'+a.join(',')+'}'
+        }
+      default:
+        console.log("unknown type "+v); 
+    }
+}
+    title.innerText = document.title;
+    sample.innerText = toJSON.toString();
+    out.innerText = "Running...";
+    evaluate();
+</script>
+
+</body>
+</html>
