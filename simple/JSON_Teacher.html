@@ -10,8 +10,8 @@
 
 <h2 id=title></h2>
 
-<input type=text id=usr onChange='self.evaluate()' size=40
-   value='[2, 0, {a:0, b:{}, c:false, d:[]}, "00", true]' >
+<input type=text id=usr onChange='process()' size=40
+   value='[2, {a:0, b:{}, c:false, d:[]}, "00", true]' >
 <pre id=out></pre>
 <hr />
 <b>Sample code</b>
@@ -23,9 +23,9 @@
 
 <script>
 "use strict";
-function evaluate() {
+function process(s = usr.value) {
   try {
-    let v = eval('('+usr.value+')')
+    let v = eval('('+s+')')
     out.style.color = 'blue'
     out.innerText = 'toJSON(v)\n'+toJSON(v)+'\n'
         +JSON.stringify(v)+'\nJSON.stringify(v)'
@@ -35,6 +35,8 @@ function evaluate() {
     out.innerText = err  //'invalid entry'
   }
 }
+//(let k of Object.keys(v)) runs the same as this:
+//for (let k in v) if (v.propertyIsEnumerable(k)) {
 function toJSON(v) {
     if (v === null) return "null"
     switch (typeof v) {
@@ -48,8 +50,11 @@ function toJSON(v) {
           return '['+a.join(',')+']'
         } else { //other object
           let a = []
-          for (let k in v)
-            a.push(toJSON(k)+':'+toJSON(v[k]))
+          for (let k of Object.keys(v)) {
+              let key = toJSON(k)
+              let val = toJSON(v[k])
+              if (val !== '') a.push(key+':'+val)
+            }
           return '{'+a.join(',')+'}'
         }
       default:
@@ -59,7 +64,7 @@ function toJSON(v) {
     title.innerText = document.title;
     sample.innerText = toJSON.toString();
     out.innerText = "Running...";
-    evaluate();
+    process();
 </script>
 
 </body>
