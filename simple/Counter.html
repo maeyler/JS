@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Counter </title>
+
+  <style>
+    #out {
+        font-size: 18px;
+        background: blue;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<button id=cnt>count</button>
+
+<p id=out></p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<hr />
+<p>Ref: <a href="https://www.w3schools.com/js/" 
+   target="ExternalDocument">JS Tutorial</a>&emsp;
+<a href="https://www.w3schools.com/jsref/prop_win_localstorage.asp" 
+   target="ExternalDocument">Local Storage</a>
+</p>
+
+<script>
+"use strict";
+function report(n) {
+    let s = "counter = "+n
+    console.log(s); out.innerText = s
+    return n
+}
+function count1() { //global var
+    return report(++counter)
+}
+function count2() { //localStorage
+    if (!localStorage.counter) 
+         localStorage.counter = 0
+    return report(++localStorage.counter)
+}
+
+    title.innerText = document.title;
+    sample.innerText = count1+'\n'+count2
+    out.innerText = "Starting...";
+    if (origin.startsWith('http') && localStorage) {
+        cnt.onclick = count2
+    } else {
+        var counter = 0
+        cnt.onclick = count1
+    }
+    cnt.onclick()
+</script>
+
+</body>
+</html>

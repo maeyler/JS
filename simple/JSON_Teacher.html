@@ -9,9 +9,9 @@
 <body>
 
 <h2 id=title></h2>
-
+Enter a valid value in JavaScript:
 <input type=text id=usr onChange='process()' size=40
-   value='[2, {a:0, b:{}, c:false, d:[]}, "00", true]' >
+   value='[2*3, {a:2-2, b:{}, c:0==2, d:[]}, "02", 2/0]' >
 <pre id=out></pre>
 <hr />
 <b>Sample code</b>
@@ -38,12 +38,12 @@ function process(s = usr.value) {
 //(let k of Object.keys(v)) runs the same as this:
 //for (let k in v) if (v.propertyIsEnumerable(k)) {
 function toJSON(v) {
-    if (v === null) return "null"
+    if (v === null) return 'null'
     switch (typeof v) {
-      case "function": return ''
-      case "boolean": ;
-      case "number": return v
-      case "string": return '"'+v+'"'
+      case "string":  return '"'+v+'"'
+      case "boolean": return v
+      case "number": 
+        return Number.isFinite(v)? v : 'null'
       case "object": 
         if (Array.isArray(v)) {
           let a = v.map(x => toJSON(x))
@@ -57,6 +57,7 @@ function toJSON(v) {
             }
           return '{'+a.join(',')+'}'
         }
+      case "function": return ''
       default:
         console.log("unknown type "+v); 
     }
