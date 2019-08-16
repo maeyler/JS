@@ -16,6 +16,32 @@
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
 
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<input id=but type=button value="Run" onClick="start()"> &emsp;
+<span id=out></span>
+<input type=checkbox onClick="mapType(checked)">Satellite
+
+<hr />
+<div id=map></div>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="https://www.mapbox.com/help/how-web-apps-work/" 
+   target="ExternalDocument">Map web apps</a> <br>
+<a href="https://www.mapbox.com/mapbox-gl-js/example/simple-map/" 
+   target="ExternalDocument">MapBox Example</a>
+</p>
+
+
 <script>
 "use strict";
 var MAP; //global object from mapboxgl
@@ -56,38 +82,20 @@ function zoom() {
     if (z <= MIN) incr = 1;
     setTimeout(zoom, 700);
 }
-</script>
-</head>
+function askUser() {
+    let r = prompt('Please enter mapbox key:')
+    return r? r : 'nokeyfound'
+}
 
-<body>
+    if (origin.startsWith('http') && localStorage) {
+        if (!localStorage.keys) localStorage.keys = {}
+        if (!localStorage.keys.mapbox)
+             localStorage.keys.mapbox = askUser()
+        mapboxgl.accessToken = localStorage.keys.mapbox
+    } else {
+        mapboxgl.accessToken = askUser()
+    }
 
-<h2 id=title></h2>
-
-<input id=but type=button value="Run" onClick="start()"> &emsp;
-<span id=out></span>
-<input type=checkbox onClick="mapType(checked)">Satellite
-
-<hr />
-<div id=map></div>
-
-<hr />
-<b>Sample code</b>
-<pre id=sample></pre>
-<hr />
-
-<p>Ref: 
-<a href="https://www.mapbox.com/help/how-web-apps-work/" 
-   target="ExternalDocument">Map webb apps</a> <br>
-<a href="https://www.mapbox.com/mapbox-gl-js/example/simple-map/" 
-   target="ExternalDocument">MapBox Example</a>
-</p>
-
-
-<script>
-mapboxgl.accessToken = 'pk.eyJ1IjoibWFleWxlciIsImEiOiJjanBtY29scnMwaDZ2M3dvOTZ2Nml1ZWl4In0.ACb7p1U9pDb7ZhCckCLn7g';
-</script>
-
-<script>
     title.innerText = document.title;
     out.innerText = "";
     sample.innerText = init;
