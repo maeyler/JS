@@ -11,6 +11,10 @@
         width:600px;
         height:600px
     }
+    #err {
+        display:none;
+        color:red
+    }
   </style>
 
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
@@ -33,14 +37,16 @@
 <b>Sample code</b>
 <pre id=sample></pre>
 <hr />
-
+<p id=err>You need an API access token to configure Mapbox 
+<a href="https://account.mapbox.com/auth/signin/?route-to=%22/access-tokens/%22" 
+   target="ExternalDocument">here</a> 
+</p>
 <p>Ref: 
 <a href="https://www.mapbox.com/help/how-web-apps-work/" 
-   target="ExternalDocument">Map web apps</a> <br>
+   target="ExternalDocument">Map web apps</a>&emsp;
 <a href="https://www.mapbox.com/mapbox-gl-js/example/simple-map/" 
    target="ExternalDocument">MapBox Example</a>
 </p>
-
 
 <script>
 "use strict";
@@ -83,22 +89,26 @@ function zoom() {
     setTimeout(zoom, 700);
 }
 function askUser() {
-    let r = prompt('Please enter mapbox key:')
-    return r? r : 'nokeyfound'
+    let k = prompt('Please enter mapbox key:')
+    if (k) return k
+    map.style.display = "none";  //hide
+    err.style.display = "block"; //show
+    throw 'You need an API access token'
 }
 
+    title.innerText = document.title;
+    sample.innerText = init;
     if (origin.startsWith('http') && localStorage) {
-        if (!localStorage.keys) localStorage.keys = {}
-        if (!localStorage.keys.mapbox)
-             localStorage.keys.mapbox = askUser()
-        mapboxgl.accessToken = localStorage.keys.mapbox
-    } else {
+        if (!localStorage.keys) localStorage.keys = '{}'
+        let keys = JSON.parse(localStorage.keys)
+        if (!keys.mapbox) {
+           keys.mapbox = askUser()
+           localStorage.keys = JSON.stringify(keys)
+        }
+        mapboxgl.accessToken = keys.mapbox
+    } else { //cannot use localStorage
         mapboxgl.accessToken = askUser()
     }
-
-    title.innerText = document.title;
-    out.innerText = "";
-    sample.innerText = init;
     //initial coordinates are given: 50. Yil Parki
     init({lat:40.970021, lng:29.057876});
 </script>

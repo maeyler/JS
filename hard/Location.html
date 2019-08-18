@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Get Location</title>
+
+  <style>
+    #out1, #out2 {
+        background: #cfc; 
+        font: 14px arial, sans-serif;
+        text-align: center;    
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Accurate</h2>
+<p>Ask the operating system</p>
+<p id=out1></p>
+<pre id=res1></pre>
+<hr />
+
+<h2>Approximate</h2>
+<p>Use public <a href="https://ipinfo.io/json" 
+   target="ExternalDocument">IP information</a> </p>
+<p id=out2></p>
+<pre id=res2></pre>
+<hr />
+
+<script>
+"use strict";
+const MSG = 'Lat &emsp;&nbsp; Lon<br>'
+function error(msg) {
+    console.log(msg)
+    res1.style.color = 'red'
+    res1.innerText = msg
+}
+function askLocation1() { //ask system -- accurate
+    if (navigator.geolocation)
+       navigator.geolocation.getCurrentPosition(report1, error)
+    else error('geolocation not found') 
+}
+function report1(p) {
+    console.log(p)
+    let lat = p.coords.latitude, lon = p.coords.longitude;
+    let t = JSON.stringify(cloneOf(p.coords))
+    let s = lat.toFixed(4)+', '+lon.toFixed(4)
+    console.log(s); out1.innerHTML = MSG+s
+    res1.innerText = t.split(',').join(',\n')
+}
+function askLocation2() { //ipinfo.io -- approximate
+    const u = "https://ipinfo.io/json"
+    //"https://extreme-ip-lookup.com/json/" not used
+    fetch(u).then(r => r.text()).then(report2)
+}
+function report2(t) {
+    let p = JSON.parse(t)
+    console.log("ipinfo.io", p)
+    let a = p.loc.split(',')
+    let s = Number(a[0]).toFixed(2)
+      +', '+Number(a[1]).toFixed(2)
+    console.log(s); out2.innerHTML = MSG+s
+    res2.innerText = t
+}
+function cloneOf(obj) {
+//https://stackoverflow.com/questions/11042212/ff-13-ie-9-json-stringify-geolocation-object
+    if (obj === null || !(obj instanceof Object)) {
+        return obj;
+    }
+    var temp = (obj instanceof Array) ? [] : {};
+    // ReSharper disable once MissingHasOwnPropertyInForeach
+    for (var key in obj) {
+        temp[key] = cloneOf(obj[key]);
+    }
+    return temp;
+}
+
+    askLocation2(); askLocation1()
+</script>
+
+</body>
+</html>
