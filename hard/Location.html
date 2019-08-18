@@ -32,17 +32,17 @@
 <script>
 "use strict";
 const MSG = 'Lat &emsp;&nbsp; Lon<br>'
-function error(msg) {
-    console.log(msg)
-    res1.style.color = 'red'
-    res1.innerText = msg
-}
 function askLocation1() { //ask system -- accurate
     if (navigator.geolocation)
-       navigator.geolocation.getCurrentPosition(report1, error)
-    else error('geolocation not found') 
+       navigator.geolocation.getCurrentPosition(report1, error1)
+    else error1({ message: 'geolocation not found' }) 
 }
-function report1(p) {
+function error1(e) { //PositionError
+    console.log(e)
+    res1.style.color = 'red'
+    res1.innerText = e.message
+}
+function report1(p) { //Position
     console.log(p)
     let lat = p.coords.latitude, lon = p.coords.longitude;
     let t = JSON.stringify(cloneOf(p.coords))
