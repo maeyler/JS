@@ -10,13 +10,19 @@
      border: 1px solid #000;
      margin: 10px 5px 0 0;
   }
+  #save {
+     background: #eee;
+     border: 1px solid darkgray;
+     padding: 0 8px;
+  }
 </style>
 </head>
 
 <body>
 <h2 id=title></h2>
 
-<input type=file id=button onChange='fileSelect(this)' />
+<input type=file id=button onChange='fileSelect(this)' /> &nbsp;
+<a id=save hidden=true onClick="this.hidden=true">Save</a>
 <p>
 <output id=msg>Select text or image </output>
 <output id=out></output>
@@ -33,6 +39,12 @@
 <script>
 "use strict";
 const reader = new FileReader();
+function showFile(f, size) {
+    save.href = URL.createObjectURL(f)
+    save.download = f.name
+    save.hidden = false
+    console.log(f.name+size+f.type)
+}
 function isText(f) {
     console.assert(f instanceof File);
     return f.type.startsWith("text") || f.name.endsWith(".md")
@@ -43,19 +55,20 @@ function fileSelect(t) { //target is the button
     let f = t.files[0];
     let size = " "+f.size+" bytes ";
     msg.innerText = f.type+size;
+    save.hidden = true;
     if (f.type.startsWith("image")) {
         reader.onload = function(evt) {
             let a = evt.target.result; //image source
             out.innerHTML = "<img class=thumb "
                 +"src='"+a+"' title='"+f.name+"' />";
-            console.log(f.name+size+f.type);
+            showFile(f, size)
         };
         reader.readAsDataURL(f);
     } else if (isText(f)) {
         reader.onload = function(evt) { //text
             let a = evt.target.result.replace(/</g, "&lt;");
             out.innerHTML = "<pre>"+a+"</pre>";
-            console.log(f.name+size+f.type);
+            showFile(f, size)
         };
         reader.readAsText(f);
     } else {

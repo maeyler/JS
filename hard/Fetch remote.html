@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Fetch Remote File </title>
+<style>
+  #save {
+     background: #eee;
+     border: 1px solid darkgray;
+     padding: 0 8px;
+  }
+</style>
 </head>
 
 <body>
@@ -16,6 +23,7 @@
 <input type=button value="text" onClick="readText()">
 <input type=button value="blob" onClick="readBlob()">
 <input type=button id=state style="visibility: hidden">
+<a id=save hidden=true onClick="this.hidden=true">Download</a>
 
 <pre id=out></pre>
 
@@ -30,19 +38,30 @@
 
 <script>
 "use strict";
+function saveBlob(b) {
+    save.href = URL.createObjectURL(b)
+    let a = url.value.split('/')
+    let n = a.length-1
+    save.download = a[n] //last word in URL
+    save.hidden = false
+    report(b.size+" bytes")
+    return b
+}
 function hide() {
     state.style.visibility = "hidden";
 }
 function show(v) {
     state.value = v; state.style.visibility = "";
+    setTimeout(hide, 1000);
 }
 function report(t, n) {
-    show("OK"); setTimeout(hide, 1000);
+    show("OK")
     out.innerText = t;
     console.log(n? n : t);
 }
 function readText() {
     show("FT"); // fetch text
+    save.hidden = true
     fetch(url.value)
       .then(r => r.text()) 
       //response of fetch() is r
@@ -53,7 +72,7 @@ function readBlob() {
     show("FB"); // fetch blob
     fetch(url.value)
       .then(r => r.blob())  //response r
-      .then(b => report(b.size+" bytes"));
+      .then(b => saveBlob(b));
 }
     title.innerText = document.title;
     sample.innerText = readText+"\n"+readBlob;
