@@ -49,10 +49,9 @@ function error1(e) { //PositionError
 function report1(p) { //Position
     let c = p.coords; console.log(c)
     let lat = c.latitude, lon = c.longitude;
-    let t = JSON.stringify(cloneOf(c))
     let s = lat.toFixed(4)+', '+lon.toFixed(4)
     console.log(s); out1.innerHTML = MSG+s
-    res1.innerText = t.replace(/,/g, ',\n')
+    res1.innerText = JSON.stringify(cloneOf(c), undefined, 2)
 }
 function askLocation2() { //ipinfo.io -- approximate
     const u = "https://ipinfo.io/json"

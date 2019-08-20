@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JSON Highlight</title>
+    
+  <style>
+    #out {
+      outline: 1px solid #ccc;
+      padding: 5px;
+    }
+    #usr { width: 99% }
+    .string { color: green; }
+    .number { color: darkorange; }
+    .boolean { color: blue; }
+    .null { color: magenta; }
+    .key { color: red; }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+Enter a valid value in JavaScript:
+<input type=text id=usr onChange='process()'>
+<pre id=out></pre>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="http://jsfiddle.net/KJQ9K/554/" 
+   target="ExternalDocument">JSON syntaxHighlight</a>,
+   anonymous software gem
+</p>
+
+<script>
+"use strict";
+function process(s = usr.value) {
+  try {
+    let v = eval('('+s+')')
+    var str = JSON.stringify(v, undefined, 2);
+    out.innerHTML = highlight(str)
+    return v
+  } catch(err) {
+    out.style.color = 'red'
+    out.innerText = err  //'invalid entry'
+  }
+}
+function match(m) {
+    var cls = 'number';
+    if (/^"/.test(m)) {
+        if (/:$/.test(m)) {
+            cls = 'key';
+        } else {
+            cls = 'string';
+        }
+    } else if (/true|false/.test(m)) {
+        cls = 'boolean';
+    } else if (/null/.test(m)) {
+        cls = 'null';
+    }
+    return '<span class='+cls+'>'+m+'</span>';
+}
+function highlight(json) {
+    json = json.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;');
+    return json.replace(EXP, match)
+}
+const EXP = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g
+const X = "{a:1,'b':'foo',c:[false,'false',null,'null',{d:{e:1.3e5,f:'1.3e5'}}]}"
+
+    title.innerText = document.title
+    sample.innerText = match+'\n'+highlight
+    usr.value = X; out.innerText = "Running..."
+    process()
+</script>
+
+</body>
+</html>
