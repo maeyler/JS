@@ -82,10 +82,10 @@ function makeRows(m, n) {
     tablo.innerHTML = text; out.innerText = t; 
 }
 function tableFromMenu() {
-    let a = size.value.split("x");
-    makeRows(a[0], a[1]);
-    rows.value = a[0];
-    cols.value = a[1];
+    let [m, n] = size.value.split("x");
+    makeRows(m, n); //a[0], a[1]
+    rows.value = m;
+    cols.value = n;
 }
 function tableFromInput() {
     let m = rows.value;

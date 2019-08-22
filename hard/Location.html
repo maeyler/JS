@@ -61,9 +61,9 @@ function askLocation2() { //ipinfo.io -- approximate
 function report2(t) { //text in JSON format
     let p = JSON.parse(t)
     console.log("ipinfo.io", p)
-    let a = p.loc.split(',')
-    let s = Number(a[0]).toFixed(2)
-      +', '+Number(a[1]).toFixed(2)
+    let [lat, lon] = p.loc.split(',') //a=
+    let s = Number(lat).toFixed(2)  //a[0]
+      +', '+Number(lon).toFixed(2)  //a[1]
     console.log(s); out2.innerHTML = MSG+s
     res2.innerText = t
 }
