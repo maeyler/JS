@@ -34,7 +34,7 @@ function fileSelect(t) {
         displayText(s)
     }
 }
-var a, b, c;  //global variables
+var a, b, c, txt='';  //global variables
 //define Menu methods
 class Main extends Menu {
   displayFile(f) {
@@ -59,6 +59,19 @@ class Main extends Menu {
         displayText("Unknown")
     }
   }
+  listChildren(elt) {
+    if (elt === undefined) elt = document.body;
+    txt = ''  //global
+    listChildrenOf(elt, '') //recursive call
+    displayText(txt)
+  }
+}
+function listChildrenOf(elt, tab) {
+    let n = elt.localName
+    if (elt.id) n += '#'+elt.id;
+    txt += tab+n+'\n'; tab += '__'
+    for (let c of elt.children)
+        listChildrenOf(c, tab);
 }
 function adjustFrameSize() {
     if (ifrm.srcdoc) ifrm.src = ""
