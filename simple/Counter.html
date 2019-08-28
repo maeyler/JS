@@ -7,6 +7,9 @@
 
   <style>
     #out {
+        max-width: 500px;
+    }
+    #out {
         font-size: 18px;
         background: blue;
         color: white;
@@ -20,7 +23,7 @@
 
 <h2 id=title></h2>
 
-<button id=cnt>count</button>
+<button id=button>count</button>
 
 <p id=out></p>
 
@@ -36,30 +39,33 @@
 
 <script>
 "use strict";
+var counter
 function report(n) {
     let s = "counter = "+n
     console.log(s); out.innerText = s
-    return n
 }
-function count1() { //global var
-    return report(++counter)
+function init() {
+    if (location.protocol.startsWith('http') 
+          && localStorage) { //HTTP required
+        button.onclick = count1
+    } else { //global var
+        counter = 0
+        button.onclick = count2
+    }
+    button.onclick()
 }
-function count2() { //localStorage
+function count1() { //localStorage
     if (!localStorage.counter) 
          localStorage.counter = 0
-    return report(++localStorage.counter)
+    report(++localStorage.counter)
 }
-
-    title.innerText = document.title;
-    sample.innerText = count1+'\n'+count2
-    out.innerText = "Starting...";
-    if (origin.startsWith('http') && localStorage) {
-        cnt.onclick = count2
-    } else {
-        var counter = 0
-        cnt.onclick = count1
-    }
-    cnt.onclick()
+function count2() { //global var
+    report(++counter)
+}
+    title.innerText = document.title
+    sample.innerText = init+'\n'+count1+'\n'+count2
+    out.innerText = "Starting..."
+    init()
 </script>
 
 </body>
