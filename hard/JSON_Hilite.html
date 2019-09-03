@@ -6,11 +6,14 @@
     <title>JSON Highlight</title>
     
   <style>
+    body {
+        max-width: 440px;
+    }
     #out {
       outline: 1px solid #ccc;
       padding: 5px;
     }
-    #usr { width: 99% }
+    #jsv { width: 99% }
     .string { color: red; }
     .number { color: blue; }
     .boolean { color: blue; }
@@ -23,7 +26,7 @@
 
 <h2 id=title></h2>
 Enter a valid value in JavaScript:
-<input type=text id=usr onChange='process()'>
+<input type=text id=jsv onChange='process()'>
 <pre id=out></pre>
 <hr />
 <b>Sample code</b>
@@ -36,9 +39,10 @@ Enter a valid value in JavaScript:
 
 <script>
 "use strict";
-function process(s = usr.value) {
+function process(s = jsv.value) {
   try {
     current = eval('('+s+')')
+    out.style.color = ''
     out.innerHTML = highlight(current)
   } catch(err) {
     current = undefined
@@ -47,7 +51,7 @@ function process(s = usr.value) {
   }
 }
 function match(m) {
-    var cls = 'number';
+    var cls = 'number' //default
     if (/^"/.test(m)) {
         if (/:$/.test(m)) {
             cls = 'key';
@@ -63,17 +67,15 @@ function match(m) {
 }
 function highlight(v) {
     let str = JSON.stringify(v, undefined, 2);
-    return str.replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(EXP, match)
+    return str.replace(EXP, match)
 }
-const EXP = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g
-const X = "{a:1,'b':'foo',c:[false,'false',null,'null',{d:{e:1.3e5,f:'1.3e5'}}]}"
+const 
+ X = "{a:1,'b':'foo',c:[false,'false',null,'null',{d:{e:1.3e5,f:'1.3e5'}}]}",
+ EXP = /"([^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
 var current //value last used
     title.innerText = document.title
     sample.innerText = match+'\n'+highlight
-    usr.value = X; out.innerText = "Running..."
+    jsv.value = X; out.innerText = "Running..."
     process()
 </script>
 
