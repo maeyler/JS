@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.11", ITERABLE = new Object();
+const VERSION = "V2.12", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -10,12 +10,15 @@ var MENU;  //installed by the caller
 class Menu {
   constructor() {}
   allKeysIn(obj) {
-    let s = []; for (let k in obj) s.push(k);
-    return s;
+    return Object.getOwnPropertyNames(obj)
   }
   allValuesOf(obj) {
-    let s = []; for (let k in obj) s.push(obj[k]);
-    return s;
+    let keys = this.allKeysIn(obj), s = []
+    for (let k of keys) {
+      let x = obj[k]
+      if (typeof x != 'function') s.push(x)
+    }
+    return s
   }
   deepEqual(a, b) { //compare two objects
     return JSON.stringify(a) == JSON.stringify(b)
