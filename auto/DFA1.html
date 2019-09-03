@@ -27,7 +27,7 @@ function accept(w, F='C', q='A') {
     input.selectionStart = i
     input.selectionEnd = i+1
     let a = (q!='' && F.includes(q))
-    return txt+'  '+(a? "Accept" : "Reject")
+    return txt+'\n'+(a? "Accept" : "Reject")
 }
 function test() {
     let w = input.value, s = "  "

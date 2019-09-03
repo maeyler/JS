@@ -24,7 +24,7 @@ function acceptD(w, F='C', q='A') {
         i++; txt += " -> "+q
     }
     let a = (q!='' && F.includes(q))
-    return txt+'  '+(a? "Accept" : "Reject")
+    return txt+'\n'+(a? "Accept" : "Reject")
 }
 function testD() {
     let w = input.value, s = "  "
