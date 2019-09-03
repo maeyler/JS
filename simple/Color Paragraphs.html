@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Color Paragraphs </title>
+  <style>
+    body {
+        max-width: 440px;
+    }
+  </style>
 </head>
 
 <body>
@@ -14,7 +19,8 @@
 <p>Second Paragraph</p>
 
 <input id=inp value=Red onChange="color(value)"
-   onMouseOver="style.color=value" onMouseOut="style.color=''">
+   onMouseOver="this.style.color=value" 
+   onMouseOut ="this.style.color=''">
 <button onClick="color(inp.value)">Apply</button>
 
 <p id=out>Third Paragraph</p>
@@ -27,10 +33,12 @@
 <script>
 "use strict";
 function color(c) {
-    let pa = document.getElementsByTagName("p");
-    for (let e of pa) e.style.color = c; 
-    out.innerText = pa.length+" paragraphs to "+c;
-    console.log(c);
+  let pa = 
+    document.getElementsByTagName("p");
+  for (let e of pa) e.style.color = c; 
+  out.innerText = 
+    pa.length+" paragraphs to "+c;
+  console.log(c);
 }
     title.innerText = document.title;
     sample.innerText = color.toString();
