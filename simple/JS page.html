@@ -10,41 +10,43 @@
 function elt(type, ...list) {
   let node = document.createElement(type)
   for (let c of list) {
-    if (typeof c != "string") node.appendChild(c)
-    else node.appendChild(document.createTextNode(c))
+    if (typeof c === "string") 
+         node.innerHTML += c
+    else node.appendChild(c)
   }
   return node;
 }
-function makePage() {
-  let txt = "No book can ever be finished. While "
+const BOOK_REF = 
+  "http://eloquentjavascript.net/14_dom.html#h_AlX6HES+2D",
+  TEXT = "No book can ever be finished. While "
     +"working just enough to find it immature "
-    +"the moment we turn away from it."
-  let book = "The Open Society and Its Enemies"
-  document.documentElement.appendChild(
-    elt("body", 
+    +"the moment we turn away from it.",
+  AUTH = "Karl Popper", YEAR = ", 1950",
+  DESC = ", preface to the second editon of ",
+  BOOK = "The Open Society and Its Enemies";
+function makePage() {
+  let link = elt("a", "Creating nodes")
+  let bold = elt("b", "Sample code")
+  let pre  = elt("pre", elt+"\n"+makePage)
+  let para = elt("p", "— ",
+        elt("b", AUTH), DESC,
+        elt("i", BOOK), YEAR
+      )
+//document.documentElement.appendChild(
+  document.body = elt("body", 
       elt("h2", document.title), 
       elt("hr"), 
-      elt("blockquote", txt,
-        elt("p", "— ",
-          elt("strong", "Karl Popper"),
-          ", preface to the second editon of ",
-          elt("em", book), ", 1950"
-        )
-      ), 
+      elt("blockquote", TEXT, para), 
       elt("hr"), 
-      elt("div",
-        elt("strong", "Sample code"),
-        elt("pre", elt+"\n"+makePage) //function text
-      ), 
+      elt("div", bold, pre), 
       elt("hr"), 
-      elt("div", "Ref: ", elt("a", "Creating nodes"))
+      elt("div", "Ref: ", link)
     )
-  )
-  let aa = document.getElementsByTagName("a")[0]
-  aa.href = "http://eloquentjavascript.net/14_dom.html#c_3rSOndXJQI"
-  aa.target="ExternalDocument"
-  let pre = document.getElementsByTagName("pre")[0]
+  link.href = BOOK_REF
+  link.target = "ExternalDocument"
+  para.style.color = "blue"
   pre.style.overflowX = "auto"
+  document.body.style.maxWidth = "480px"
 }
 makePage()
 </script>
