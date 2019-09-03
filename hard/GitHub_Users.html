@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>GitHub Users</title>
+  <style>
+    body {
+        max-width: 440px;
+    }
+    img {
+        padding-right: 12px; 
+        width: 64px;
+    }
+  </style>
 </head>
 
 <body>
 
 <h2 id=title></h2>
-
-<input type=text id=usr value="yazeedb" onChange="readUser()">
+<input type=text id=usr value=hakandilek onChange="readUser()">
 <p id=out></p>
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
 <hr />
-<p>Ref: <a href="https://developer.github.com/v3/users/" 
-   target=ExternalDocument>GitHub Developer</a>&emsp;
-   <a href="https://yazeedb.com/posts/learn-closures-in-6-minutes" 
-   target=ExternalDocument>JS Closures</a>
+<p>Ref: <a href="https://developer.github.com/v3/#rate-limiting" 
+   target=ExternalDocument>GitHub Developer</a>
 </p>
 
 <script>
@@ -30,31 +36,41 @@ function error(t) {
     out.style.color = 'red'
     out.innerText = t; console.log(t)
 }
+function listRepos(b) {
+    if (b.length) 
+      out.innerHTML += 
+        b.map(x => x.name).join(", ")
+}
 function userData(u) {
     if (!u || !u.login) {
       error(usr.value+' not found')
       return
     } 
     //u.login is the same as usr.value
-    let s = u.name 
+    out.style.color = ''
+    out.innerHTML = ''
+    //start with a tiny image
+    let i = document.createElement("img")
+    i.src = u.avatar_url
+    i.align = "left"
+    out.appendChild(i)
+    //add name and location
+    let s = (u.name? u.name : u.login)
     if (u.location) s += ", "+u.location
-    console.log(s)
+    out.innerHTML += s+BR; console.log(s)
+    //add link to GitHub 
     let h = "github.com/"+u.login
-    s += BR+ "<a href=https://"+h
-    s += " target=ExternalDocument>"+h+"</a>"
-    s += BR+ u.public_repos+" repos"+BR
+    let a = document.createElement("a")
+    a.href = "https://"+h
+    a.target = "ExternalDocument"
+    a.innerText = h
+    out.appendChild(a)
+    //add repo count
+    let p = u.public_repos+" repos"
+    out.innerHTML += BR+p+BR+BR
     fetch(URL+u.login+"/repos")
       .then(r => r.json()) 
-      .then(a => {
-        if (a.length) {
-          let b = a.map(x => x.name)
-          s += b.join(", ")
-        //for (let x of a) s += x.name+", "
-        }
-        out.style.color = 'black'
-        out.innerHTML = s
-      }) 
-      .catch(error)
+      .then(listRepos).catch(error)
 }
 function readUser() {
     fetch(URL+usr.value)
@@ -63,7 +79,8 @@ function readUser() {
 }
 
     title.innerText = document.title
-    sample.innerText = readUser +NL+ userData
+    sample.innerText =  
+       listRepos +NL+ userData +NL+ readUser
     out.innerText = "Reading data"
     readUser()
 </script>
