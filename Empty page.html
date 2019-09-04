@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<!-- Modify or remove all items marked xxx -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Empty Page xxx </title>
 
-  <style>
-    #out { /* CSS code used in out */
+  <style> /* CSS code in use */
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
+    #out {
         font-size: 18px;
         background: blue;
         color: white;
@@ -17,11 +18,13 @@
   </style>
 </head>
 
+<!-- Modify or remove all items marked xxx -->
+
 <body>
 
 <h2 id=title></h2>
 
-<button onClick="count()">xxx</button>
+<input type=button value=xxx onClick="count()">
 
 <p id=out></p>
 
@@ -36,7 +39,7 @@
 
 <script>
 "use strict";
-// JavaScript code used in button
+// JavaScript code is used in the button
 function count() {
     console.log("counter = "+counter); 
     return counter++; 

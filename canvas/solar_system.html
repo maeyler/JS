@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width">
     <title>Solar System </title>
 
+  <style>
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<canvas id=canvas></canvas>
+<p>
+<input type=button id=button value="Stop" onClick="runStop()" />
+<input id=trace type=checkbox>Trace </input>&nbsp;
+<input type=button value="Image" onClick="image()" />
+<span id=out>t =</span>
+</p>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<p>Ref: 
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations" 
+   target="ExternalDocument">Canvas Tutorial</a>
+</p>
+
 <script>
 "use strict";
 const SIZE = 300,
@@ -72,31 +99,6 @@ function render(t) {
   ctx.restore();
   ctx.restore();
 }
-</script>
-</head>
-
-<body>
-
-<h2 id=title></h2>
-
-<canvas id=canvas></canvas>
-<p>
-<input type=button id=button value="Stop" onClick="runStop()" />
-<input id=trace type=checkbox>Trace </input>&nbsp;
-<input type=button value="Image" onClick="image()" />
-<span id=out>t =</span>
-</p>
-<hr />
-<b>Sample code</b>
-<pre id=sample></pre>
-<hr />
-
-<p>Ref: 
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations" 
-   target="ExternalDocument">Canvas Tutorial</a>
-</p>
-
-<script>
     title.innerText = document.title;
     sample.innerText = draw.toString();
     canvas.width = SIZE; canvas.height = SIZE;

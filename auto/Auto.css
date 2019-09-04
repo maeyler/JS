@@ -57,4 +57,7 @@ td {
 .found {
   color: #F60; 
 }
+#out {
+  overflow-x: auto;
+}
 

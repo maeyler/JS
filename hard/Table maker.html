@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Make a Table </title>
-</head>
 
-<style>
+  <style>
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
     table { border-collapse: collapse; }
     th { color: blue; padding: 5px 5px; }
     td { 
@@ -14,7 +15,9 @@
         padding: 5px 5px; 
         text-align: center; 
     }
-    td:hover .tip { visibility: visible; }
+    td:hover .tip {
+        visibility: visible;
+    }
     .tip {
         visibility: hidden;
         font-size: small;
@@ -24,7 +27,8 @@
         padding: 5px 5px;
         position: absolute;
     }
-</style>
+  </style>
+</head>
 
 <body>
 <center>

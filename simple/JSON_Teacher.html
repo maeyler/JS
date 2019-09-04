@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>JSON Teacher</title>
+
   <style>
-    body {
-        max-width: 440px;
-    }
+    body { max-width: 440px; }
+    #sample, #out { overflow-x: auto; }
   </style>
 </head>
 
@@ -51,7 +51,7 @@ function toJSON(v) {
         return Number.isFinite(v)? v : 'null'
       case "object": 
         if (Array.isArray(v)) {
-          let a = v.map(x => toJSON(x))
+          let a = v.map(toJSON)
           return '['+a.join(',')+']'
         } else { //other object
           let a = []

@@ -6,6 +6,8 @@
     <title>Permutations & Subsets </title>
 
 <style>
+  body { max-width: 440px; }
+  #sample { overflow-x: auto; }
   p {
     float: left;
     width: 50%;
@@ -16,6 +18,21 @@
     clear: both;
   }
 </style>
+</head>
+
+<body>
+<h3>Counting &emsp; 
+<input type=text id=inp size=6 value="CAFE"
+    onChange="main()">
+</h3>
+<div class=row>
+  <p id=out1></p>
+  <p id=out2></p>
+</div>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
 
 <script>
 "use strict";
@@ -52,25 +69,6 @@ function main() {
     a = [...inp.value]; //array
     c = []; permute();
 }
-</script>
-</head>
-
-<body>
-<h3>Counting &emsp; 
-<input type=text id=inp size=6 value="CAFE"
-    onChange="main()">
-</h3>
-<div class=row>
-  <p id=out1></p>
-  <p id=out2></p>
-</div>
-<hr />
-<b>Sample code</b>
-<pre id=sample></pre>
-<hr />
-
-<script>
-   //title.innerText = document.title;
    sample.innerText = permute+"\n"+subsets+"\n"+main;
    main()
 </script>
