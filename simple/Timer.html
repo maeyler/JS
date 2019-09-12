@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="manifest" href="../manifest.json">
+    <title>Simple Timer</title>
+
+  <style>
+    body { max-width: 320px; }
+    #sample { overflow-x: auto; }
+    #but {
+        font-size: 24px;
+        margin: 0 40px;
+        border-radius: 8px;
+        padding: 2px 10px;
+        cursor: pointer;
+    }
+    #out {
+        font-size: 18px;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+    #kap {
+        position: absolute;
+        margin: 6px;
+        top: 0;  right: 0;
+        cursor: pointer;
+    }
+    div {
+        position: relative;
+    }
+    .tip {
+        visibility: hidden;
+        position: absolute;
+        font: 11px arial, sans-serif;
+        color: black;
+        background: yellow;
+        border: 1px solid;
+        padding: 6px;
+    }
+    button:hover .tip {
+        visibility: visible;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<button id=but></button> 
+<div>
+  <button id=kap>x
+    <span class=tip>Clear</span>
+  </button>
+  <pre id=out></pre>
+</div>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<script>
+"use strict";
+function init() {
+    but.innerText = '>'
+    out.style.background = 'gray'
+    out.innerText = 'Tap on > button' 
+    kap.style.visibility = 'hidden'
+    last = 0; n = 0
+}
+function count() {
+    but.innerText = n
+    out.style.background = 'blue'
+    let time = Date.now()/1000
+    if (last) {
+        let s = (time-last).toFixed(2)
+        out.innerText += s+'\n'
+        kap.style.visibility = ''
+    } else {
+        out.innerText = ''
+    }
+    last = time; n++
+}
+    
+    title.innerText = document.title;
+    sample.innerText = init+'\n'+count
+    but.onclick = count
+    kap.onclick = init
+    var last, n;  init();
+</script>
+
+</body>
+</html>
