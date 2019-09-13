@@ -8,10 +8,8 @@
 
   <style>
     body { max-width: 320px; }
-    #sample { overflow-x: auto; }
     #but {
         font-size: 24px;
-        margin: 0 40px;
         border-radius: 8px;
         padding: 2px 10px;
         cursor: pointer;
@@ -19,16 +17,16 @@
     #out {
         font-size: 18px;
         color: white;
-        text-align: center;
         padding: 10px;
     }
     #kap {
         position: absolute;
         margin: 6px;
-        top: 0;  right: 0;
+        right: 0;
         cursor: pointer;
     }
     div {
+        text-align: center;
         position: relative;
     }
     .tip {
@@ -50,7 +48,9 @@
 
 <h2 id=title></h2>
 
-<button id=but></button> 
+<div>
+  <button id=but></button>
+</div>
 <div>
   <button id=kap>x
     <span class=tip>Clear</span>
