@@ -6,9 +6,7 @@
     <script src="TurkceSayi.js"></script>
     <title>Some HTML Items </title>
   <style>
-    body {
-        max-width: 440px;
-    }
+    body { max-width: 440px; }
     #out {
         color: blue;
         padding: 10px;
@@ -19,26 +17,40 @@
 <body>
 <h2 id=title></h2>
 
-<p>1. Text 
-<input type=text value="All chars allowed" onChange="report(value)">
+<datalist id=flavors>
+    <option value="Vanilla">
+    <option value="Chocolate">
+    <option value="Coconut">
+    <option value="Cranberry">
+    <option value="Mint">
+    <option value="Melon">
+    <option value="Mulberry">
+    <option value="Strawberry">
+</datalist>
+
+<p>1. Plain text 
+<input type=text value="All chars are allowed" onChange="report(value)">
 </p>
-<p>2. Menu  
-<select onChange="report(value)">
-<option>Celal<option>Hakkı<option>Akif<option>Ismail
+<p>2. Datalist
+<input list=flavors id=menu2 onChange="report(value)">
+</p> 
+<p>3. Select  
+<select id=menu3 onChange="report(value)">
+<!-- options will be copied from flavors -->
 </select>
 </p>
-<p>3. Number
+<p>4. Number
 <input type=number value=1234 onChange="report(toWord(value))">
 </p>
-<p>4. Password
+<p>5. Password
 <input type=password id=pass style="width:90px">
 <input type=button value=Show onClick="report(pass.value)">
 </p>
-<p>5. Checkbox
+<p>6. Checkbox
 <input type=checkbox onClick="report('English '+checked)">English
 <input type=checkbox onClick="report('French '+checked)">French 
 </p>
-<p>6. Button
+<p>7. Button
 <input type=button value=Back onClick="history.go(-1)"
    onMouseOver="console.log('in')" onMouseOut="console.log('out')">
 
@@ -56,6 +68,10 @@ function report(s) {
 }
     title.innerText = document.title;
     sample.innerText = toWord.toString();
+    let a = [''] //empty string
+    for (let x of flavors.options) a.push(x.value)
+  //let a = [...flavors.options].map(x => x.value) 
+    menu3.innerHTML = a.join('<option>')
 </script>
 
 </body>
