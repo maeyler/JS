@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width">
     <title>Read local file </title>
 <style>
+  div {
+     margin: 12px 0;
+  }
   .thumb {
      width: 400px;
-     border: 1px solid #000;
-     margin: 10px 5px 0 0;
+     border: 1px solid darkgray;
+  }
+  #zone {
+     width: 390px;
+     font: 12px arial, sans-serif;
+     margin: 12px 0;
+     border: 1px solid darkgray;
+     padding: 5px;
+  }
+  #out {
+     color: blue;
   }
   #save {
      background: #eee;
@@ -21,16 +33,17 @@
 <body>
 <h2 id=title></h2>
 
+<div id=zone>You may drop a single file here</div>
+
 <input type=file id=button onChange='fileSelect(this)' /> &nbsp;
 <a id=save hidden=true onClick="this.hidden=true">Save</a>
-<p>
-<output id=msg>Select text or image </output>
-<output id=out></output>
-</p>
+
+<div id=msg>Select text or image </div>
+<div id=out></div>
 
 <hr>
 <b>Sample code</b>
-<pre id=sample style="overflow-x:auto"></pre>
+<pre id=sample></pre>
 <hr>
 <p>Ref: <a href="https://www.html5rocks.com/en/tutorials/file/dndfiles/" 
       target="ExternalDocument">File selection</a>
@@ -47,12 +60,15 @@ function showFile(f, size) {
 }
 function isText(f) {
     console.assert(f instanceof File);
-    return f.type.startsWith("text") || f.name.endsWith(".md")
-         || f.name.endsWith(".js") || f.name.endsWith(".java");
+    return f.type.startsWith("text") 
+         || f.name.endsWith(".js") || f.name.endsWith(".java")
+         || f.name.endsWith(".json") || f.name.endsWith(".md");
 }
 function fileSelect(t) { //target is the button
     console.assert(t == button);
-    let f = t.files[0];
+    listFile(t.files[0]);
+}
+function listFile(f) {
     let size = " "+f.size+" bytes ";
     msg.innerText = f.type+size;
     save.hidden = true;
@@ -76,8 +92,22 @@ function fileSelect(t) { //target is the button
         out.innerText = "";
     }
 }
+function handleFileSelect(evt) {
+    //evt.stopPropagation();
+    evt.preventDefault();
+    let [f, a] = evt.dataTransfer.files
+    listFile(f);
+}
+function handleDragOver(evt) {
+    //evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy';
+}
     title.innerText = document.title;
-    sample.innerText = fileSelect.toString();
+    sample.innerText = fileSelect+'\n'+listFile;
+    zone.addEventListener('dragover', handleDragOver, false);
+    zone.addEventListener('drop', handleFileSelect, false);
+
 </script>
 
 </body>
