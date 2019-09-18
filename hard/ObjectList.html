@@ -30,20 +30,23 @@
 
 <script>
 "use strict";
-function toObject(line, keys) {
-    let b = {}
-    let a = line.split('\t')
-    for (let i=0; i<a.length; i++)
-        b[keys[i]] = a[i]
-    return b
+function toNumber(s) {
+    return isNaN(s)? s : Number(s)
 }
 function toList(str) {
-    let [a0, ...data] = str.split('\n')
-    let k = a0.split('\t')
-    console.log("Keys:", k)
-    let a = data.map(x => toObject(x, k))
-    console.log("Objects:", a)
-    return a
+  function toObject(line) {
+    let b = {}
+    let a = line.split('\t')
+    for (let i=0; i<a.length; i++) 
+        b[keys[i]] = toNumber(a[i])
+    return b
+  }
+    let [d0, ...data] = str.split('\n')
+    let keys = d0.split('\t')
+    console.log("Keys:", keys)
+    let list = data.map(toObject)
+    console.log("Objects:", list)
+    return list
 }
 const TXT = 
 `Name	Diam	Mass	Radius	Period
@@ -57,7 +60,7 @@ Uranus	4.007	14.60	19.22	84.01
 Neptune	3.883	17.20	30.06	164.80`
 
     title.innerText = document.title
-    sample.innerText = toObject+'\n'+toList
+    sample.innerText = toNumber+'\n'+toList
     inp.innerText = TXT
     let a = toList(TXT)  //array of objects
     out.innerText = JSON.stringify(a, undefined ,2)
