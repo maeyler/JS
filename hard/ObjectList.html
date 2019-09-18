@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>List of Objects </title>
+
+  <style> /* CSS code in use */
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
+    #out { color: blue; }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<b>Text input</b>
+<pre id=inp></pre>
+<b>JSON output</b>
+<pre id=out></pre>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Examples" 
+   target="ExternalDocument">Rest Parameters</a>
+</p>
+
+<script>
+"use strict";
+function toObject(line, keys) {
+    let b = {}
+    let a = line.split('\t')
+    for (let i=0; i<a.length; i++)
+        b[keys[i]] = a[i]
+    return b
+}
+function toList(str) {
+    let [a0, ...data] = str.split('\n')
+    let k = a0.split('\t')
+    console.log("Keys:", k)
+    let a = data.map(x => toObject(x, k))
+    console.log("Objects:", a)
+    return a
+}
+const TXT = 
+`Name	Diam	Mass	Radius	Period
+Mercury	0.382	0.06	0.40	0.24
+Venus	0.949	0.82	0.72	0.62
+Earth	1.000	1.00	1.00	1.00
+Mars	0.532	0.11	1.52	1.88
+Jupiter	11.209	317.80	5.20	11.86
+Saturn	9.449	95.20	9.54	29.46
+Uranus	4.007	14.60	19.22	84.01
+Neptune	3.883	17.20	30.06	164.80`
+
+    title.innerText = document.title
+    sample.innerText = toObject+'\n'+toList
+    inp.innerText = TXT
+    let a = toList(TXT)  //array of objects
+    out.innerText = JSON.stringify(a, undefined ,2)
+</script>
+
+</body>
+</html>

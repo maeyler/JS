@@ -57,11 +57,11 @@ function readData(file) {
         .then(addStudents, report);
 }
 function parseStudent(line) {
-    let b = line.split("\t");
-    let id = b[0], name = b[1], gpa = b[2];
+    let [id, name, gpa, ...list] = line.split("\t");
+  /*let id = b[0], name = b[1], gpa = b[2];
     let list = [];
     for (let i=3; i<b.length; i++) 
-        list.push(b[i]);
+        list.push(b[i]); */
     return {id, name, gpa, list};
 }
 function addStudents(txt) {
