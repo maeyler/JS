@@ -31,21 +31,16 @@
 <script>
 "use strict";
 function toList(str) {
-  let toNumber = 
-    (s) => isNaN(s)? s : Number(s)
-  function toObject(line) {
+  function toObject(x) {
     let b = {}
-    let a = line.split('\t')
-    for (let i=0; i<a.length; i++) 
-        b[keys[i]] = toNumber(a[i])
+    for (let [i,s] of x.split('\t').entries())
+      b[keys[i]] = (isNaN(s)? s : Number(s))
     return b
   }
     let [d0, ...data] = str.split('\n')
     let keys = d0.split('\t')
     console.log("Keys:", keys)
-    let list = data.map(toObject)
-    console.log("Objects:", list)
-    return list
+    return data.map(toObject)
 }
 const TXT = 
 `Name	Diam	Mass	Radius	Period
@@ -63,6 +58,7 @@ Neptune	3.883	17.20	30.06	164.80`
     inp.innerText = TXT
     let a = toList(TXT)  //array of objects
     out.innerText = JSON.stringify(a, undefined ,2)
+    console.table(a)
 </script>
 
 </body>
