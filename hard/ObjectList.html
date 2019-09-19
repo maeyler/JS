@@ -30,10 +30,9 @@
 
 <script>
 "use strict";
-function toNumber(s) {
-    return isNaN(s)? s : Number(s)
-}
 function toList(str) {
+  let toNumber = 
+    (s) => isNaN(s)? s : Number(s)
   function toObject(line) {
     let b = {}
     let a = line.split('\t')
@@ -60,7 +59,7 @@ Uranus	4.007	14.60	19.22	84.01
 Neptune	3.883	17.20	30.06	164.80`
 
     title.innerText = document.title
-    sample.innerText = toNumber+'\n'+toList
+    sample.innerText = toList
     inp.innerText = TXT
     let a = toList(TXT)  //array of objects
     out.innerText = JSON.stringify(a, undefined ,2)

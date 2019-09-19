@@ -8,13 +8,13 @@
 <script>
 "use strict";
 function elt(type, ...list) {
-  let node = document.createElement(type)
+  let e = document.createElement(type)
   for (let c of list) {
     if (typeof c === "string") 
-         node.innerHTML += c
-    else node.appendChild(c)
+       c = document.createTextNode(c);
+    e.appendChild(c)
   }
-  return node;
+  return e;
 }
 const BOOK_REF = 
   "http://eloquentjavascript.net/14_dom.html#h_AlX6HES+2D",
@@ -25,13 +25,17 @@ const BOOK_REF =
   DESC = ", preface to the second editon of ",
   BOOK = "The Open Society and Its Enemies";
 function makePage() {
-  let link = elt("a", "Creating nodes")
-  let bold = elt("b", "Sample code")
-  let pre  = elt("pre", elt+"\n"+makePage)
   let para = elt("p", "— ",
         elt("b", AUTH), DESC,
         elt("i", BOOK), YEAR
       )
+  para.style.color = "blue"
+  let bold = elt("b", "Sample code")
+  let pre  = elt("pre", elt+"\n"+makePage)
+  pre.style.overflowX = "auto"
+  let link = elt("a", "Creating nodes")
+  link.href = BOOK_REF
+  link.target = "ExternalDocument"
 //document.documentElement.appendChild(
   document.body = elt("body", 
       elt("h2", document.title), 
@@ -42,10 +46,6 @@ function makePage() {
       elt("hr"), 
       elt("div", "Ref: ", link)
     )
-  link.href = BOOK_REF
-  link.target = "ExternalDocument"
-  para.style.color = "blue"
-  pre.style.overflowX = "auto"
   document.body.style.maxWidth = "480px"
 }
 makePage()
