@@ -1,15 +1,15 @@
-table.inspector {
+table {
   padding: 2px;
   border: 1px solid;
   border-spacing: 1px;
   background: yellow;
 }
-table.inspector th {
+table th {
   font: 14px verdana, serif;
   font-weight: bold;
   cursor: default;
 }
-table.inspector ul { /*scroll doesn't work on td*/
+table ul { /*scroll doesn't work on td*/
   padding: 0;
   margin: 2px;
   min-width:  170px;
@@ -18,58 +18,67 @@ table.inspector ul { /*scroll doesn't work on td*/
   overflow-x: auto;
   overflow-y: auto;
 }
-table.inspector li {
+table li {
   margin: 2px;
   list-style-type: none;
   cursor: pointer;
 }
-table.inspector li, #small {
+table li, #small {
   font: 12px arial, sans-serif;
 }
-table.inspector li:hover {
+table li:hover {
   color: white;
   background-color: blue;
 }
-table.inspector button, checkbox {
+table button, checkbox {
   cursor: pointer;
 }
-table.inspector p {
+table p {
   margin: 8px 0;    
 }
-table.inspector #inp, #out {
+#inp, #out {
   width: 98%;
 }
-table.inspector #out {
+#out {
   font: 13px arial, sans-serif;
 }
-table.inspector #list1 {
+#list1 {
   height: 392px;
 }
-table.inspector #list2, #list3 {
+#list2, #list3 {
   height: 178px;
 }
-table.inspector #prev, #dele, #menu {
+.cfirst, th {
+  position: relative;
+}
+.tip1 {
   visibility: hidden;
   font: 10px arial, sans-serif;
   text-align: center;
   color: white;
   background-color: blue;
-  padding: 5px 5px;
+  padding: 5px;
   position: absolute;
+  top: -5px; left: 40px;
+  width: 100px;
 }
-table.inspector .cname, .tip {
+button:hover .tip1 { 
+  visibility: visible; 
+}
+.cfirst, .cname, .tip2 {
   font-weight: bold;
   text-align: center;
   background-color: #aaffaa;
 }
-table.inspector .tip {
+.tip2 {
   visibility: hidden;
   color: black;
   border: 1px solid;
   padding: 6px;
   position: absolute;
+  right: 0;
 }
-table.inspector .cname:hover .tip { 
+.cfirst:hover .tip2 { 
   visibility: visible; 
 }
 

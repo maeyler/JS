@@ -7,13 +7,20 @@
     <script src="inspector.js"></script>
     <script src="../math/Number.js"></script>
     <title>Inspector </title>
-</head>
 
-<body>
-<p><b id=docName></b> &nbsp;
-<a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
-<a href="https://maeyler.github.io/JS/sss/Turkish">Turkish</a>
-</p>
+  <style> 
+    iframe { 
+        margin: 0;  
+        width: 100%;  
+        border: none; 
+    } 
+    div { 
+        display: inline-block; 
+        vertical-align: text-top; 
+        overflow-y: auto;  
+    } 
+  </style> </head>
+
 <script>
 "use strict";
 const RDR2 = new FileReader();
@@ -120,32 +127,39 @@ function init() {
     let menu = {s, d, a, b, c, window, navigator};
     MENU = new Main(); //extends Menu
     for (let k in menu) MENU[k] = menu[k];
+    MENU.adjustFrameSize = adjustFrameSize;
     display(MENU); 
 }
+</script>
+
+<body>
+<div>
+  <p><b id=docName></b> &nbsp;
+    <a href="https://maeyler.github.io/JS/sss/">Read me</a> &nbsp;
+    <a href="https://maeyler.github.io/JS/sss/Turkish">Turkish</a>
+  </p>
+  <div id=sss></div>
+  <p><input type=file multiple onChange='fileSelect(this)' />
+  </p>
+  <p>URL:
+    <input type=text id=urlb onKeyUp='enterKey(event)'
+      style="width:70%" value="https://maeyler.github.io/JS/" />
+  </p>
+  <hr color="blue" size="2">
+</div>
+
+  <iframe id=ifrm
+    scrolling="no" onload="adjustFrameSize()">
+  </iframe>
+
+<script>
     docName.innerText = document.title+" "+VERSION;
     try {
-        inspect(document.body, init);
+        inspect(sss, init);
         inp.value = "ifrm";
     } catch(e) {
         reportError(e);
     }
 </script>
-
-<p><input type=file multiple onChange='fileSelect(this)' />
-</p>
-<p>URL:
-  <input type=text id=urlb onKeyUp='enterKey(event)'
-    style="width:70%" value="https://maeyler.github.io/JS/" />
-  <!--button onClick="displayURL(urlb.value)">Go</button>
-  <button onClick="adjustFrameSize()">Fix</button-->
-</p>
-<hr color="blue" size="2">
-<div>
-  <iframe id=ifrm
-    style="margin:0; width:100%; border:none;"   
-    scrolling="no" onload="adjustFrameSize()">
-  </iframe>
-</div>
-
 </body>
 </html>

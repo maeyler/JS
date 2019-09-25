@@ -14,11 +14,12 @@
         border: 1px solid blue; 
         padding: 5px 5px; 
         text-align: center; 
+        position: relative;
     }
     td:hover .tip {
         visibility: visible;
     }
-    .tip {
+    td .tip {
         visibility: hidden;
         font-size: small;
         background-color: blue;
@@ -26,6 +27,8 @@
         text-align: center;
         padding: 5px 5px;
         position: absolute;
+        left: 5px; 
+        top: 20px;
     }
   </style>
 </head>

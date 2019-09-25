@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.12", ITERABLE = new Object();
+const VERSION = "V2.13a", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -10,15 +10,12 @@ var MENU;  //installed by the caller
 class Menu {
   constructor() {}
   allKeysIn(obj) {
+  //let s = []; for (let k in obj) s.push(k); 
     return Object.getOwnPropertyNames(obj)
   }
   allValuesOf(obj) {
-    let keys = this.allKeysIn(obj), s = []
-    for (let k of keys) {
-      let x = obj[k]
-      if (typeof x != 'function') s.push(x)
-    }
-    return s
+    return this.allKeysIn(obj).map(k => obj[k])
+        .filter(x => typeof x != 'function')
   }
   deepEqual(a, b) { //compare two objects
     return JSON.stringify(a) == JSON.stringify(b)
@@ -173,10 +170,11 @@ function arrayToList(a, L) {
         if (!s.startsWith("* *"))
             list += "<li>"+ s +"</li>";
         else { //class name
-            list += "<li class=cname>" + s.substring(3);
+            let cls = (j>0? "cname" : "cfirst")
+            list += "<li class="+cls+">" + s.substring(3);
             if (j > 0) continue; //show tip for the first item
             let sc = superClasses(_).join("<br>");
-            list += "<span class=tip>"+ sc +"</span></li>";
+            list += "<span class=tip2>"+ sc +"</span></li>";
         }
     }
     L.innerHTML = list;
@@ -294,21 +292,15 @@ function inspect(parent, init) {
     parent.appendChild(t); t.innerHTML =
 `
   <tr>
-    <th><button onClick='previous()' 
-      onMouseOver='makeVisible(prev, true)'
-      onMouseOut ='makeVisible(prev, false)'>◀
-    <span id=prev>Display previous object</span></button>
+    <th><button onClick='previous()'>◀
+    <span class=tip1>Display previous object</span></button>
     &nbsp; Objects &nbsp;
-    <button onClick='removeIt(event.ctrlKey)' 
-      onMouseOver='makeVisible(dele, true)' 
-      onMouseOut ='makeVisible(dele, false)'>✘
-    <span id=dele>Delete current object<br>
+    <button onClick='removeIt(event.ctrlKey)'>✘
+    <span class=tip1>Delete current object<br>
         (&lt;CTRL&gt; deletes all)</span></button>
     </th>
-    <th><button onClick='display(MENU)' 
-      onMouseOver='makeVisible(menu, true)'
-      onMouseOut ='makeVisible(menu, false)'>M
-    <span id=menu>Display Menu</span></button>
+    <th><button onClick='display(MENU)'>M
+    <span class=tip1>Display Menu</span></button>
     &nbsp; Properties
     </th>
   </tr>
