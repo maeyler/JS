@@ -48,7 +48,7 @@ table p {
 #list2, #list3 {
   height: 178px;
 }
-.cfirst, th {
+.cfirst, button {
   position: relative;
 }
 .tip1 {
@@ -59,7 +59,7 @@ table p {
   background-color: blue;
   padding: 5px;
   position: absolute;
-  top: -5px; left: 40px;
+  top: -8px; left: -35px;
   width: 100px;
 }
 button:hover .tip1 { 

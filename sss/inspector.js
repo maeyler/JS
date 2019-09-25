@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.13a", ITERABLE = new Object();
+const VERSION = "V2.13b", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -299,7 +299,7 @@ function inspect(parent, init) {
     <span class=tip1>Delete current object<br>
         (&lt;CTRL&gt; deletes all)</span></button>
     </th>
-    <th><button onClick='display(MENU)'>M
+    <th><button id=menu onClick='display(MENU)'>M
     <span class=tip1>Display Menu</span></button>
     &nbsp; Properties
     </th>
@@ -333,7 +333,7 @@ function inspect(parent, init) {
   </tr>
 `
     init(); 
-    if (!MENU) menu.parentNode.style.visibility="hidden";
+    if (!MENU) menu.style.visibility="hidden";
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
 }
