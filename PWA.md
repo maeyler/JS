@@ -9,8 +9,12 @@ Chrome gibi bir tarayıcı ile açarak kitabı uygulama halinde kaydedebilirsini
 ### PWA -- 1. Safha
 Sayfanın Android/Chrome altında web uygulaması olması için iki adım yeterli:
 
-1. `manifest.json` dosyası ile birlikte ana sayfaya tek satır: <br>
-`<link rel="manifest" href="manifest.json">`
+1. Ana sayfamıza iki satır ekleyelim: 
+```
+<link rel="icon" sizes="192x192" href="images/JS.png">
+<link rel="manifest" href="manifest.json">
+```
+Ayrıca `manifest.json` dosyası şöyle olmalı:
 ```
 {
   "name": "JavaScript samples",
@@ -26,9 +30,10 @@ Sayfanın Android/Chrome altında web uygulaması olması için iki adım yeterl
   ]
 }
 ```
-2. Gerekli icon'lar (bir tane yeterli)
+2. Gerekli simgeler (bir icon yeterli)
 
-Büyük (512x512) icon varsa, uygulama yüklenirken sistem onu kullanabilir
+Büyük (512x512) simge varsa, uygulama yüklenirken sistem onu kullanabilir.<br>
+[favicon.io](https://favicon.io) yardımı ile farklı boylarda bir simge takımı kolayca yapılabilir. (5 yıldız!)
 
 ![JS icon](images/JS.png)
 

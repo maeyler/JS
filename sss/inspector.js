@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.13b", ITERABLE = new Object();
+const VERSION = "V2.13", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -24,7 +24,7 @@ class Menu {
     return "[object Menu] " +this.constructor.name 
   }
 }
-
+/*
 function makeVisible(t, val) {
     t.style.visibility = val? "visible" : "";
     if (val) setTimeout(hideTips, 2500);
@@ -33,7 +33,7 @@ function hideTips() {
     prev.style.visibility = "";
     dele.style.visibility = "";
     menu.style.visibility = "";
-}
+}*/
 function report(input, result) { 
     let msg = trunc(input, MAX_CHARS);
     if (result != undefined) {
@@ -286,20 +286,25 @@ function displayItem(c) {
     if (hist[n-1] !== _) hist.push(_); 
     if (n > 50) hist.splice(0, 20);
 }
+function hideTip(t, show) {
+    let v = show? 'visible' : 'hidden'
+    for (let x of t.getElementsByClassName("tip1")) 
+      x.style.visibility = v
+}
 function inspect(parent, init) {
     let t = document.createElement("table");
     t.className = 'inspector';
     parent.appendChild(t); t.innerHTML =
 `
   <tr>
-    <th><button onClick='previous()'>◀
+    <th><button onClick='previous();hideTip(this)'>◀
     <span class=tip1>Display previous object</span></button>
     &nbsp; Objects &nbsp;
-    <button onClick='removeIt(event.ctrlKey)'>✘
+    <button onClick='removeIt(event.ctrlKey);hideTip(this)'>✘
     <span class=tip1>Delete current object<br>
         (&lt;CTRL&gt; deletes all)</span></button>
     </th>
-    <th><button id=menu onClick='display(MENU)'>M
+    <th><button id=menu onClick='display(MENU);hideTip(this)'>M
     <span class=tip1>Display Menu</span></button>
     &nbsp; Properties
     </th>
@@ -336,4 +341,8 @@ function inspect(parent, init) {
     if (!MENU) menu.style.visibility="hidden";
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
+    if (sss) for (let x of sss.getElementsByTagName("button")) {
+       x.onmouseover = (e) => { hideTip(x,true) }
+       x.onmouseout  = (e) => { hideTip(x) }
+    }
 }

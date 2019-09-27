@@ -28,7 +28,7 @@ table li, #small {
 }
 table li:hover {
   color: white;
-  background-color: blue;
+  background: blue;
 }
 table button, checkbox {
   cursor: pointer;
@@ -56,10 +56,10 @@ table p {
   font: 10px arial, sans-serif;
   text-align: center;
   color: white;
-  background-color: blue;
+  background: blue;
   padding: 5px;
   position: absolute;
-  top: -8px; left: -35px;
+  top: -7px; left: -35px;
   width: 100px;
 }
 button:hover .tip1 { 
@@ -68,7 +68,7 @@ button:hover .tip1 {
 .cfirst, .cname, .tip2 {
   font-weight: bold;
   text-align: center;
-  background-color: #aaffaa;
+  background: #aaffaa;
 }
 .tip2 {
   visibility: hidden;
