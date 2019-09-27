@@ -9,8 +9,12 @@ When you open this page, a PWA-aware browser (e.g. Chrome) will give the option 
 ### PWA -- Stage 1
 Two steps will make your web page look like a web app under Android/Chrome
 
-1. Add `manifest.json` and insert this line to the main page: <br>
-`<link rel="manifest" href="manifest.json">`
+1. Add these two lines to the main page: 
+```
+<link rel="icon" sizes="192x192" href="images/JS.png">
+<link rel="manifest" href="manifest.json">
+```
+and make `manifest.json` as follows:
 ```
 {
   "name": "JavaScript samples",
@@ -27,7 +31,8 @@ Two steps will make your web page look like a web app under Android/Chrome
 }
 ```
 2. Add related icons -- Just one icon is enough.
-If a large icon (512x512) exists, it may be used as splash screen.
+If a large icon (512x512) exists, it may be used as splash screen. <br>
+[A wonderful tool](https://favicon.io) made by John Sorrentino will be very useful to make a full set of icons of the desired sizes from image/emoji/text. (5 stars!)
 
 ![JS icon](images/JS.png)
 
