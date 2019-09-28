@@ -11,10 +11,6 @@
       "src": "/JS/images/JS.png",
       "sizes": "192x192",
       "type": "image/png"
-    }, {
-      "src": "/JS/images/305A.png",
-      "sizes": "512x512",
-      "type": "image/png"
     }
   ]
 }
