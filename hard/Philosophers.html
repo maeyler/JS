@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
     <title>Dining Philosophers </title>
 
-<style>
+  <style>
     input {
         width: 90px;
     }
@@ -21,7 +22,46 @@
     #tim, #out {
         color: darkgreen;
     }
-</style>
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<p>
+<button id=button onClick="doRun()">start</button>
+<button id=step   onClick="doStep()">step</button>
+&emsp; Delay: 
+<input id=inp type="range" min=1 max=20 value=5 
+onChange="delay=100*value">
+</p>
+
+<pre id=tim>No event</pre>
+
+<table>
+  <tr>
+    <td id=c3>c3</td><td id=p2>p2</td><td id=c2>c2</td>
+  </tr><tr>
+    <td id=p3>p3</td><td>        </td><td id=p1>p1</td>
+  </tr><tr>
+    <td id=c0>c0</td><td id=p0>p0</td><td id=c1>c1</td>
+  </tr>
+</table>
+
+<pre id=out>Not started</pre>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<hr />
+<p>Ref: 
+<a href="http://www.wikiwand.com/en/Dining_philosophers_problem" 
+  target="NewTab">Dining_philosophers</a> &emsp;
+Java jar is <a href=
+"http://github.com/maeyler/BLM305/blob/master/work/DiningPhilosophers.jar?raw=true"
+  target="NewTab">here</a>
+</p>
 
 <script>
 "use strict";
@@ -178,48 +218,6 @@ class MyEvent {
     }
   }
 }
-</script>
-</head>
-
-<body>
-
-<h2 id=title></h2>
-<p>
-<button id=button onClick="doRun()">start</button>
-<button id=step   onClick="doStep()">step</button>
-&emsp; Delay: 
-<input id=inp type="range" min=1 max=20 value=5 
-onChange="delay=100*value">
-</p>
-
-<pre id=tim>No event</pre>
-
-<table>
-  <tr>
-    <td id=c3>c3</td><td id=p2>p2</td><td id=c2>c2</td>
-  </tr><tr>
-    <td id=p3>p3</td><td>        </td><td id=p1>p1</td>
-  </tr><tr>
-    <td id=c0>c0</td><td id=p0>p0</td><td id=c1>c1</td>
-  </tr>
-</table>
-
-<pre id=out>Not started</pre>
-
-<hr />
-<b>Sample code</b>
-<pre id=sample></pre>
-
-<hr />
-<p>Ref: 
-<a href="http://www.wikiwand.com/en/Dining_philosophers_problem" 
-   target="ExternalDocument">Dining_philosophers</a> &emsp;
-Java jar is <a href=
-"http://github.com/maeyler/BLM305/blob/master/work/DiningPhilosophers.jar?raw=true" 
-   target="ExternalDocument">here</a>
-</p>
-
-<script>
    title.innerText = document.title;
    sample.innerText = Philosopher.toString();
    var delay = 100*inp.value; //msec

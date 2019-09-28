@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
     <title>GitHub Users</title>
+
   <style>
     body {
         max-width: 440px;
@@ -25,7 +27,7 @@
 <pre id=sample></pre>
 <hr />
 <p>Ref: <a href="https://developer.github.com/v3/#rate-limiting" 
-   target=ExternalDocument>GitHub Developer</a>
+   target=NewTab>GitHub Developer</a>
 </p>
 
 <script>
@@ -62,7 +64,7 @@ function userData(u) {
     let h = "github.com/"+u.login
     let a = document.createElement("a")
     a.href = "https://"+h
-    a.target = "ExternalDocument"
+    a.target = "NewTab"
     a.innerText = h
     out.appendChild(a)
     //add repo count
