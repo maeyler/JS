@@ -6,23 +6,23 @@
     <meta name="theme-color" content="cyan" />
     <meta name="author" content="M A Eyler, Istanbul, 2018" />
     <meta name="description" content="BLM305 FSMV University" />
-    <title>JS Örnekleri </title>
-    <link rel="icon" sizes="192x192" href="images/JS.png">
+    <title>JavaScript Örnekleri </title>
+    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
     <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
       if (navigator.serviceWorker.controller)
         console.log('service worker already running')
-      else navigator.serviceWorker
-        .register('https://maeyler.github.io/JS/sw.js')
+      else if (location.protocol.startsWith('http') 
+        navigator.serviceWorker.register('/JS/sw.js')
         .then((reg) => { console.log('SW Registered', reg.active) })
-        .catch(console.error)
+        .catch(alert)
     }
   </script>
   <style>
     h3 { padding: 12px 0 0 20px; }
     p  { padding: 0 0 0 20px; }
-    li { padding: 3px; }
+    li { margin: 6px; }
   </style>
 </head>
 
