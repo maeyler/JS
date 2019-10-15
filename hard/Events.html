@@ -38,8 +38,8 @@ circle(s) are movable if a touch screen is available.
 <br><br>
 Scroll events below are reflected on the blue bar.
 <br><br>
-The total number of event calls 
-on either listener is reported below.
+The total number of event calls on either listener is reported 
+below. Horizontal swipes are also reported.
 </p>
 <p id=out></p>
 
@@ -58,13 +58,15 @@ on either listener is reported below.
 
 <script>
 "use strict";
-function report(msg) {
-    console.log(msg); out.innerText = msg; count++;
+function report(msg, log) {
+    if (log) console.log(msg); 
+    out.innerText = msg; count++;
 }
-function removeDots(evt, e) { //e is undefined
+function removeDots(et) { //evt.type
+    let e
     while (e = document.querySelector("dot")) 
         e.remove();
-    return (count+":  "+evt.type+" ");
+    return (count+":  "+et+" ");
 }
 function addDot(x, y) {
     let e = document.createElement("dot");
@@ -75,19 +77,39 @@ function addDot(x, y) {
     document.body.appendChild(e);
 }
 function doClick(evt) {
-    let msg = removeDots(evt);
+    let msg = removeDots(evt.type);
     let x = evt.pageX, y = evt.pageY;
     addDot(x, y); 
-    report(msg+" at "+x+", "+y);
+    report(msg+" at "+x+", "+y, true);
 }
-function doTouch(evt) {
-    let msg = removeDots(evt);
-    let n = evt.touches.length;
-    for (let i = 0; i < n; i++) {
-        let t = evt.touches[i];
+function drawDots(ta, et, log) {
+    let msg = removeDots(et);
+    for (let t of ta)
         addDot(t.pageX, t.pageY); 
-    }
-    report(msg+n+" touches");
+    report(msg+ta.length+" touches", log);
+}
+function doTouchS(evt) {
+    drawDots(evt.touches, evt.type, true)
+    swipe.t = new Date().getTime()
+    swipe.x = evt.touches[0].pageX
+    swipe.y = evt.touches[0].pageY
+}
+function doTouchM(evt) {
+    drawDots(evt.touches, evt.type, false)
+}
+function doTouchE(evt) {
+    report(removeDots(evt.type), true);
+    let ct = evt.changedTouches
+    if (ct.length == 0) return
+    let dt = new Date().getTime() - swipe.t
+    if (dt > 250) return //max time
+    let dx = Math.abs(ct[0].pageX - swipe.x)
+    let dy = Math.abs(ct[0].pageY - swipe.y)
+    console.log(dt, dx, dy)
+    if (dx < 50) return //min distance
+    if (dx < 5*dy) return //not horizontal
+    let dir = ct[0].pageX>swipe.x? "right" : "left"
+    report("swipe "+dir, true)
 }
 function scroller(evt) {
     let t = evt.target;
@@ -104,11 +126,12 @@ function scroller(evt) {
     long.innerText = "Modify all items marked xxx ".repeat(200);
     long.addEventListener("scroll", scroller);
     
-    touch.addEventListener("touchstart", doTouch);
-    touch.addEventListener("touchmove", doTouch);
-    //touch.addEventListener("touchend", doTouch);
+    touch.addEventListener("touchstart", doTouchS);
+    touch.addEventListener("touchmove", doTouchM);
+    touch.addEventListener("touchend", doTouchE);
     touch.addEventListener("click", doClick);
     var count = 0;
+    const swipe = { t:0, x:0, y:0 }
 </script>
 
 </body>
