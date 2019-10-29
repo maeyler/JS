@@ -11,11 +11,9 @@
     <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
-      if (navigator.serviceWorker.controller)
-        console.log('service worker already running')
-      else if (location.protocol.startsWith('http') 
-        navigator.serviceWorker.register('/JS/sw.js')
-        .then((reg) => { console.log('SW Registered', reg.active) })
+      if (location.protocol.startsWith('http'))
+        navigator.serviceWorker.register('sw.js')
+        .then(reg => { console.log('Service Worker', reg.scope) })
         .catch(alert)
     }
   </script>

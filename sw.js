@@ -1,11 +1,27 @@
 const CACHE ='JS2'
+const FILES = [
+  '/JS/',
+  '/JS/index.html',
+  '/JS/README',
+  '/JS/Java to JS',
+  '/JS/PWA',
+  '/JS/PWA_EN',
+  '/JS/images/JS.png',
+  '/JS/manifest.json'
+]
 function installCB(e) {
-  console.log('install', e.request);
+  console.log(CACHE, e);
+  e.waitUntil(
+    caches.open(CACHE)
+    .then(cache => cache.addAll(FILES))
+    .catch(console.err)
+  )
 }
 self.addEventListener('install', installCB)
 
 function save(req, resp) {
-  if (!req.url.includes("github")) return resp;
+  if (!req.url.host.includes("maeyler")) 
+     return resp;
   return caches.open(CACHE)
   .then(cache => {
     cache.put(req, resp.clone());
@@ -25,4 +41,9 @@ function fetchCB(e) { //fetch first
   )
 }
 self.addEventListener('fetch', fetchCB)
+
+function activateCB(e) {
+  console.log(CACHE, e);
+}
+addEventListener('activate', activateCB);
 
