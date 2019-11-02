@@ -121,11 +121,10 @@ function enterKey(evt) {
 
 function init() {
     let s = "Small is beautiful", d = new Date(),
-       len = 123, name = "Circle", pi = Math.PI, 
-       sqrt = Math.sqrt, power = Math.pow;
+       len = 123, name = "Circle", pi = Math.PI;
     a = [0, 11, "22", "abc"]; b = new Set(a);
-    c = {len, name, pi, sqrt, power};
-    let menu = {s, d, a, b, c, window, navigator};
+    c = {len, name, pi, sqrt: Math.sqrt};
+    let menu = {s, d, a, b, c, window, navigator, caches};
     MENU = new Main(); //extends Menu
     for (let k in menu) MENU[k] = menu[k];
     MENU.adjustFrameSize = adjustFrameSize;

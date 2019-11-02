@@ -1,14 +1,14 @@
 const CACHE ='JS2'
 function installCB(e) {
-  console.log('install', e.request);
+  console.log(CACHE, e);
 }
-self.addEventListener('install', installCB)
+addEventListener('install', installCB)
 
 function save(req, resp) {
   if (!req.url.includes("maeyler")) 
      return resp;
   return caches.open(CACHE)
-  .then(cache => {
+  .then(cache => { // save request
     cache.put(req, resp.clone());
     return resp;
   }) 
@@ -25,10 +25,10 @@ function fetchCB(e) { //fetch first
     .catch(() => caches.match(req).then(report))
   )
 }
-self.addEventListener('fetch', fetchCB)
+addEventListener('fetch', fetchCB)
 
 function activateCB(e) {
   console.log(CACHE, e);
 }
-self.addEventListener('activate', activateCB);
+addEventListener('activate', activateCB);
 
