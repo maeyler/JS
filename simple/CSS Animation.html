@@ -7,8 +7,36 @@
     <title>CSS Animation</title>
 
   <style>
-    body { max-width: 600px; }
+    body { max-width: 500px; }
     #sample { overflow-x: auto; }
+    button {
+      user-select: none;
+      cursor: pointer;
+    }
+    div {
+      font-size: 180px;
+      background: #cfc;
+      width: 300px;
+      height: 240px;
+      position: relative;
+    }
+    #iii, #dot {
+      user-select: none;
+      width: 20px;
+      position: absolute;
+      left: 130px;
+    }
+    #iii {
+      color: blue;
+    }
+    #dot {
+      background: rgba(0, 0, 0, 0);
+      color: #ac1;
+      top: -105px;
+    }
+    #out {
+      height: 35px;
+    }
   </style>
 </head>
 
@@ -16,12 +44,19 @@
 
 <h2 id=title></h2>
 
-<button onClick="this.animate(t1, 5000)">translate</button>
-<button onClick="this.animate(t2, 5000)">rotate</button>
-<button onClick="this.animate(t3, 6000)">background</button>
-<button onClick="out.animate(t4, 6000)">fontSize</button>
+<div id=box onClick="box.animate(t2, 5000)">
+  <span id=iii>ı</span>
+  <span id=dot>.</span>
+</div>
 
-<p id=out>Animations in CSS are powerful and simple</p>
+<p>
+<button onClick="this.animate(t1, 5000)">translate</button>
+<button onClick="dot .animate(t2, 5000)">rotate</button>
+<button onClick="box .animate(t3, 6000)">background</button>
+<button onClick="out .animate(t4, 6000)">fontSize</button>
+</p>
+
+<p id=out>Animations in CSS are powerful</p>
 
 <hr />
 <b>Sample code</b>
@@ -34,15 +69,16 @@
 
 <script>
 "use strict";
-const 
-  t1 = { transform: ["translateX(0)", "translateX(300px)", "translateX(0)"] },
-  t2 = { transform: ["rotate(0)", "rotate(90deg)", "rotate(0)"] },
+const
+  r0 = "rotate(0)", x0 = "translateX(0)",
+  t1 = { transform: [x0, "translateX(290px)", x0] },
+  t2 = { transform: [r0, "rotate(90deg)", r0, "rotate(-70deg)", r0] },
   t3 = { background: ["yellow", "cyan", "magenta", "yellow"] },
-  t4 = { fontSize: ["100%", "150%", "100%", "75%", "100%"] };
+  t4 = { fontSize: ["100%", "140%", "100%", "80%", "100%"] };
     title.innerText = document.title;
     sample.innerText 
       = 't3 = { background: ["yellow", "cyan", "magenta", "yellow"] }'
-      + '\n<button onClick="this.animate(t3, 6000)">background</button>';
+      + '\n<button onClick="box.animate(t3, 6000)">background</button>';
 </script>
 
 </body>
