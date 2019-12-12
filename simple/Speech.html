@@ -23,10 +23,12 @@
 
 <h2 id=title></h2>
 
-<input id=dinle type=button value=Dinle> &emsp;
-<input id=soyle type=button value=Talk>
+<input id=dinle type=button onclick=listen()>&emsp;
+<input id=turk  type=checkbox onchange=setVoice()>TR&emsp;
+<input id=male  type=checkbox onchange=setVoice()>Male&emsp; 
+<input id=konus type=button onclick=speak()>
 
-<p id=out></p>
+<p id=out>Tell me something</p>
 
 <hr />
 <b>Sample code</b>
@@ -39,32 +41,40 @@
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=Ayb0S4YG">
 </script> 
 <script>
-"use strict";
-function listen() {
-    out.innerText = 'Dinliyorum'
-    out.style.background = 'brown'
-    SR.start()
+"use strict"
+var voice
+function setVoice(t=turk.checked, m=male.checked) {
+    dinle.value = t? "Dinle" : "Listen"
+    konus.value = t? "Konuş" : "Speak"
+    voice  = t? "Turkish " : "US English "
+    voice += m? "Male" : "Female"
+    console.log("voice =", voice)
 }
-function talk(t, v="Turkish Male") {
-    responsiveVoice.speak(t, v)
+function speak(s=out.innerText, v=voice) {
+    responsiveVoice.speak(s, v)
+}
+function listen(t=turk.checked) {
+    SR.lang = t? "tr-TR" : "en-EN"; SR.start()
+    out.innerText = t? 'Dinliyorum' : 'Listening'
+    out.style.background = 'brown'
 }
 function getResult(e) {
     let a = e.results[0][0]; //use first result
     console.log(a.transcript, a.confidence.toFixed(2))
-    talk(a.transcript); out.innerText = a.transcript
+    out.innerText = a.transcript; speak()
+    out.style.background = ''
+}
+function error(e) {
+    out.innerText = turk.checked? '[ses yok]' : '[no input]'
     out.style.background = ''
 }
 
     title.innerText = document.title
     sample.innerText = listen+'\n'+getResult
-    out.innerText = "Bana bişey söyle"
-    dinle.onclick = listen
-    soyle.onclick = () => { 
-        talk(out.innerText, "US English Male") 
-    }
-    var SR = new webkitSpeechRecognition()
-    SR.onspeechend = SR.stop; SR.lang = 'tr-TR'
-    SR.onresult = getResult
+    const SR = new webkitSpeechRecognition()
+    SR.onspeechend = SR.stop; SR.onsoundend = error
+    SR.onresult = getResult;  SR.onnomatch = error
+    setVoice()
 </script>
 
 </body>
