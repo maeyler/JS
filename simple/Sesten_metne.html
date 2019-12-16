@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Sesten Metne Kayıt</title>
+
+  <style> /* CSS code in use */
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
+    #out {
+        font-size: 18px;
+        background: blue;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<input id=dinle type=button onclick=listen() value=Dinle>&emsp;
+<input id=ekle  type=button onclick=addStr() value=Ekle>&emsp;
+<input id=sakla type=button onclick=saveStr() value=Sakla>
+<a id=save hidden=true>Download</a>
+
+<p id=out></p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+
+<hr />
+<p>Ref: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API" target="NewTab">Speech_API</a>
+</p>
+
+<script>
+"use strict"
+var str
+function listen(t="tr-TR") {
+    SR.lang = t; SR.start()
+    out.innerText = 'Dinliyorum'
+    out.style.background = 'brown'
+}
+function getResult(e) {
+    let a = e.results[0][0]; //use first result
+    console.log(a.transcript, a.confidence.toFixed(2))
+    out.innerText = a.transcript
+    out.style.background = ''
+}
+function error(e) {
+    out.innerText = '[no input]'
+    out.style.background = ''
+}
+function addStr(s=out.innerText) {
+    if (str) str += '\n'+s; else str = s
+    dinle.click()
+}
+function saveStr(s=str, f="output.txt") {
+    let b = new Blob([s], {type:"text/plain"});
+    save.href = URL.createObjectURL(b)
+    save.download = f
+    save.click(); str = ''
+}
+  document.onkeydown = (evt) => {
+      let k = evt.key.toUpperCase()
+      switch (k) {
+          case 'D': case 'L':
+            dinle.click(); break
+          case 'A': case 'E':
+            ekle.click();  break
+          case 'S':
+            sakla.click(); break
+          default: error()
+      }
+}
+
+    title.innerText = document.title
+    sample.innerText = saveStr+'\n'+listen+'\n'+getResult
+    const SR = new webkitSpeechRecognition()
+    SR.onspeechend = SR.stop; SR.onsoundend = error
+    SR.onresult = getResult;  SR.onnomatch = error
+</script>
+
+</body>
+</html>
