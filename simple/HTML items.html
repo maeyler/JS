@@ -34,7 +34,7 @@
 <input type=text value="All chars are allowed" onChange="report(value)">
 </p>
 <p>2. Datalist
-<input list=flavors id=menu2 onChange="report(value)">
+<input list=flavors onChange="report(value)">
 </p> 
 <p>3. Select  
 <select id=menu3 onChange="report(value)">
@@ -42,20 +42,24 @@
 </select>
 </p>
 <p>4. Number
-<input type=number value=1234 onChange="report(toWord(value))">
+<input type=number value=1234 max=999999999999999
+       onChange="report(toWord(valueAsNumber))">
 </p>
 <p>5. Password
-<input type=password id=pass style="width:90px">
+<input type=password id=pass size=8>
 <input type=button value=Show onClick="report(pass.value)">
 </p>
 <p>6. Checkbox
 <input type=checkbox onClick="report('English '+checked)">English
 <input type=checkbox onClick="report('French '+checked)">French 
 </p>
-<p>7. Button
+<p>7. Date
+<input type=date onChange="report(valueAsDate)">
+</p>
+<p>8. Button
 <input type=button value=Back onClick="history.go(-1)"
    onMouseOver="console.log('in')" onMouseOut="console.log('out')">
-
+</p>
 <p id=out>Output</p>
 
 <hr />
@@ -66,13 +70,14 @@
 <script>
 "use strict";
 function report(s) {
+    if (s === null) return
+    if (s instanceof Date) s = s.toDateString()
     out.innerText = s; console.log(s);
 }
     title.innerText = document.title;
     sample.innerText = toWord.toString();
-    let a = [''] //empty string
-    for (let x of flavors.options) a.push(x.value)
-  //let a = [...flavors.options].map(x => x.value) 
+    let a = [...flavors.options].map(x => x.value)
+    a.splice(0, 0, '')  //insert '' at a[0]
     menu3.innerHTML = a.join('<option>')
 </script>
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Speech_API</title>
+
+  <style>
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
+    #out {
+        font-size: 18px;
+        background: blue;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<input id=dinle type=button onclick=listen() value=Listen>&emsp;
+<select id=dil>
+  <option>en-US</option>
+  <option>ar-AR</option>
+  <option>fr-FR</option>
+  <option>en-GB</option>
+  <option>it-IT</option>
+  <option>tr-TR</option>
+</select>
+<!--Lang <input id=dil type=text size=6 value="en-US"-->&emsp;
+<input id=konus type=button onclick=speak()  value=Speak>
+
+<p id=out>Tell me something</p>
+
+<hr />
+<b>Spoken words</b>
+<pre id=sample></pre>
+
+
+<script>
+"use strict"
+function speak(s=out.innerText, t=dil.value) {
+    let u = new SpeechSynthesisUtterance(s)
+    u.lang = t; speechSynthesis.speak(u)
+}
+function listen(t=dil.value) {
+    SR.lang = t; SR.start()
+    out.innerText = 'Listening'
+    out.style.background = 'brown'
+}
+function getResult(e) {
+    let a = e.results[0][0]; //use first result
+    let s = a.transcript
+    console.log(s, a.confidence.toFixed(2))
+    sample.innerText += s+'\n'
+    out.innerText = s; speak(s)
+    out.style.background = ''
+}
+function error(e) {
+    out.innerText = '[no input]'
+    out.style.background = ''
+}
+
+    title.innerText = document.title
+    listen+'\n'+getResult
+    const SR = new webkitSpeechRecognition()
+    SR.onspeechend = SR.stop; SR.onsoundend = error
+    SR.onresult = getResult;  SR.onnomatch = error
+</script>
+
+</body>
+</html>
