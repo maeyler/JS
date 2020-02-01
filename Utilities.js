@@ -26,7 +26,7 @@ class TabularData {
         Object.setPrototypeOf(x, this.proto)
         this.data.push(x)
       }
-      if (callback) callback()
+      if (callback) callback(t)
     }
     fetch(url).then(x => x.text()).then(toArray)
   }

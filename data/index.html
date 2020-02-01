@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"  content="width=device-width">
+    <link rel="stylesheet" href="main.css" media="all">
+    <title>Forms to Sheets</title>
+
+  <style>
+    input {
+        width: 280px;
+    }
+    div {
+        background:yellow; 
+        border:1px solid; 
+        padding:8px;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+   }
+  </style>
+</head>
+
+<body>
+
+<h2 id="google-forms-to-docs">Google Forms to Docs</h2>
+
+<p>A simple, public database to save your data in the cloud</p>
+<p>The method described below is only for teaching purposes -- <b>All data will be public</b></p>
+
+<b>1. Make a Google Form</b>
+
+<p>Visit <a href="https://docs.google.com/forms">docs.google.com/forms</a> to make a new form. Suppose we want a data table with 3 fields: user, topic, marks. All fields will be "short answer". Another field for timestamp will be added by the server. We are ready to add data.</p>
+
+
+<b>2. Get the data-entry address</b>
+
+<p>Enter the field names as the answer to all three questions in the form. Go to the three-dots menu to select "pre-filled link" and copy the address:</p>
+<p><img src="prefill.png" alt="prefill" /></p>
+
+<p>We need the magic numbers hidden in this link in order to make a proper data entry.</p>
+
+<p>We need to replace viewform =&gt; formResponse in the code:</p>
+
+<pre>const FORM_URL = "https://docs.google.com/forms/d/e/"
+    +"1FAIpQLScbLFzsO3ugLVVO8TWS28pmsvrGnf9yyFyYv4UIK8tncCA_NA/"
+    +"formResponse?usp=pp_url"
+    +"&amp;entry.1395280695="+user
+    +"&amp;entry.387807091="+topic
+    +"&amp;entry.1944284271="+marks
+//  +"&amp;submit=Submit" not needed
+
+//put the link on an iframe and use it to post one row to the table
+</pre>
+
+<p>Using this code, we can make a forms page similar to the <a id=form target="NewTab">Forms link</a>:</p>
+
+<div>
+<h3>MVC Todo Form</h3>
+    <p><b>User</b> &emsp;  (Unique id -- not verified)<br> <input type="text" id="user"></p>
+    <p><b>Topic</b> &emsp; (Todo item to be added)<br> <input type="text" id="topic"></p>
+    <p><b>Marks</b> &emsp; (C:completed, D:deleted)<br> <input type="text" id="marks"></p>
+    <button onclick="submitFormData()">Submit Data</button>
+</div>
+<br>
+
+<b>3. Move the data to Google Sheets</b>
+
+<p>The default location of the data is Google Drive. It should be moved to Google Sheets, where it will be available for the clients.</p>
+
+<p>Clik on Responses and "Create Spreadsheet" -- Your new sheet wil be opened</p>
+
+
+<b>4. Publish your data</b>
+
+<p>Select in the File menu "Publish to web" and copy the address. This link gets the data in human-readable HTML format. Other formats such as JSON, CSV, and TSV are also available:</p>
+
+<pre>const DOCS_URL = "https://docs.google.com/spreadsheets/u/1/d/e/2PACX-"
+    +"1vStbPfY8oQuJKDQwIiFwRMs5V6loOPmr3gzc8UQN36z4cbfLZuPedXePhgq9053P7KsDA8YZ42cvBVE/"
+    +'pub?output=tsv' //tab-separated values
+</pre>
+
+<p><code>fetch(DOCS_URL)</code> gets all the data similar to the <a id=docs target="NewTab">Data link</a>:</p>
+
+<hr>
+<h3>MVC Todo Data</h3>
+<button onclick="tabularData(displayData)">Read Data</button>
+<pre id=out></pre>
+<hr>
+
+<p>Summary: <b>One link adds a row to the table, the other link reads the data</b></p>
+
+<p>If the table becomes too large, unused rows can be deleted manually from the sheet. The data is read-only, nobody can modify it except the owner. But new rows can be added anyone who has the link. Forms data is still in the Drive, not used by the Sheets. So it may be deleted once-in-a-while to save space.</p>
+
+<h3>Reference</h3>
+<p>Idea from <a href="https://github.com/a0m0rajab/LearningQuest/" 
+    target="NewTab">LearningQuest</a> by A Rajab</p>
+
+<script src="submitForm.js"></script>
+<script>
+"use strict";
+function submitFormData() { //to Google Forms -- add one line
+    submitData(user.value, topic.value, marks.value)
+    report("sumbitted: "+topic.value)
+}
+var MAX_ROWS = 50
+function displayData(t, d) { //text t
+    if (d.length > MAX_ROWS) {
+        let a = t.split('\n')
+        a.length = MAX_ROWS
+        t = a.join('\n')
+    }
+    report(t, d)
+}
+// Report results
+function report(t, d) {
+    out.innerText = t
+    console.log(d? d : t)
+}
+function showError(e) {
+    out.innerText = 'Error '+e
+    console.error(e)
+}
+
+    form.href = FORM_URL+'viewform'
+    docs.href = DOCS_URL+'pub?output=html'
+    </script>
+</body>
+
+</html>

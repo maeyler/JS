@@ -1,0 +1,27 @@
+    body {
+        max-width: 900px;
+        padding: 0 10px;
+        margin: 0;
+        font: 15px/1.4 sans-serif;
+        background: #eee;
+    }
+    pre  {
+        font-size: 13px;
+        background: white;
+        overflow-x: auto;
+    }
+    img  {
+        max-width: 500px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .large  {
+        max-width: 100%;
+    }
+@media screen and (max-width: 500px) {
+    img  {
+        width: 100%;
+    }
+}
+
