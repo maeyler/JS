@@ -24,7 +24,7 @@
 
 <body>
 
-<h2 id="google-forms-to-docs">Google Forms to Docs</h2>
+<h2 id="google-forms-to-docs">Google Forms to Google Sheets</h2>
 
 <p>A simple, public database to save your data in the cloud</p>
 <p>The method described below is only for teaching purposes -- <b>All data will be public</b></p>
@@ -61,7 +61,7 @@
     <p><b>User</b> &emsp;  (Unique id -- not verified)<br> <input type="text" id="user"></p>
     <p><b>Topic</b> &emsp; (Todo item to be added)<br> <input type="text" id="topic"></p>
     <p><b>Marks</b> &emsp; (C:completed, D:deleted)<br> <input type="text" id="marks"></p>
-    <button onclick="submitFormData()">Submit Data</button>
+    <button onclick="submitFormData()">Submit Data</button> &emsp; <span id=out1></span>
 </div>
 <br>
 
@@ -85,8 +85,8 @@
 
 <hr>
 <h3>MVC Todo Data</h3>
-<button onclick="tabularData(displayData)">Read Data</button>
-<pre id=out></pre>
+<button onclick="tabularData(display)">Read Data</button> &emsp; <span id=out2></span>
+<pre id=out3></pre>
 <hr>
 
 <p>Summary: <b>One link adds a row to the table, the other link reads the data</b></p>
@@ -102,29 +102,29 @@
 "use strict";
 function submitFormData() { //to Google Forms -- add one line
     submitData(user.value, topic.value, marks.value)
-    report("sumbitted: "+topic.value)
+    let s = "sumbitted: "+topic.value
+    out1.innerText = s; console.log(s)
+    topic.select(0, 99); topic.focus()
 }
-var MAX_ROWS = 50
-function displayData(t, d) { //text t
-    if (d.length > MAX_ROWS) {
-        let a = t.split('\n')
-        a.length = MAX_ROWS
+var MAX_ROWS = 35
+function display(t, d) { //String t, Array d
+    let k = d.length - MAX_ROWS
+    if (k > 0) {
+        let a = t.split('\n')  
+        a.splice(1, k) //deletes k items
         t = a.join('\n')
     }
-    report(t, d)
-}
-// Report results
-function report(t, d) {
-    out.innerText = t
-    console.log(d? d : t)
-}
-function showError(e) {
-    out.innerText = 'Error '+e
-    console.error(e)
+    out2.innerText = d.length+" items"
+    out3.innerText = t; console.log(d)
 }
 
     form.href = FORM_URL+'viewform'
     docs.href = DOCS_URL+'pub?output=html'
+    //topic.onchange = submitFormData
+    if (localStorage.userName) {
+        user.value = localStorage.userName
+        topic.focus()
+    } else user.focus()
     </script>
 </body>
 
