@@ -24,19 +24,25 @@
 
 <body>
 
-<h2 id="google-forms-to-docs">Google Forms to Google Sheets</h2>
+<h2 id="google-forms-to-docs">Free Cloud Storage</h2>
 
-<p>A simple, public database to save your data in the cloud</p>
-<p>The method described below is only for teaching purposes -- <b>All data will be public</b></p>
+<p>A simple, public database to save your data in Google Sheets</p>
+<p>The method described below is only for teaching purposes -- 
+    <b>All data will be public</b></p>
 
 <b>1. Make a Google Form</b>
 
-<p>Visit <a href="https://docs.google.com/forms">docs.google.com/forms</a> to make a new form. Suppose we want a data table with 3 fields: user, topic, marks. All fields will be "short answer". Another field for timestamp will be added by the server. We are ready to add data.</p>
+<p>Visit <a href="https://docs.google.com/forms">docs.google.com/forms</a> 
+to make a new form. Suppose we want a data table with 3 fields: 
+user, topic, marks. All fields will be "short answer". 
+Another field for timestamp will be added automatically by the server. </p>
 
 
 <b>2. Get the data-entry address</b>
 
-<p>Enter the field names as the answer to all three questions in the form. Go to the three-dots menu to select "pre-filled link" and copy the address:</p>
+<p>Go to the three-dots menu to select "pre-filled link". 
+Enter the field names as the answer to all three questions in the form.  
+Now the address is ready for modification:</p>
 <p><img src="prefill.png" alt="prefill" /></p>
 
 <p>We need the magic numbers hidden in this link in order to make a proper data entry.</p>
@@ -54,44 +60,58 @@
 //put the link on an iframe and use it to post one row to the table
 </pre>
 
-<p>Using this code, we can make a forms page similar to the <a id=form target="NewTab">Forms link</a>:</p>
+<p>Using this code, we can make a forms page similar to the 
+    <a id=form target="NewTab">Forms link</a>:</p>
 
 <div>
 <h3>MVC Todo Form</h3>
-    <p><b>User</b> &emsp;  (Unique id -- not verified)<br> <input type="text" id="user"></p>
-    <p><b>Topic</b> &emsp; (Todo item to be added)<br> <input type="text" id="topic"></p>
-    <p><b>Marks</b> &emsp; (C:completed, D:deleted)<br> <input type="text" id="marks"></p>
-    <button onclick="submitFormData()">Submit Data</button> &emsp; <span id=out1></span>
+    <p><b>User</b> &emsp;  (Unique id -- not verified)<br> 
+        <input type="text" id="user"></p>
+    <p><b>Topic</b> &emsp; (Todo item to be added)<br> 
+        <input type="text" id="topic"></p>
+    <p><b>Marks</b> &emsp; (C:completed, D:deleted)<br> 
+        <input type="text" id="marks"></p>
+    <button onclick="submitFormData()">Submit Data</button> &emsp; 
+    <span id=out1></span>
 </div>
 <br>
 
 <b>3. Move the data to Google Sheets</b>
 
-<p>The default location of the data is Google Drive. It should be moved to Google Sheets, where it will be available for the clients.</p>
+<p>The default location of the data is Google Drive. It should be accessible 
+    by Google Sheets, where it will be available for the clients.</p>
 
 <p>Clik on Responses and "Create Spreadsheet" -- Your new sheet wil be opened</p>
 
 
 <b>4. Publish your data</b>
 
-<p>Select in the File menu "Publish to web" and copy the address. This link gets the data in human-readable HTML format. Other formats such as JSON, CSV, and TSV are also available:</p>
+<p>Select in the File menu "Publish to web" and copy the address. 
+    This link gets the data in human-readable HTML format. 
+    Other formats such as JSON, CSV, and TSV are also available:</p>
 
 <pre>const DOCS_URL = "https://docs.google.com/spreadsheets/u/1/d/e/2PACX-"
     +"1vStbPfY8oQuJKDQwIiFwRMs5V6loOPmr3gzc8UQN36z4cbfLZuPedXePhgq9053P7KsDA8YZ42cvBVE/"
     +'pub?output=tsv' //tab-separated values
 </pre>
 
-<p><code>fetch(DOCS_URL)</code> gets all the data similar to the <a id=docs target="NewTab">Data link</a>:</p>
+<p><code>fetch(DOCS_URL)</code> gets all the data similar to the 
+    <a id=docs target="NewTab">Data link</a>:</p>
 
 <hr>
 <h3>MVC Todo Data</h3>
-<button onclick="tabularData(display)">Read Data</button> &emsp; <span id=out2></span>
+<button onclick="tabularData(display)">Read Data</button> &emsp; 
+<span id=out2></span>
 <pre id=out3></pre>
 <hr>
 
 <p>Summary: <b>One link adds a row to the table, the other link reads the data</b></p>
 
-<p>If the table becomes too large, unused rows can be deleted manually from the sheet. The data is read-only, nobody can modify it except the owner. But new rows can be added anyone who has the link. Forms data is still in the Drive, not used by the Sheets. So it may be deleted once-in-a-while to save space.</p>
+<p>If the table becomes too large, unused rows can be deleted manually from the sheet. 
+The data is read-only, nobody can modify it except the owner. 
+But new rows can be added anyone who has the link. 
+Forms data is still in the Drive, not used by the Sheets. 
+So it may be deleted once-in-a-while to save space.</p>
 
 <h3>Reference</h3>
 <p>Idea from <a href="https://github.com/a0m0rajab/LearningQuest/" 
