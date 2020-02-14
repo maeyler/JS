@@ -53,14 +53,17 @@ table p {
 }
 .tip1 {
   visibility: hidden;
-  font: 10px arial, sans-serif;
+  font: 11px arial, sans-serif;
+  cursor: default;
   text-align: center;
-  color: white;
-  background: blue;
+  color: black;
+  background: #eee;
+  border: 1px solid;
   padding: 5px;
   position: absolute;
-  top: -7px; left: -35px;
-  width: 100px;
+  top: 20px; left: -20px;
+  width: 120px;
+  z-index: 1;
 }
 button:hover .tip1 { 
   visibility: visible; 

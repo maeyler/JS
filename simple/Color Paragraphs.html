@@ -34,8 +34,7 @@
 <script>
 "use strict";
 function color(c) {
-  let pa = 
-    document.getElementsByTagName("p");
+  let pa = document.querySelectorAll("p");
   for (let e of pa) e.style.color = c; 
   out.innerText = 
     pa.length+" paragraphs to "+c;

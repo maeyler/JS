@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.13", ITERABLE = new Object();
+const VERSION = "V2.14", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -24,16 +24,6 @@ class Menu {
     return "[object Menu] " +this.constructor.name 
   }
 }
-/*
-function makeVisible(t, val) {
-    t.style.visibility = val? "visible" : "";
-    if (val) setTimeout(hideTips, 2500);
-}
-function hideTips() {
-    prev.style.visibility = "";
-    dele.style.visibility = "";
-    menu.style.visibility = "";
-}*/
 function report(input, result) { 
     let msg = trunc(input, MAX_CHARS);
     if (result != undefined) {
@@ -287,9 +277,9 @@ function displayItem(c) {
     if (n > 50) hist.splice(0, 20);
 }
 function hideTip(t, show) {
-    let v = show? 'visible' : 'hidden'
-    for (let x of t.getElementsByClassName("tip1")) 
-      x.style.visibility = v
+    //let v = show? 'visible' : 'hidden'
+    for (let x of t.querySelectorAll(".tip1")) 
+      x.hidden = !show
 }
 function inspect(parent, init) {
     let t = document.createElement("table");
@@ -341,8 +331,8 @@ function inspect(parent, init) {
     if (!MENU) menu.style.visibility="hidden";
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
-    if (sss) for (let x of sss.getElementsByTagName("button")) {
-       x.onmouseover = (e) => { hideTip(x,true) }
-       x.onmouseout  = (e) => { hideTip(x) }
+    if (sss) for (let x of sss.querySelectorAll("button")) {
+       x.onmouseover = (e) => { hideTip(x, true) }
+       x.onmouseout  = (e) => { hideTip(x, false) }
     }
 }

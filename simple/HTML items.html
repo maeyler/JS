@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <script src="TurkceSayi.js"></script>
     <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
-    <title>Some HTML Items </title>
+    <title>HTML Input Items </title>
 
   <style>
     body { max-width: 440px; }
@@ -30,7 +30,7 @@
     <option value="Strawberry">
 </datalist>
 
-<p>1. Plain text 
+<p>1. Text 
 <input type=text value="All chars are allowed" onChange="report(value)">
 </p>
 <p>2. Datalist
@@ -60,6 +60,8 @@
 <input type=button value=Back onClick="history.go(-1)"
    onMouseOver="console.log('in')" onMouseOut="console.log('out')">
 </p>
+Button element: <button onClick="hide(this)">Get lost</button>
+
 <p id=out>Output</p>
 
 <hr />
@@ -69,6 +71,11 @@
 
 <script>
 "use strict";
+function hide(e) {
+    e.hidden = true
+    navigator.vibrate([300, 300, 300])
+    report("Disappear and vibrate")
+}
 function report(s) {
     if (s === null) return
     if (s instanceof Date) s = s.toDateString()

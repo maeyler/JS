@@ -45,9 +45,8 @@ Enter the field names as the answer to all three questions in the form.
 Now the address is ready for modification:</p>
 <p><img src="prefill.png" alt="prefill" /></p>
 
-<p>We need the magic numbers hidden in this link in order to make a proper data entry.</p>
-
-<p>We need to replace viewform =&gt; formResponse in the code:</p>
+<p>The magic numbers hidden in this link are the keys for proper data entry.
+We need to replace <code>viewform =&gt; formResponse</code> in the link:</p>
 
 <pre>const FORM_URL = "https://docs.google.com/forms/d/e/"
     +"1FAIpQLScbLFzsO3ugLVVO8TWS28pmsvrGnf9yyFyYv4UIK8tncCA_NA/"
@@ -149,8 +148,8 @@ function display(t, d) { //String t, Array d
     //topic.onchange = submitFormData
     if (localStorage.userName) {
         user.value = localStorage.userName
-        topic.focus()
-    } else user.focus()
+        //topic.focus()
+    } //else user.focus()
     </script>
 </body>
 
