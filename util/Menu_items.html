@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="../images/JS.png">
+    <title>Menu Items </title>
+
+  <style>
+    body { max-width: 440px; }
+    #out {
+        color: blue;
+        padding: 10px;
+    }
+    .menu {
+      box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+      position: fixed;
+      border: #ccc 1px solid;
+      color: blue;
+      background-color: #eee;
+      font: 13px sansserif, arial;
+      user-select: none;
+      overflow-y: auto;
+      max-height: 70vh;
+      z-index: 1;
+    }
+    .menuItem {
+      display: block;
+      padding: 10px 12px;
+    }
+    .menuItem:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    .selection {
+      display: block;
+      box-sizing: border-box;
+      border: #ccc 1px solid;
+      padding: 2px 12px;
+      user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+<h2 id=title></h2>
+
+<datalist id=flavors>
+    <option value="Vanilla">
+    <option value="Chocolate">
+    <option value="Coconut">
+    <option value="Cranberry">
+    <option value="Mint">
+    <option value="Melon">
+    <option value="Mulberry">
+    <option value="Strawberry">
+</datalist>
+
+<p>1. ContextMenu <br>
+    <span id=span1 class=selection>
+        <br>ContextMenu is active in this box<br> &nbsp;
+    </span>
+    <div id=menu1 class=menu hidden>
+        <span class=menuItem>
+            Count <input type=number min=0 max=999>
+        </span>
+    </div>
+</p>
+<p>2. Datalist <br>
+<input list=flavors onChange="report(value)">
+</p> 
+<p>3. Select <br>
+<select id=menu3 onChange="report(value)">
+<!-- options will be copied from flavors -->
+</select>
+</p>
+<p>4. SelectMenu <br>
+    <span id=span4 class=selection></span>
+    <div id=menu4 class=menu hidden></div>
+</p>
+
+<p id=out>Output</p>
+
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<script src="Util.js"></script>
+<script>
+"use strict";
+function report(s) {
+    if (s === null) return
+    out.innerText = s; console.log(s);
+}
+    title.innerText = document.title
+    sample.innerText = ContextMenu.toString()
+    let a = [...flavors.options].map(x => x.value)
+    let cm = new ContextMenu(menu1, a, report, 160)
+    span1.oncontextmenu = evt => cm.process(evt)
+    let b = ['', ...a]  //insert '' at b[0]
+    menu3.innerHTML = b.join('<option>')
+    let sm = new SelectMenu(span4, menu4, a, report, 160)
+    span4.onclick = evt => sm.process(evt)
+</script>
+
+</body>
+</html>
