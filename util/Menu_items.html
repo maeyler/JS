@@ -55,25 +55,24 @@
     <option value="Strawberry">
 </datalist>
 
-<p>1. ContextMenu <br>
+<p>class ContextMenu <br>
     <span id=span1 class=selection>
         <br>ContextMenu is active in this box<br> &nbsp;
     </span>
     <div id=menu1 class=menu hidden>
-        <span class=menuItem>
-            Count <input type=number min=0 max=999>
-        </span>
+        <span class=menuItem>Count &nbsp;<input id=counter type=number 
+          value=0 min=0 max=999></span>
     </div>
 </p>
-<p>2. Datalist <br>
+<p>input using datalist <br>
 <input list=flavors onChange="report(value)">
 </p> 
-<p>3. Select <br>
+<p>HTML select <br>
 <select id=menu3 onChange="report(value)">
 <!-- options will be copied from flavors -->
 </select>
 </p>
-<p>4. SelectMenu <br>
+<p>class SelectMenu <br>
     <span id=span4 class=selection></span>
     <div id=menu4 class=menu hidden></div>
 </p>
@@ -84,23 +83,32 @@
 <b>Sample code</b>
 <pre id=sample></pre>
 <hr />
+<p>Ref: 
+  <a href="https://adrianroselli.com/2020/03/stop-using-drop-down.html" 
+    target=NewTab>Stop using 'Drop-down'
+  </a>
 
 <script src="Util.js"></script>
 <script>
 "use strict";
 function report(s) {
     if (s === null) return
-    out.innerText = s; console.log(s);
+    s = (++counter.value) + '. ' + s
+    out.innerText = s; console.log(s)
+}
+function cb(m) { //callback
+    if (m.menu.hidden) { //hide menu
+      report(m.current.innerText)
+    } else { //show menu
+      counter.focus()
+    }
 }
     title.innerText = document.title
-    sample.innerText = ContextMenu.toString()
+    sample.innerText = ContextMenu+'\n'+cb
     let a = [...flavors.options].map(x => x.value)
-    let cm = new ContextMenu(menu1, a, report, 160)
-    span1.oncontextmenu = evt => cm.process(evt)
-    let b = ['', ...a]  //insert '' at b[0]
-    menu3.innerHTML = b.join('<option>')
-    let sm = new SelectMenu(span4, menu4, a, report, 160)
-    span4.onclick = evt => sm.process(evt)
+    let c = new ContextMenu(span1, menu1, a, cb, 160)
+    let s = new SelectMenu(span4, menu4, a, cb, 160)
+    menu3.innerHTML = '<option>' + a.join('<option>')
 </script>
 
 </body>
