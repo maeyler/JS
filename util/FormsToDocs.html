@@ -99,7 +99,7 @@ We need to replace <code>viewform =&gt; formResponse</code> in the link:</p>
 
 <hr>
 <h3>MVC Todo Data</h3>
-<button onclick="tabularData(display)">Read Data</button> &emsp; 
+<button onclick="DOCS.tabularData(display)">Read Data</button> &emsp; 
 <span id=out2></span>
 <pre id=out3></pre>
 <hr>
@@ -122,11 +122,20 @@ So it may be deleted once-in-a-while to save space.</p>
 
 <p>Both ideas are interesting, thank you...</p>
 
-<script src="submitForm.js"></script>
+<script src="Util.js"></script>
 <script>
 "use strict";
+const FORM_URL = "https://docs.google.com/forms/d/e/"
+    +"1FAIpQLScbLFzsO3ugLVVO8TWS28pmsvrGnf9yyFyYv4UIK8tncCA_NA/",
+  //magic numbers in the link are from "Get pre-filled link" menu
+  ENTRIES = ["&entry.1395280695=", "&entry.387807091=", "&entry.1944284271="],
+  FORM = new FormClient(FORM_URL, ENTRIES),
+  DOCS_URL = "https://docs.google.com/spreadsheets/u/1/d/e/"
+    +"2PACX-1vStbPfY8oQuJKDQwIiFwRMs5V6loOPmr3gzc8UQN36z4cbfLZuPedXePhgq9053P7KsDA8YZ42cvBVE/",
+  DOCS = new DocsClient(DOCS_URL)
+
 function submitFormData() { //to Google Forms -- add one line
-    submitData(user.value, topic.value, marks.value)
+    FORM.submitData(user.value, topic.value, marks.value)
     let s = "sumbitted: "+topic.value
     out1.innerText = s; console.log(s)
     topic.select(0, 99); topic.focus()

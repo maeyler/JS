@@ -1,5 +1,7 @@
 "use strict";
-/** Shows a hidden menu upon right-click on a given element
+/** PART#1 -- Menu classes
+ * 
+ * ContextMenu shows a hidden menu upon right-click on a given element
  *  
  * elt and menu must be defined in HTML code
  * items (if any) are added to those already in HTML
@@ -74,7 +76,7 @@ class ContextMenu {
     }
 }
 
-/** Shows a hidden menu upon click on elt
+/** SelectMenu shows a hidden menu upon click on elt
  * 
  *  Text of selected item is displayed in elt */
 class SelectMenu extends ContextMenu {
@@ -117,5 +119,91 @@ class SelectMenu extends ContextMenu {
     selectItem(t) {
         let a = [...this.menu.children]
         this.selectIndex(a.indexOf(t))
+    }
+}
+
+
+/** PART#2 -- Modal dialog classes */
+
+
+/** PART#3 -- Cloud classes 
+ * 
+ * TabularData reads text and converts it to Array of objects
+*/
+class TabularData {
+    constructor(sample, name) {
+      this.name = name
+      this.proto = Object.getPrototypeOf(sample)
+      this.keys = Object.getOwnPropertyNames(sample)
+      console.log(this.name, this)
+      this.data = []
+    }
+    readData(url, callback) {
+      let k = this.keys
+      let toArray = (t) => {
+        for (let s of t.split('\n')) {
+          if (!s) break //end of loop 
+          let b = s.split('\t'); //TAB
+          let n = Math.min(k.length, b.length)
+          let x = {}
+          for (let i=0; i<n; i++)
+              x[k[i]] = b[i]
+          if (n < b.length) { //remainder
+            let r = []
+            for (let i=n-1; i<b.length; i++) 
+                r.push(b[i])
+            x[k[n-1]] = r  //last key
+          }
+          Object.setPrototypeOf(x, this.proto)
+          this.data.push(x)
+        }
+        if (callback) callback(t)
+      }
+      fetch(url).then(x => x.text()).then(toArray)
+    }
+    toString() {
+      return this.keys.join(', ')
+    }
+  }
+  
+// idea from A Rajab https://a0m0rajab.github.io/LearningQuest/googleDocs/submitForm.html
+// https://www.freecodecamp.org/news/cjn-google-sheets-as-json-endpoint/
+// https://bionicteaching.com/silent-submission-of-google-forms/
+
+class FormClient {
+    constructor(url, entries) {
+        this.FORM_URL = url + 'formResponse?usp=pp_url'
+        this.entries = entries
+    }
+    submitData(...data) { //to Google Forms -- add one line
+        if (data.length != this.entries.length) throw "Invalid data"
+        let link = this.FORM_URL
+        for (let i=0; i<data.length; i++) {
+            link += this.entries[i] + data[i]
+        }
+        const post = document.createElement("iframe")
+        post.src = decodeURI(link)
+        post.id = "postID"
+        post.hidden = true;
+        document.body.appendChild(post)
+        const removeElement = () => {post.parentNode.removeChild(post)}
+        setTimeout(removeElement, 2000);
+    }
+}
+
+class DocsClient {
+    constructor(url) {
+        this.DOCS_URL = url + 'pub?output=tsv'
+    }
+    //two ways to read from Google Sheets
+    fetchData(success, failure) { //simplest method
+        fetch(this.DOCS_URL)
+        .then(r => r.text()) 
+        .then(success).catch(failure)
+    }
+    tabularData(success) { //uses fetch
+        const B = {time:0, user:0, topic:0, marks:0}
+        const bm = new TabularData(B, 'Todo marks') 
+        bm.readData(this.DOCS_URL, t => {success(t, bm.data)})
     }
 }
