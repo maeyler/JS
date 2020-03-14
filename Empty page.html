@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
+    <link rel="icon" sizes="192x192" href="images/JS.png">
     <title>Empty Page xxx </title>
 
   <style> /* CSS code in use */
@@ -25,7 +25,7 @@
 
 <h2 id=title></h2>
 
-<input type=button value=xxx onClick="count()">
+<input type=button id=xxx value=Count>
 
 <p id=out></p>
 
@@ -46,11 +46,12 @@ function count() {
     return counter++; 
 }
     //global variable id is the HTML element with id 
-    //const title = document.getElementById("title");
-    title.innerText = document.title;
-    sample.innerText = count.toString();
-    out.innerText = "Modify all items marked xxx";
-    var counter = 0; count();
+    //const title = document.getElementById("title")
+    title.innerText = document.title
+    sample.innerText = count.toString()
+    out.innerText = "Modify all items marked xxx"
+    xxx.onclick = () => count()
+    var counter = 0; count()
 </script>
 
 </body>

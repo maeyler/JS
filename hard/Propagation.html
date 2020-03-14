@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="../images/JS.png">
+    <title>Event Propagation </title>
+
+  <style>
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
+    #out {
+      font-size: 15px;
+      padding: 10px;
+    }
+    ul, table {
+      margin: 12px;
+      display: inline-block;
+    }
+    ul {
+      position: relative;
+      top: -12px; /*???*/
+    }
+    #evt {
+      position: fixed;
+      top: 8px; right: 8px;
+      width: 160px;
+      height: 40px;
+      font: 17px sans-serif;
+      text-align: center;
+      background: lemonchiffon;
+      color: blue;
+    }
+  @media screen and (min-width: 440px) {
+    #evt { left: 288px; }
+  }
+    table { border-collapse: collapse; }
+    th { 
+      color: blue; 
+      padding: 5px 5px; 
+    }
+    td { 
+      border: 1px solid blue; 
+      padding: 5px 5px; 
+      text-align: center; 
+    }
+  </style>
+</head>
+
+<body>
+  
+<h2 id=title></h2>
+<div id=evt></div>
+<p>
+  Two kinds of events are reported above: <code>click and keyup</code>
+</p>
+<p>
+  <input type=text id=txt value='some text'>
+  <input type=button id=but value=Clear> &emsp;
+  <input type=checkbox id=bdy checked>Body only &emsp;
+</p>
+<ul>
+  <li>Vanilla
+  <li>Chocolate
+  <li>Coconut
+  <li>Cranberry
+  <li>Mulberry
+  <li>Strawberry
+</ul>
+<table>
+  <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+  <tr><th>1</th><td>1,1</td><td>1,2</td><td>1,3</td><td>1,4</td></tr>
+  <tr><th>2</th><td>2,1</td><td>2,2</td><td>2,3</td><td>2,4</td></tr>
+  <tr><th>3</th><td>3,1</td><td>3,2</td><td>3,3</td><td>3,4</td></tr>
+</table>
+<hr />
+<pre id=out></pre>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="https://www.sitepoint.com/event-bubbling-javascript/" 
+   target="NewTab">Event capturing & bubbling</a>
+</p>
+
+<script>
+"use strict";
+function addListeners(elt) {
+  function capturing(e) {
+    eventLog('capturing ', this, e.target)
+  }
+  function bubbling(e) {
+    eventLog('bubbling  ', this, e.target)
+  }
+    elt.addEventListener('click', capturing, true)
+    elt.addEventListener('click', bubbling, false)
+    elt.addEventListener('keyup', capturing, true)
+    elt.addEventListener('keyup', bubbling, false)
+    if (elt === window) return
+    for (let n of elt.children) addListeners(n)
+}
+function startLog(e) {
+    out.innerText = ''
+    let t = e.target
+    let n = t.children.length
+    let s = n? n+' children' : t.value || t.innerText
+    let f = e.type+' '+formatNode(t)
+    console.log(f, s)
+    s = e.key || (e.clientX+', '+e.clientY)
+    evt.innerText = f+'\n'+s
+}
+function formatNode(node) {
+    if (node == window) return 'window'
+    let s = node.id? '#'+node.id : ''
+    return node.nodeName+s
+}
+function eventLog(type, node, target) {
+  function eligible(node) {
+    if (!bdy.checked || node===target) return true
+    return node!=window && node!=document 
+        && node!=document.firstElementChild //html
+  }
+  if (eligible(node))
+    out.innerText += type + formatNode(node) +'\n'
+}
+    title.innerText = document.title
+    sample.innerText = addListeners+'\n'+formatNode+'\n'+eventLog
+    but.onclick = () => txt.value=''
+    out.innerText = "output"
+    window.addEventListener('click', startLog, true)
+    window.addEventListener('keyup', startLog, true)
+    addListeners(window); addListeners(document)
+</script>
+
+</body>
+</html>
