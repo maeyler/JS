@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"  content="width=device-width">
     <link rel="stylesheet" href="main.css" media="all">
-    <title>Forms to Sheets</title>
+    <title>Free Cloud Storage</title>
 
   <style>
     input {
@@ -24,7 +24,7 @@
 
 <body>
 
-<h2 id="google-forms-to-docs">Free Cloud Storage</h2>
+<h2 id=title></h2>
 
 <p>A simple, public database to save your data in Google Sheets</p>
 <p>The method described below is only for teaching purposes -- 
@@ -70,7 +70,7 @@ We need to replace <code>viewform =&gt; formResponse</code> in the link:</p>
         <input type="text" id="topic"></p>
     <p><b>Marks</b> &emsp; (C:completed, D:deleted)<br> 
         <input type="text" id="marks"></p>
-    <button onclick="submitFormData()">Submit Data</button> &emsp; 
+    <button id=submit>Submit Data</button> &emsp; 
     <span id=out1></span>
 </div>
 <br>
@@ -99,7 +99,7 @@ We need to replace <code>viewform =&gt; formResponse</code> in the link:</p>
 
 <hr>
 <h3>MVC Todo Data</h3>
-<button onclick="DOCS.tabularData(display)">Read Data</button> &emsp; 
+<button id=reader>Read Data</button> &emsp; 
 <span id=out2></span>
 <pre id=out3></pre>
 <hr>
@@ -134,14 +134,22 @@ const FORM_URL = "https://docs.google.com/forms/d/e/"
     +"2PACX-1vStbPfY8oQuJKDQwIiFwRMs5V6loOPmr3gzc8UQN36z4cbfLZuPedXePhgq9053P7KsDA8YZ42cvBVE/",
   DOCS = new DocsClient(DOCS_URL)
 
-function submitFormData() { //to Google Forms -- add one line
+/** to Google Forms -- add one line */
+function submitFormData() { //
     FORM.submitData(user.value, topic.value, marks.value)
-    let s = "sumbitted: "+topic.value
+    let s = "submitted: "+topic.value
     out1.innerText = s; console.log(s)
     topic.select(0, 99); topic.focus()
 }
-var MAX_ROWS = 20  //for display
-function display(t, d) { //String t, Array d
+/** number of lines to display -- may be modified in console */
+var MAX_ROWS = 20
+/** from Google Docs -- display most recent lines */
+function displayDocsData() {
+  /**
+   * @param {String} t 
+   * @param {Array} d
+   */
+  function display(t, d) {
     let k = d.length - MAX_ROWS
     if (k > 0) {
         let a = t.split('\n')  
@@ -150,15 +158,18 @@ function display(t, d) { //String t, Array d
     }
     out2.innerText = d.length+" items"
     out3.innerText = t; console.log(d)
+  }
+    DOCS.tabularData(display)
 }
-
+    title.innerText = document.title
+    submit.onclick = submitFormData
+    reader.onclick = displayDocsData
     form.href = FORM_URL+'viewform'
     docs.href = DOCS_URL+'pub?output=html'
     //topic.onchange = submitFormData
     if (localStorage.userName) {
         user.value = localStorage.userName
-        //topic.focus()
-    } //else user.focus()
+    }
     </script>
 </body>
 
