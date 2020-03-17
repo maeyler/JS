@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="images/JS.png">
+    <title>TC Kimlik Doğrula </title>
+
+  <style> /* CSS code in use */
+    body { max-width: 440px; }
+    #sample { overflow-x: auto; }
+    #out {
+        font-size: 18px;
+        background: blue;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+Kimlik No 
+<input type=number id=kimlik>
+<p id=out></p>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="https://www.wikiwand.com/tr/T.C._Kimlik_Numaras%C4%B1" 
+   target="NewTab">T.C. Kimlik -- Vikipedia</a><br>
+   <a href="https://matemacik.blogspot.com/2020/03/tc-kimlik-numaras.html"
+   target="NewTab">Matemacik -- yöntem burada</a>
+</p>
+
+<script src="../util/Util.js"></script>
+<script>
+"use strict";
+function report() {
+    let v = kimlik.value
+    let t = verifyTC(v)
+    out.innerText += '\n'+v+' '+t
+    console.log(v, t)
+}
+    title.innerText = document.title
+    sample.innerText = verifyTC.toString()
+    kimlik.onchange = report
+    kimlik.value = 21221221272
+    report()
+</script>
+
+</body>
+</html>

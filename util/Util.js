@@ -207,3 +207,24 @@ class DocsClient {
         bm.readData(this.DOCS_URL, t => {success(t, bm.data)})
     }
 }
+
+function verifyTC(s) {
+    // ilk test için s string olmalı
+    if (typeof s != 'string') s = String(s)
+    // 11 basamaklı sayı (ilk basamak 0 olamaz)
+    const E = /^[1-9][0-9]{10}$/
+    if (!E.test(s)) return 'test hata'
+
+    // şimdi number[] gerekiyor
+    s = [...s].map(i => Number(i))
+    // a, b, c değerlerine bakalım
+    let a=0, b=0, c=s[10]
+    for (let i=0; i<9; i+=2) {
+        a += s[i]; b += s[i+1]
+    }
+    // (a+b)nin son basamağı c olmalı
+    if ((a+b)%10 != c) return 'a+b hata'
+
+    // (8a)nın son basamağı c olmalı
+    return 8*a%10 != c? '8a hata' : true
+}
