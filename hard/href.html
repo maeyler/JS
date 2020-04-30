@@ -25,7 +25,7 @@ body { max-width: 460px; }
     line-height:2em; 
     cursor:pointer;
 }
-[title]:before {
+[title]:after {
     content:attr(title); 
     font-family:sans-serif; 
     position:absolute; 
@@ -35,14 +35,14 @@ body { max-width: 460px; }
     line-height:1.55em; 
     background:blue; color: white;
 }
-#protocol:before {
+[title=protocol]:after {
     width:120%; margin-left:-60%; 
 }
 
-[title] [title]:before {margin-top:1.5em;}
-[title] [title] [title]:before {margin-top:3em;}
+[title] [title]:after {margin-top:1.55em;}
+[title] [title] [title]:after {margin-top:3.1em;}
 
-[title]:hover, :target {
+[title]:hover {
     position:relative; 
     z-index:1; 
     outline:50em solid rgba(255,255,255,.8);
@@ -52,18 +52,18 @@ body { max-width: 460px; }
 
 <body>
 
-<h2 id=title></h2>
-URL <input id=input type="url" onchange="init()">
+<h2 id=heading></h2>
+URL <input id=input type="url">
 <div id=main>
-<span id="href" title="href">
-  <span id="host" title="host">
-    <span id="protocol" title="protocol"></span>//
-    <span id="hostname" title="hostname"></span>:
-    <span id="port" title="port"></span>
+<span title="href">
+  <span title="origin">
+    <span title="protocol"></span>//
+    <span title="hostname"></span>:
+    <span title="port"></span>
   </span>
-  <span id="pathname" title="pathname"></span>
-  <span id="search" title="search"></span>
-  <span id="hash" title="hash"></span>
+  <span title="pathname"></span>
+  <span title="search"></span>
+  <span title="hash"></span>
 </span>
 </div>
 
@@ -78,17 +78,19 @@ URL <input id=input type="url" onchange="init()">
 
 <script>
 "use strict";
-function init(u=input.value) {
-  let url = new URL(u)
+function doInput(evt) {
+  let url = new URL(input.value)
   for (let k in url) {
-    let e = main.querySelector('#'+k)
+    let e = main.querySelector('[title='+k+']')
     if (e && e.childElementCount == 0) 
         e.innerText = url[k]
   }
 }
+heading.innerText = document.title
 input.value = 'https://test.org:8888/foo/bar?q=baz#bang'
-init(); sample.innerText = init
-title.innerText = document.title
+input.onchange = doInput
+sample.innerText = doInput
+doInput()
 </script>
 
 </body>
