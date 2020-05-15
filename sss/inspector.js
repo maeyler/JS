@@ -331,7 +331,7 @@ function inspect(parent, init) {
     if (!MENU) menu.style.visibility="hidden";
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
-    if (sss) for (let x of sss.querySelectorAll("button")) {
+    if (window.sss) for (let x of sss.querySelectorAll("button")) {
        x.onmouseover = (e) => { hideTip(x, true) }
        x.onmouseout  = (e) => { hideTip(x, false) }
     }
