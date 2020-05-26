@@ -19,14 +19,9 @@
 It runs any JS code within JS <br>
 </p>
 <textarea id="code">
-//Two ways of doing sqrt
-//and the active platform
-f = Math.sqrt
-a = 9*100
-e = "Math.sqrt(a)"
-return "f(a) = "+f(a) +"\n"
-      + e +" = "+eval(e) +"\n"
-   + "os: "+ navigator.platform
+a = "9*100"
+e = "Math.sqrt("+a+")"
+return e +" = "+eval(e)
 
 //we can return just one object
 //and only Strings are readable
@@ -48,14 +43,14 @@ return "f(a) = "+f(a) +"\n"
 <script>
 "use strict";
 function magic() {
-    let s = code.value, t;
+    let t = code.value;
     try {
-      t = Function(s).call();
-      console.log("Result: "+t); 
+      t = Function(t).call();
+      console.log(t); 
       out.style.color = "blue";
     } catch (error) {
       t = error;
-      console.log("Error: "+t); 
+      console.error(t); 
       out.style.color = "red";
     }
     out.innerText = t; 
