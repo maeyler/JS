@@ -1,0 +1,38 @@
+    body { 
+        /* max-width: 440px; */
+        background: #bef;
+        font: 14px arial;
+    }
+    body, h2, h3 { margin: 20px; }
+    h2 { margin-bottom: 16px; }
+    li {
+        width: 280px;
+        list-style: none;
+        margin: 8px 0;
+        cursor: pointer;
+    }
+    li img { 
+        width: 90%;
+        background-color: black;
+        padding: 0 5%;
+    }
+    li span {
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+        margin: 8px;
+    }
+    li, iframe, div {
+        display: inline-block;
+    }
+    iframe {
+        width: 560px; height: 315px;
+    }
+    pre { 
+        margin: 2px; 
+        font-size: small;
+    }
+    #editor {
+        vertical-align: top;
+        height: 315px;
+    }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"    content="width=device-width">
+    <meta name="author"      content="M A Eyler, Istanbul, 2020" />
+    <link rel="icon" sizes="192x192" href="../images/JS.png">
+    <link href="play_list.css" rel="stylesheet" media="all">
+    <title>YouTube API </title>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<button id=loader onclick="loadClient()">load</button><br>
+<div id=exec>
+    Play list ID 
+    <input id=listID type=text size=35 value=PLC20F52B96F3E8206>
+    <button onclick="execute()">Run</button>
+    <p id=out></p>
+</div>
+<iframe id=player frameborder="0" allowfullscreen
+  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture">
+</iframe>
+<hr />
+<div id=liste>
+</div>
+<hr />
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+var accessKey, owner
+  /**
+   * https://developers.google.com/explorer-help/guides/code_samples#javascript
+   */
+function loadClient() {
+    const GAPI = "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
+    gapi.client.setApiKey(accessKey); loader.style.display = 'none'
+    return gapi.client.load(GAPI).then(success, console.error)
+}
+function success() {
+    exec.style.display = ''; console.log("GAPI client loaded for API")
+}
+// Make sure the client is loaded before calling this method.
+function execute(list=listID.value) {
+    return gapi.client.youtube.playlistItems.list({
+      "part": "snippet,contentDetails",
+      "maxResults": 30,
+      "playlistId": list
+    }).then(report, console.error);
+}
+function report(response) {
+    let a = response.result.items.reverse()
+    owner = a[0].snippet.channelTitle
+    a = a.map(x=> ({topic:x.snippet.title, link:x.contentDetails.videoId}))
+    console.log(owner, a); useData(a)  //fill data
+    out.innerText = a.length+' items by '+owner
+    //navigator.clipboard.writeText(a.join('\n') )
+  }
+// Interaction
+function askUser() {
+    let k = prompt('Please enter Google API key:')
+    if (k) return k
+    const ERR = 'You need an API key'
+    alert(ERR); out.innerText = ERR; console.error(ERR)
+}
+function getAPIkey() {
+    if (origin.startsWith('http') && localStorage) {
+        if (!localStorage.keys) localStorage.keys = '{}'
+        let keys = JSON.parse(localStorage.keys)
+        if (!keys.googleAPI) {
+           keys.googleAPI = askUser()
+           localStorage.keys = JSON.stringify(keys)
+        }
+        accessKey = keys.googleAPI
+    } else { //cannot use localStorage
+        accessKey = askUser()
+    }
+}
+function doClick(evt) {
+    let t = evt.target
+    let h = t.ref || t.parentNode.ref
+    console.log(t.tagName, h)
+    if (h) player.src = h
+}
+function useData(data) {
+    const IMG1 = 'https://img.youtube.com/vi/'
+    const IMG2 = '/0.jpg' //mqdefault is smaller
+    const HREF = 'https://www.youtube.com/embed/'
+    liste.innerText = '' //clear list
+    for (let x of data) {
+        let t = document.createElement('li')
+        let i = document.createElement('img')
+        i.src = IMG1+x.link+IMG2; t.append(i)
+        let a = document.createElement('span')
+        a.innerText = x.topic; t.append(a)
+        t.ref = HREF+x.link; liste.append(t)
+    }
+    player.src = liste.querySelector('li').ref
+}
+    gapi.load("client"); getAPIkey();
+    title.innerText = document.title
+    exec.style.display = 'none'
+    liste.onclick = doClick
+</script>
+
+</body>
+</html>

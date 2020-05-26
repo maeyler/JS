@@ -5,54 +5,14 @@
     <meta name="viewport"    content="width=device-width">
     <meta name="author"      content="M A Eyler, Istanbul, 2020" />
     <link rel="icon" sizes="192x192" href="../images/JS.png">
+    <link href="play_list.css" rel="stylesheet" media="all">
     <title>Video play list </title>
-
-  <style>
-    body { 
-        /* max-width: 440px; */
-        background: #bef;
-        font: 14px arial;
-    }
-    body, h2, h3 { margin: 20px; }
-    h2 { margin-bottom: 16px; }
-    li {
-        width: 280px;
-        list-style: none;
-        margin: 8px 0;
-        cursor: pointer;
-    }
-    li img { 
-        width: 90%;
-        background-color: black;
-        padding: 0 5%;
-    }
-    li span {
-        display: inline-block;
-        vertical-align: top;
-        text-align: center;
-        margin: 8px;
-    }
-    li, iframe, div {
-        display: inline-block;
-    }
-    iframe {
-        width: 560px; height: 315px;
-    }
-    pre { 
-        margin: 2px; 
-        font-size: small;
-    }
-    #editor {
-        vertical-align: top;
-        height: 315px;
-    }
-  </style>
 </head>
 
 <body>
 
 <h2 id=title></h2>
-<div id=editor>
+<div>
   <textarea id=data rows=12 cols=64></textarea><br>
   Open Dev Tools on YouTube playlist page and do the following:
   <pre>[...document.querySelectorAll('ytd-playlist-video-renderer')].map(x => 
@@ -87,6 +47,7 @@ Kumanda kimde?	eHi0Vz6whNM
 Kelimeler arasında	rjjoJIRdG1k
 Davullar kimin için çalıyor?	in2jHEGhX-E
 Çok gezen ne bilir?	xysXdujMWVI`
+
 function doClick(evt) {
     let t = evt.target
     let h = t.ref || t.parentNode.ref
@@ -95,7 +56,8 @@ function doClick(evt) {
 }
 function useData() {
     const IMG1 = 'https://img.youtube.com/vi/'
-    const IMG2 = '/mqdefault.jpg' //hqdefault is larger
+    const IMG2 = '/0.jpg' //mqdefault is smaller
+    //https://boingboing.net/features/getthumbs
     const HREF = 'https://www.youtube.com/embed/'
     liste.innerText = '' //clear list
     for (let s of data.value.split('\n')) {
@@ -114,12 +76,6 @@ function useData() {
     useDat.onclick= useData
     data.value = DATA
     useData()
-    
-/* How to get DATA from youtube play list
-[...document.querySelectorAll('ytd-playlist-video-renderer')].map(x => 
-x.querySelector('[title]').title+'\t'+
-x.querySelector('[href]').href.substring(32,43)).reverse().join('\n')
-*/
 </script>
 
 </body>
