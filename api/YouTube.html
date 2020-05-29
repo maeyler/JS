@@ -95,6 +95,7 @@ function useData(data) {
     }
     player.src = liste.querySelector('li').ref
 }
+    if (!access._key) throw 'You need an API key'
     gapi.load("client")
     title.innerText = document.title
     setTimeout(loadClient, 200)

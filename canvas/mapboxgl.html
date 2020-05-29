@@ -49,8 +49,10 @@
    target="NewTab">MapBox Example</a>
 </p>
 
+<script src="../util/Util.js"></script>
 <script>
 "use strict";
+const access = new KeyHolder('mapbox')
 var MAP; //global object from mapboxgl
 function mapType(sat) {
     MAP.setStyle(sat?
@@ -89,27 +91,15 @@ function zoom() {
     if (z <= MIN) incr = 1;
     setTimeout(zoom, 700);
 }
-function askUser() {
-    let k = prompt('Please enter mapbox key:')
-    if (k) return k
+function error() {
     map.style.display = "none";  //hide
     err.style.display = "block"; //show
     throw 'You need an API access token'
 }
-
+    if (!access._key) error()
     title.innerText = document.title;
     sample.innerText = init;
-    if (origin.startsWith('http') && localStorage) {
-        if (!localStorage.keys) localStorage.keys = '{}'
-        let keys = JSON.parse(localStorage.keys)
-        if (!keys.mapbox) {
-           keys.mapbox = askUser()
-           localStorage.keys = JSON.stringify(keys)
-        }
-        mapboxgl.accessToken = keys.mapbox
-    } else { //cannot use localStorage
-        mapboxgl.accessToken = askUser()
-    }
+    mapboxgl.accessToken = access._key
     //initial coordinates are given: 50. Yil Parki
     init({lat:40.970021, lng:29.057876});
 </script>

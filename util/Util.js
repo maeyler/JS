@@ -239,7 +239,7 @@ class KeyHolder {
           if (k) return k
           const ERR = 'You need an API key'
           console.error(ERR)
-          if (out) out.innerText = ERR
+          if (window.out) out.innerText = ERR
       }
       this.name = name
       if (origin.startsWith('http') && localStorage) {

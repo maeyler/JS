@@ -71,12 +71,13 @@
 </p>
 <p id=refs>Ref: 
   <a href="http://eecs.oregonstate.edu/ecampus-video/CS290/core-content/ajax-forms/js-http.html" 
-   target="NewTab">openweathermap example</a> (old)<br>
+   target="NewTab">openweathermap example</a> (xhttp code)<br>
 </p>
-<p>Bu eski yöntem, 2015'ten beri fetch() kullanıyoruz
-</p>
+<pre id=sample>//Better to use fetch()
+</pre>
 </div>
 
+<script src="../util/Util.js"></script>
 <script>
 "use strict";
 // Clock
@@ -126,11 +127,11 @@ function getLocation1(p) { //Accurate
     askWeather()
 }
 // Weather
-var accessKey;
+const access = new KeyHolder('openweather')
 function askWeather() {
     console.log(lat, lon); 
     const url = "https://api.openweathermap.org/data/2.5/weather?"
-    let u = url+"lat="+lat+"&lon="+lon+"&APPID="+accessKey;
+    let u = url+"lat="+lat+"&lon="+lon+"&APPID="+access._key;
     hava.innerText = "getting weather"
     detay.innerText = ''
     gunes.innerText = ''
@@ -173,35 +174,16 @@ function convert(kelvin){
     //return celsius*1.8 + 32
 }
 // Interaction
-function askUser() {
-    let k = prompt('Please enter openweather key:')
-    if (!k) error('You need an API key')
-    return k
-}
 function error(e) {
     main.style.display = "none"; //hide
-    refs.style.display = "none";
     err.style.display = ''; //show
     throw e
 }
-function getAPIkey() {
-    if (origin.startsWith('http') && localStorage) {
-        if (!localStorage.keys) localStorage.keys = '{}'
-        let keys = JSON.parse(localStorage.keys)
-        if (!keys.openweather) {
-           keys.openweather = askUser()
-           localStorage.keys = JSON.stringify(keys)
-        }
-        accessKey = keys.openweather
-    } else { //cannot use localStorage
-        accessKey = askUser()
-    }
-}
-
+    if (!access._key) error('You need an API key')
     err.style.display = "none";
     window.onfocus = setHourMin;
-    setHourMin(); count(); 
-    getAPIkey(); showIcon('01n');
+    sample.innerText += askWeather
+    setHourMin(); count(); showIcon('01n');
     navigator.permissions.query({name:'geolocation'})
     .then(askLocation);
 </script>
