@@ -1,10 +1,9 @@
     body { 
-        /* max-width: 440px; */
         background: #bef;
         font: 14px arial;
     }
-    body, h2, h3 { margin: 20px; }
-    h2 { margin-bottom: 16px; }
+    body, h2, h3 { margin: 8px; }
+    /* h2, div { margin-bottom: 16px; } */
     li {
         width: 280px;
         list-style: none;
@@ -32,7 +31,6 @@
         margin: 2px; 
         font-size: small;
     }
-    #editor {
-        vertical-align: top;
-        height: 315px;
+    #out {
+        font-size: larger;
     }

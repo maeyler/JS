@@ -208,6 +208,9 @@ class DocsClient {
     }
 }
 
+/** PART#4 - various utilities
+ * verifyTC, KeyHolder
+ */
 function verifyTC(s) {
     // ilk test için s string olmalı
     if (typeof s != 'string') s = String(s)
@@ -228,3 +231,29 @@ function verifyTC(s) {
     // (8a)nın son basamağı c olmalı
     return 8*a%10 != c? '8a hata' : true
 }
+
+class KeyHolder {
+    constructor(name) {
+      function askUser() {
+          let k = prompt('Please enter key for '+name)
+          if (k) return k
+          const ERR = 'You need an API key'
+          console.error(ERR)
+          if (out) out.innerText = ERR
+      }
+      this.name = name
+      if (origin.startsWith('http') && localStorage) {
+          if (!localStorage.keys) localStorage.keys = '{}'
+          let keys = JSON.parse(localStorage.keys)
+          if (!keys[name]) {
+             keys[name] = askUser()
+             localStorage.keys = JSON.stringify(keys)
+          }
+          this._key = keys[name]
+      } else { //cannot use localStorage
+          this._key = askUser()
+      }
+    }
+}
+
+//export { ContextMenu, SelectMenu, TabularData, verifyTC, KeyHolder }

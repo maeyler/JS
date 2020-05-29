@@ -17,26 +17,23 @@ SSS V1.31
 
 SSS V1.30
 =========
-* Menu.toTree(File): check if zip/jar file or directory
+function verifyTC(s) {
+    // ilk test için s string olmalı
+    if (typeof s != 'string') s = String(s)
+    // 11 basamaklı sayı (ilk basamak 0 olamaz)
+    const E = /^[1-9][0-9]{10}$/
+    if (!E.test(s)) return 'test hata'
 
-* TimerLoader: add identity (just a counter)
+    // şimdi number[] gerekiyor
+    s = [...s].map(i => Number(i))
+    // a, b, c değerlerine bakalım
+    let a=0, b=0, c=s[10]
+    for (let i=0; i<9; i+=2) {
+        a += s[i]; b += s[i+1]
+    }
+    // (a+b)nin son basamağı c olmalı
+    if ((a+b)%10 != c) return 'a+b hata'
 
-SSS V1.29
-=========
-* More.listClasses(ClassLoader)
-
-* More.toZipFile(File)
-
-* Menu.toTree(Container): do not expand JScrollPane
-
-SSS V1.28
-=========
-* ParamDialog: center correctly
-
-* More.getFrames() and More.getThreads()
-
-* classes can be removed
-
-* Menu$Loader -> mae.util.TimerLoader
-  Menu$Filter -> mae.util.SimpleFilter
-  Inspector$Data (becomes inner class)
+    // (8a)nın son basamağı c olmalı
+    return 8*a%10 != c? '8a hata' : true
+}
