@@ -19,7 +19,7 @@
         <input id=maxNum type=number value=30 style="width:40px;"><br><br>
         Play list ID 
         <input id=listID type=text size=35 value=PLC20F52B96F3E8206>
-        <button onclick="execute()">Run</button>
+        <button onclick="location.hash=listID.value">Run</button>
     </p>
     <p id=out>Please reload if not started automatically</p>
 </div>
@@ -32,10 +32,11 @@
 <hr />
 
 <script src="https://apis.google.com/js/api.js"></script>
-<script src="../util/Util.js"></script>
+<!-- <script src="../util/Util.js"></script> -->
 <script>
 "use strict";
-const access = new KeyHolder('googleAPI')
+const access = { _key:'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU' } 
+        //new KeyHolder('googleAPI')
 var chanTitle, listTitle
   /**
    * https://developers.google.com/explorer-help/guides/code_samples#javascript
@@ -49,6 +50,7 @@ function loadClient() {
 function success() {
     exec.hidden = false; out.innerText = "GAPI client loaded"
     console.log("GAPI client loaded for youtube API")
+    hashModified()
 }
 // Make sure the client is loaded before calling this method.
 function execute(id = listID.value) {
@@ -69,7 +71,7 @@ function getTitle(response) {
     console.log(listTitle, x)
   }
 function getItems(response) {
-    let a = response.result.items.reverse()
+    let a = response.result.items  //might .reverse()
     console.log('getItems', a)
     a = a.map(x => ({tit:x.snippet.title, vid:x.snippet.resourceId.videoId}))
     out.innerText = a.length+' items by '+chanTitle+'\n'+listTitle
@@ -98,9 +100,16 @@ function useData(data) {
     }
     player.src = liste.querySelector('li').ref
 }
+function hashModified() {
+    let id = location.hash
+    if (!id) return
+    console.log('hashModified', id)
+    listID.value = id.substring(1); execute()
+}
     if (!access._key) throw 'You need an API key'
     gapi.load("client")
     title.innerText = document.title
+    window.onhashchange = hashModified
     setTimeout(loadClient, 200)
     liste.onclick = doClick
 </script>
