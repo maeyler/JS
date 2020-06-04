@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport"    content="width=device-width">
       <link rel="icon" sizes="192x192" href="../images/JS.png">
-      <title>Bouncing balls </title>
+      <title>Colliding balls </title>
       <style>
          body { margin: 0; }
          p { margin: 8px; }
@@ -16,9 +16,10 @@
       <canvas></canvas>
       <p><a target="NewTab"
 href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_building_practice">
-         Bouncing balls</a> &emsp; &emsp;
-         Number = <input id=maxNum type=number value=10>
-         <button onclick="start()">Run</button>
+         Bouncing</a> &emsp;
+         Balls:<input id=maxNum type=number value=16>
+         <button onclick="start()">Run</button> &emsp;
+         <input id=collide type=checkbox>Collide
       </p>
 <script>
 "use strict";
@@ -31,58 +32,101 @@ function random(min, max) {
 }
 function randomColor() { //exclude too dark colors
    let r=random(0,255), g=random(0,255), b=random(0,255)
-   while (r+g+b < 20) { r++; g++, b++ }
+   while (r+g+b < 60) { r+=3; g+=3, b+=3 }
    return 'rgb('+r+','+g+','+b+')'
 }
 
-class Ball {
-   constructor(x, y, velX, velY, color, size) {
+class Vector {
+   constructor(x, y) {
       this.x = x;
       this.y = y;
-      this.velX = velX;
-      this.velY = velY;
+   }
+   plus(k, that) {
+      return new Vector(this.x + k*that.x, this.y + k*that.y)
+   }
+   minus(that) {
+      return this.plus(-1, that)
+   }
+   inner(that) {
+      return this.x*that.x + this.y*that.y
+   }
+   get lenSqr() {
+      return this.inner(this)
+   }
+   get length() {
+      return Math.sqrt(this.lenSqr)
+   }
+   distance(that) {
+      return this.minus(that).length
+   }
+}
+
+class Ball {
+   constructor(pos, vel, color, size) {
+      this.pos = pos;
+      this.vel = vel;
       this.color = color;
       this.size = size;
    }
    draw() {
-      ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-      ctx.fill();
+      ctx.beginPath(); ctx.fillStyle = this.color
+      ctx.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI)
+      ctx.fill()
    }
    update() {
-      if ((this.x+this.size) >= canvas.width)
-         this.velX = -(this.velX);
-      if ((this.x - this.size) <= 0)
-         this.velX = -(this.velX);
-      if ((this.y+this.size) >= canvas.height)
-         this.velY = -(this.velY);
-      if ((this.y - this.size) <= 0)
-         this.velY = -(this.velY);
-      this.x += this.velX;
-      this.y += this.velY;
+      if (this.pos.x + this.size >= canvas.width)
+         this.vel.x = -this.vel.x;
+      if (this.pos.x - this.size <= 0)
+         this.vel.x = -this.vel.x;
+      if (this.pos.y + this.size >= canvas.height)
+         this.vel.y = -this.vel.y;
+      if (this.pos.y - this.size <= 0)
+         this.vel.y = -this.vel.y;
+      this.pos.x += this.vel.x
+      this.pos.y += this.vel.y
    }
    collidesWith(b) {
-      let dx = this.x - b.x;
-      let dy = this.y - b.y;
-      let distance = Math.sqrt(dx * dx + dy * dy);
-      return (distance < this.size + b.size)
+      //  d = Math.sqrt(dx * dx + dy * dy)
+      let d = this.pos.distance(b.pos)
+      return (d < this.size + b.size)
    }
 }
 function animate() {
    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'
    ctx.fillRect(0, 0, canvas.width, canvas.height)
-   for (let i=0; i<balls.length; i++) {
-      let b = balls[i];
+   for (let b of balls) {
       b.draw(); b.update()
+   }
+   for (let i=0; i<balls.length; i++) {
+      let b1 = balls[i];
       for (let j=0; j<i; j++) {
-         let x = balls[j];
-         if (x.collidesWith(b)) {
-            b.color = x.color = randomColor()
-         }
+         let b2 = balls[j];
+         if (!b1.collidesWith(b2)) continue
+         b1.color = b2.color = randomColor()
+         if (!collide.checked) continue
+         // https://en.wikipedia.org/wiki/Elastic_collision
+         let dx = b2.pos.minus(b1.pos) // x2-x1
+         let dv = b2.vel.minus(b1.vel) // v2-v1
+         let m = b1.size + b2.size     // m1+m2
+         let k = (2/m)*dv.inner(dx)/dx.inner(dx)
+         b1.vel = b1.vel.plus(+k*b2.size, dx)
+         b2.vel = b2.vel.plus(-k*b1.size, dx)
       }
    }
    id = requestAnimationFrame(animate)
+   // if (id%100 == 0) total()
+}
+function total(log) {
+   let px = 0, py = 0, te = 0
+   for (let b of balls) {
+      px += b.size * b.vel.x
+      py += b.size * b.vel.y
+      te += b.size * b.vel.lenSqr
+   }
+   te = te.toPrecision(4)
+   if (!log) return te
+   console.log('Total momentum & energy')
+   console.log(px.toPrecision(3), py.toPrecision(3), te)
 }
 function start() {
    if (id) cancelAnimationFrame(id)
@@ -92,14 +136,14 @@ function start() {
    balls = [];
    while (balls.length < nBalls) {
       let size = random(10, 20)
-      let ball = new Ball(
+      let pos = new Vector(
          random(size, canvas.width - size),
          random(size, canvas.height - size),
-         random(-7, 7), random(-7, 7), randomColor(), size
       )
-      balls.push(ball)
+      let vel = new Vector(random(-7, 7), random(-7, 7))
+      balls.push(new Ball(pos, vel, randomColor(), size))
    }
-   animate()
+   total(true); animate()
 }
 start()
 </script>
