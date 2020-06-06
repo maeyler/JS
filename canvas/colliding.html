@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-US">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width">
+      <meta name="author" content="M A Eyler, Istanbul, 2020">
+      <link rel="icon" sizes="192x192" href="../images/JS.png">
+      <title>Colliding balls </title>
+      <style>
+        body { margin: 0; }
+        p { margin: 8px; }
+        #maxNum { width: 40px; }
+      </style>
+   </head>
+  
+   <body>
+      <canvas id=canvas></canvas>
+      <p><a target="NewTab" href="https://maeyler.github.io/JS/canvas/bouncing.html">
+        First version</a> &emsp;
+        Balls:<input id=maxNum type=number value=16
+        title="Set number of balls, then click Run">
+        <button onclick="start()">Run</button> &emsp;
+        <button onclick="heatUp(1/1.05 - 1)" 
+        title="Decrease total energy by 5%">Cooler</button>
+        <button onclick="heatUp(0.05)"
+        title="Increase total energy by 5%">Warmer</button>
+      </p>
+<script>
+"use strict";
+const ctx = canvas.getContext('2d')
+var balls = [], id = 0;
+
+function random(min, max) {
+   return min + Math.random() * (max-min)
+}
+function randInt(min, max) {
+   return min + Math.floor(Math.random() * (max-min+1))
+}
+function randomColor() { //exclude too dark colors
+   let r=randInt(0,255), g=randInt(0,255), b=randInt(0,255)
+   if (r+g+b < 100) return randomColor()
+   return 'rgb('+r+','+g+','+b+')'
+}
+
+class Vector {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+    }
+    add(k, that) { //modifies this object
+      this.x += k*that.x; this.y += k*that.y
+    }
+    plus(that) { //returns new object
+      return new Vector(this.x + that.x, this.y + that.y)
+    }
+    minus(that) { //returns new object
+      return new Vector(this.x - that.x, this.y - that.y)
+    }
+    inner(that) { //returns number
+      return this.x*that.x + this.y*that.y
+    }
+    get lenSqr() {
+      return this.inner(this)
+    }
+    get length() {
+      return Math.sqrt(this.lenSqr)
+    }
+    distance(that) {
+      return this.minus(that).length
+    }
+}
+
+//Ball and bouncing logic is based on 
+//https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_building_practice
+class Ball {
+    constructor(pos, vel, color, size) {
+      this.pos = pos;
+      this.vel = vel;
+      this.color = color;
+      this.size = size;
+    }
+    draw() {
+      ctx.beginPath(); ctx.fillStyle = this.color
+      ctx.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI)
+      ctx.fill()
+    }
+    update(t=1) {
+      if (this.pos.x + this.size >= canvas.width)
+         this.vel.x = -Math.abs(this.vel.x);
+      if (this.pos.x - this.size <= 0)
+         this.vel.x =  Math.abs(this.vel.x);
+      if (this.pos.y + this.size >= canvas.height)
+         this.vel.y = -Math.abs(this.vel.y);
+      if (this.pos.y - this.size <= 0)
+         this.vel.y =  Math.abs(this.vel.y);
+      this.pos.x += this.vel.x * t
+      this.pos.y += this.vel.y * t
+    }
+    collidesWith(b) { //not used
+      //  d = Math.sqrt(dx * dx + dy * dy)
+      let p = this.pos.plus(this.vel)
+      let d = p.distance(b.pos.plus(b.vel))
+      return (d < this.size + b.size)
+    }
+}
+
+function collisionData(b1, b2) {
+//based on https://en.wikipedia.org/wiki/Elastic_collision
+    let dx = b2.pos.minus(b1.pos) // x2-x1
+    let dv = b2.vel.minus(b1.vel) // v2-v1
+    let m = b1.size + b2.size     // m1+m2
+    let k = (2/m)*dv.inner(dx)/dx.inner(dx)
+    return {dv, dx, m, k}
+}
+function checkCollision(i) {
+    //Original contribution by M A Eyler
+    let b1 = balls[i], t = 1, col = []
+    for (let j=i+1; j<balls.length; j++) {
+        let b2 = balls[j];
+        let {dv, dx, m, k} = collisionData(b1, b2)
+        let a = dv.lenSqr
+        if (a < 0.0001) continue //same velocity
+        let b = dv.inner(dx)/a
+        let c = (dx.lenSqr - m*m)/a
+        //solve t^2 + 2b*t + c = 0
+        if (b*b < c) continue //no real solution 
+        if (1+2*b+c > 0) continue //solution t>1
+        let tt = (-b-Math.sqrt(b*b-c))
+        // if (tt > 1) continue -- should not happen
+        t = Math.min(t, tt) //collision time with b2
+        b1.color = b2.color = randomColor()
+        col.push(b2)
+    }
+    if (col.length > 2) console.log(col)
+    b1.update(t) //t==1 if no collision detected
+    for (let b2 of col) {
+        b2.update(t)
+        let {dx, k} = collisionData(b1, b2)
+        b1.vel.add(+k*b2.size, dx)
+        b2.vel.add(-k*b1.size, dx)
+    }
+}
+function animate() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    for (let b of balls) b.draw()
+    for (let i=0; i<balls.length; i++)
+      checkCollision(i)
+    id = requestAnimationFrame(animate)
+}
+function total(log) {
+    let px = 0, py = 0, te = 0
+    for (let b of balls) {
+      px += b.size * b.vel.x
+      py += b.size * b.vel.y
+      te += b.size * b.vel.lenSqr
+    }
+    te = te.toPrecision(4)
+    if (!log) return te
+    console.log('Total momentum & energy')
+    console.log(px.toPrecision(3), py.toPrecision(3), te)
+}
+function heatUp(a) {
+    for (let b of balls)
+        b.vel.add(a, b.vel)
+    total(true)
+}
+function start() {
+    if (id) cancelAnimationFrame(id)
+    canvas.width = window.innerWidth - 4
+    canvas.height = window.innerHeight - 50
+    let nBalls = maxNum.value || 10
+    balls = [];
+    while (balls.length < nBalls) {
+      let size = randInt(10, 20)
+      let pos = new Vector(
+        random(size, canvas.width - size),
+        random(size, canvas.height - size),
+      )
+      let vel = new Vector(random(-7, 7), random(-7, 7))
+      balls.push(new Ball(pos, vel, randomColor(), size))
+    }
+    total(true); animate()
+}
+start()
+</script>
+  </body>
+</html>
