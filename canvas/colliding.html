@@ -5,26 +5,31 @@
       <meta name="viewport" content="width=device-width">
       <meta name="author" content="M A Eyler, Istanbul, 2020">
       <link rel="icon" sizes="192x192" href="../images/JS.png">
+      <link rel="stylesheet" href="../util/Util.css" media="all">
       <title>Colliding balls </title>
       <style>
         body { margin: 0; }
         p { margin: 8px; }
         #maxNum { width: 40px; }
+        #run { font-family: monospace; }
+        .selection { display: inline-block; }
       </style>
    </head>
   
    <body>
       <canvas id=canvas></canvas>
-      <p><a target="NewTab" href="https://maeyler.github.io/JS/canvas/bouncing.html">
-        First version</a> &emsp;
-        Balls:<input id=maxNum type=number value=16
-        title="Set number of balls, then click Run">
-        <button onclick="start()">Run</button> &emsp;
-        <button onclick="heatUp(1/1.05 - 1)" 
-        title="Decrease total energy by 5%">Cooler</button>
-        <button onclick="heatUp(0.05)"
-        title="Increase total energy by 5%">Warmer</button>
+      <p>
+        <span id=span4 class=selection
+        title="Right-click for context-menu">☰</span>&emsp;
+        Balls:<input id=maxNum type=number value=60
+        title="Enter number of balls -- actual number may be different">
+        <button id=run title="Run/Pause">Run</button>&emsp;
+        <button id=cool title="Decrease speed of each ball by 5%">Cooler</button>
+        <button id=warm title="Increase speed of each ball by 5%">Warmer</button>
       </p>
+      <div id=menu4 class=menu hidden></div>
+
+<script src="../util/Util.js"></script>
 <script>
 "use strict";
 const ctx = canvas.getContext('2d')
@@ -73,16 +78,21 @@ class Vector {
 //Ball and bouncing logic is based on 
 //https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_building_practice
 class Ball {
-    constructor(pos, vel, color, size) {
+    constructor(pos, vel, size, color, id) {
       this.pos = pos;
       this.vel = vel;
-      this.color = color;
       this.size = size;
+      this.color = color;
+      if (id !== undefined) this.id = id
     }
     draw() {
+      let x = this.pos.x, y = this.pos.y
       ctx.beginPath(); ctx.fillStyle = this.color
-      ctx.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI)
+      ctx.arc(x, y, this.size, 0, 2 * Math.PI)
       ctx.fill()
+      if (this.id === undefined) return
+      ctx.fillStyle = "black"
+      ctx.fillText(this.id, x-5, y+5)
     }
     update(t=1) {
       if (this.pos.x + this.size >= canvas.width)
@@ -96,10 +106,9 @@ class Ball {
       this.pos.x += this.vel.x * t
       this.pos.y += this.vel.y * t
     }
-    collidesWith(b) { //not used
+    collidesWith(b) {
       //  d = Math.sqrt(dx * dx + dy * dy)
-      let p = this.pos.plus(this.vel)
-      let d = p.distance(b.pos.plus(b.vel))
+      let d = this.pos.distance(b.pos)
       return (d < this.size + b.size)
     }
 }
@@ -114,7 +123,7 @@ function collisionData(b1, b2) {
 }
 function checkCollision(i) {
     //Original contribution by M A Eyler
-    let b1 = balls[i], t = 1, col = []
+    let b1 = balls[i], t = 1, list = []
     for (let j=i+1; j<balls.length; j++) {
         let b2 = balls[j];
         let {dv, dx, m, k} = collisionData(b1, b2)
@@ -128,22 +137,29 @@ function checkCollision(i) {
         let tt = (-b-Math.sqrt(b*b-c))
         // if (tt > 1) continue -- should not happen
         t = Math.min(t, tt) //collision time with b2
-        b1.color = b2.color = randomColor()
-        col.push(b2)
+        // if (Math.random() < 0.5)  doesn't work
+        //      b1.color = b2.color  just one color
+        // else b2.color = b1.color  prevails
+        if (randomize)
+            b1.color = b2.color = randomColor()
+        list.push(b2)
     }
-    if (col.length > 2) console.log(col)
+    if (list.length > 2) console.log(list)
     b1.update(t) //t==1 if no collision detected
-    for (let b2 of col) {
+    for (let b2 of list) {
         b2.update(t)
         let {dx, k} = collisionData(b1, b2)
         b1.vel.add(+k*b2.size, dx)
         b2.vel.add(-k*b1.size, dx)
     }
 }
-function animate() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'
+function drawBalls(alfa) {
+    ctx.fillStyle = 'rgba(0, 0, 0, '+alfa+')'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     for (let b of balls) b.draw()
+}
+function animate() {
+    drawBalls(0.25); run.innerText = '||'
     for (let i=0; i<balls.length; i++)
       checkCollision(i)
     id = requestAnimationFrame(animate)
@@ -165,24 +181,111 @@ function heatUp(a) {
         b.vel.add(a, b.vel)
     total(true)
 }
-function start() {
+function pause() {
     if (id) cancelAnimationFrame(id)
+    id = undefined; run.innerText = '▶'
+}
+function start(initCB) {
+    pause(); current = initCB
     canvas.width = window.innerWidth - 4
     canvas.height = window.innerHeight - 50
-    let nBalls = maxNum.value || 10
-    balls = [];
-    while (balls.length < nBalls) {
+    balls = []; maxNum.value = initCB()
+    total(true); drawBalls(1)
+}
+function defBalls() {
+    randomize = true
+    let iter = 0; let num = 0
+    let max = maxNum.value || 10
+    while (num < max && iter++ < 2*max) {
       let size = randInt(10, 20)
       let pos = new Vector(
         random(size, canvas.width - size),
         random(size, canvas.height - size),
       )
-      let vel = new Vector(random(-7, 7), random(-7, 7))
-      balls.push(new Ball(pos, vel, randomColor(), size))
+      let b = new Ball(pos, null, size, null, num)
+      if (balls.some(x => b.collidesWith(x))) continue
+      b.vel = new Vector(4, random(-0.1, 0.1))
+      // new Vector(random(-7, 7), random(-7, 7))
+      b.color = randomColor()
+      balls.push(b); num++
     }
-    total(true); animate()
+    return num
 }
-start()
+function brownian() {
+    randomize = false; const size = 3
+    let pos = new Vector(canvas.width/2, canvas.height/2)
+    let vel = new Vector(0, 0)
+    const B = new Ball(pos, vel, 60, 'orange') //large ball
+    balls = [B]; let num = 0; let iter = 0
+    const max = maxNum.value || 90
+    while (num < max && iter++ < 2*max) {
+      pos = new Vector(
+        random(size, canvas.width - size),
+        random(size, canvas.height - size),
+      )
+      let b = new Ball(pos, null, size)
+      if (balls.some(x => b.collidesWith(x))) continue
+      b.vel = new Vector(random(-5, 5), random(-5, 5))
+      b.color = 'cyan'
+      balls.push(b); num++
+    }
+    return num
+}
+function evaporate() {
+    randomize = false; const size = 3, D = 2*size+1
+    const M = Math.floor(canvas.width/D) //balls per row
+    const max = maxNum.value || 200
+    const N = Math.min(5, Math.ceil(max/M)) //rows
+    let x = size, y = canvas.height - N*D, num = 0
+    while (num < N*M) {
+      let pos = new Vector(x, y)
+      let vel = new Vector(0, 0)
+      if (num < M) //top row moves up
+        vel = new Vector(random(-1, 1), random(-6, -3)) 
+      let b = new Ball(pos, vel, size)
+      b.color = 'yellow'
+      balls.push(b); num++; x += D
+      if (x+size < canvas.width) continue
+      x = size; y += D  //next row
+    }
+    return num
+}
+const
+  FIRST = "https://maeyler.github.io/JS/canvas/bouncing.html",
+  ART = "https://matemacik.blogspot.com/2020/06/carpsan-toplar.html",
+  MENU = ['Matemacik (in Turkish)', 'First version', '<hr>', 
+          'Random balls', 'Brownian motion', 'Solid evaporation']
+function cb(m) { //callback
+    if (!m.menu.hidden) return
+    let s = m.current.innerText
+    switch (MENU.indexOf(s)) {
+        case 0: location = ART; break;
+        case 1: location = FIRST; break;
+        case 3: start(defBalls); break;
+        case 4: start(brownian); break;
+        case 5: start(evaporate); break;
+        default: console.log(s)
+    }
+}
+function doClick(evt) {
+    if (id) pause(); else animate()
+}
+function doKey(evt) {
+    if (evt.key == 'Escape') 
+        pause()
+    if (evt.key == 'Enter')
+        start(current)
+}
+var current  //configuration
+var randomize // colors?
+run.onclick  = doClick
+cool.onclick = e => heatUp(1/1.05 - 1)
+warm.onclick = e => heatUp(0.05)
+let m = new ContextMenu(span4, menu4, MENU, cb, 160)
+m.show = evt => m.showAt(0, evt.clientY-220)
+span4.addEventListener('click', evt => m.show(evt)) //not working
+document.onkeydown = doKey
+start(defBalls)
 </script>
   </body>
 </html>

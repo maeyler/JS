@@ -1,0 +1,26 @@
+.menu {
+    box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    border: #ccc 1px solid;
+    color: blue;
+    background-color: #eee;
+    font: 13px sansserif, arial;
+    user-select: none;
+    overflow-y: auto;
+    max-height: 70vh;
+    z-index: 1;
+  }
+  .menuItem {
+    display: block;
+    padding: 10px 12px;
+  }
+  .menuItem:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  .selection {
+    display: block;
+    box-sizing: border-box;
+    border: #ccc 1px solid;
+    padding: 2px 12px;
+    user-select: none;
+  }
