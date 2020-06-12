@@ -21,8 +21,8 @@
       <p>
         <span id=show class=selection
         title="Select scenario">☰</span>&emsp;
-        Balls:<input id=maxNum type=number value=30
-        title="Enter number of balls -- actual number may be different">
+        Balls:<input id=maxNum type=number value=''
+        title="Enter number of balls -- use empty string for a safe number">
         <button id=run title="Run/Pause">Run</button>&emsp;
         <button id=cool title="Decrease speed of each ball by 5%">Cooler</button>
         <button id=warm title="Increase speed of each ball by 5%">Warmer</button>
@@ -42,9 +42,10 @@ function randInt(min, max) {
    return min + Math.floor(Math.random() * (max-min+1))
 }
 function randomColor() { //exclude too dark colors
-   let r=randInt(0,255), g=randInt(0,255), b=randInt(0,255)
-   if (r+g+b < 100) return randomColor()
-   return 'rgb('+r+','+g+','+b+')'
+// let r=randInt(0,255), g=randInt(0,255), b=randInt(0,255)
+// return 'rgb('+r+','+g+','+b+')'
+   let h=randInt(0,359), s=randInt(30,100), l=randInt(30,70)
+   return 'hsl('+h+','+s+'%,'+l+'%)'
 }
 
 class Vector {
@@ -79,7 +80,7 @@ class Vector {
 }
 
 //Ball and bouncing logic is based on 
-//https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_building_practice
+//https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/
 class Ball {
     constructor(pos, vel, size, color, id) {
       this.pos = pos;
@@ -188,8 +189,9 @@ function pause() {
     id = undefined; run.innerText = '▶'
 }
 function doError(a) {
-    console.log(a); numErr++; 
-    let col = 'yellow'
+    let g = Math.max(0, 255 - 20*numErr)
+    console.log(a); numErr++
+    let col = 'rgb(255,'+g+',0)'
     if (numErr > 3) col = 'orange'
     if (numErr > 9) col = 'red'
     maxNum.style.background = col
@@ -205,14 +207,15 @@ function start(initCB) {
 function colored() {
     randomize = true
     let iter = 0; let num = 0
-    let max = maxNum.value || 10
+    const N = canvas.width * canvas.height
+    const max = maxNum.value || Math.round(N/15000)
     while (num < max && iter++ < 2*max) {
       let size = randInt(10, 20)
       let pos = new Vector(
         random(size, canvas.width - size),
         random(size, canvas.height - size),
       )
-      let b = new Ball(pos, null, size, null, num)
+      let b = new Ball(pos, null, size)  //, null, num)
       if (balls.some(x => b.collidesWith(x))) continue
       b.vel = new Vector(4, random(-0.1, 0.1))
       // new Vector(random(-7, 7), random(-7, 7))
@@ -227,7 +230,8 @@ function brownian() {
     let vel = new Vector(0, 0)
     const B = new Ball(pos, vel, 60, 'orange') //large ball
     balls = [B]; let num = 0; let iter = 0
-    const max = maxNum.value || 90
+    const N = canvas.width * canvas.height
+    const max = maxNum.value || Math.round(N/5000)
     while (num < max && iter++ < 2*max) {
       pos = new Vector(
         random(size, canvas.width - size),
@@ -242,9 +246,9 @@ function brownian() {
     return num
 }
 function evaporate() {
-    randomize = false; const size = 3, D = 2*size+1
+    randomize = false; const size = 4, D = 2*size+1
     const M = Math.floor(canvas.width/D) //balls per row
-    const max = maxNum.value || 200
+    const max = maxNum.value || 2*M
     const N = Math.min(5, Math.ceil(max/M)) //rows
     const x0 = size + Math.ceil((canvas.width - M*D)/2)
     let x = x0, y = canvas.height - N*D +size-2, num = 0
@@ -253,8 +257,7 @@ function evaporate() {
       let vel = new Vector(0, 0)
       if (num < M) //top row moves up
         vel = new Vector(random(-1, 1), random(-6, -3)) 
-      let b = new Ball(pos, vel, size)
-      b.color = 'yellow'
+      let b = new Ball(pos, vel, size, '#4fc')
       balls.push(b); num++; x += D
       if (x+size < canvas.width) continue
       x = x0; y += D  //next row
