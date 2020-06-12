@@ -19,15 +19,15 @@
    <body>
       <canvas id=canvas></canvas>
       <p>
-        <span id=span4 class=selection
-        title="Right-click for context-menu">☰</span>&emsp;
-        Balls:<input id=maxNum type=number value=60
+        <span id=show class=selection
+        title="Select scenario">☰</span>&emsp;
+        Balls:<input id=maxNum type=number value=30
         title="Enter number of balls -- actual number may be different">
         <button id=run title="Run/Pause">Run</button>&emsp;
         <button id=cool title="Decrease speed of each ball by 5%">Cooler</button>
         <button id=warm title="Increase speed of each ball by 5%">Warmer</button>
       </p>
-      <div id=menu4 class=menu hidden></div>
+      <div id=scenario class=menu hidden></div>
 
 <script src="../util/Util.js"></script>
 <script>
@@ -54,6 +54,9 @@ class Vector {
     }
     add(k, that) { //modifies this object
       this.x += k*that.x; this.y += k*that.y
+    }
+    mult(k) { //modifies this object
+      this.x = k*this.x; this.y = k*this.y
     }
     plus(that) { //returns new object
       return new Vector(this.x + that.x, this.y + that.y)
@@ -116,6 +119,8 @@ class Ball {
 function collisionData(b1, b2) {
 //based on https://en.wikipedia.org/wiki/Elastic_collision
     let dx = b2.pos.minus(b1.pos) // x2-x1
+    // let len = dx.length // might be too small
+    // if (len < 1) dx.mult(1/len) //normalized
     let dv = b2.vel.minus(b1.vel) // v2-v1
     let m = b1.size + b2.size     // m1+m2
     let k = (2/m)*dv.inner(dx)/dx.inner(dx)
@@ -137,14 +142,11 @@ function checkCollision(i) {
         let tt = (-b-Math.sqrt(b*b-c))
         // if (tt > 1) continue -- should not happen
         t = Math.min(t, tt) //collision time with b2
-        // if (Math.random() < 0.5)  doesn't work
-        //      b1.color = b2.color  just one color
-        // else b2.color = b1.color  prevails
         if (randomize)
             b1.color = b2.color = randomColor()
         list.push(b2)
     }
-    if (list.length > 2) console.log(list)
+    if (list.length > 2) doError(list)
     b1.update(t) //t==1 if no collision detected
     for (let b2 of list) {
         b2.update(t)
@@ -185,14 +187,22 @@ function pause() {
     if (id) cancelAnimationFrame(id)
     id = undefined; run.innerText = '▶'
 }
+function doError(a) {
+    console.log(a); numErr++; 
+    let col = 'yellow'
+    if (numErr > 3) col = 'orange'
+    if (numErr > 9) col = 'red'
+    maxNum.style.background = col
+}
 function start(initCB) {
     pause(); current = initCB
+    numErr = 0; maxNum.style.background = ''
     canvas.width = window.innerWidth - 4
     canvas.height = window.innerHeight - 50
     balls = []; maxNum.value = initCB()
     total(true); drawBalls(1)
 }
-function defBalls() {
+function colored() {
     randomize = true
     let iter = 0; let num = 0
     let max = maxNum.value || 10
@@ -236,7 +246,8 @@ function evaporate() {
     const M = Math.floor(canvas.width/D) //balls per row
     const max = maxNum.value || 200
     const N = Math.min(5, Math.ceil(max/M)) //rows
-    let x = size, y = canvas.height - N*D, num = 0
+    const x0 = size + Math.ceil((canvas.width - M*D)/2)
+    let x = x0, y = canvas.height - N*D +size-2, num = 0
     while (num < N*M) {
       let pos = new Vector(x, y)
       let vel = new Vector(0, 0)
@@ -246,46 +257,56 @@ function evaporate() {
       b.color = 'yellow'
       balls.push(b); num++; x += D
       if (x+size < canvas.width) continue
-      x = size; y += D  //next row
+      x = x0; y += D  //next row
     }
     return num
 }
 const
-  FIRST = "https://maeyler.github.io/JS/canvas/bouncing.html",
-  ART = "https://matemacik.blogspot.com/2020/06/carpsan-toplar.html",
-  MENU = ['Matemacik (in Turkish)', 'First version', '<hr>', 
-          'Random balls', 'Brownian motion', 'Solid evaporation']
-function cb(m) { //callback
-    if (!m.menu.hidden) return
+  PREV = "bouncing.html",
+  BLOG = "https://matemacik.blogspot.com/2020/06/carpsan-toplar.html",
+  MENU = ['Matemacik (in Turkish)', /*'First version',*/ '<hr>', 
+          'Colored balls', 'Brownian motion', 'Solid evaporation']
+function cb(m) { //callback -- do not use MENU.indexOf(s)
+    if (!m.current) return
     let s = m.current.innerText
-    switch (MENU.indexOf(s)) {
-        case 0: location = ART; break;
-        case 1: location = FIRST; break;
-        case 3: start(defBalls); break;
-        case 4: start(brownian); break;
-        case 5: start(evaporate); break;
-        default: console.log(s)
+    if (s) process(s[0])
+}
+function process(c) {
+    switch (c.toUpperCase()) {
+        case 'R': doRun(); break;
+        case 'M': location = BLOG; break;
+        case 'F': location = PREV; break;
+        case 'C': start(colored); break;
+        case 'B': start(brownian); break;
+        case 'S': start(evaporate); break;
+        default: //console.log(c)
     }
 }
-function doClick(evt) {
+function doRun(evt) {
     if (id) pause(); else animate()
+}
+function doShow(evt) {
+    if (m.isHidden) {evt.stopPropagation(); m.show(evt)}
+    // else Propagate to document -- hideAll()
 }
 function doKey(evt) {
     if (evt.key == 'Escape') 
-        pause()
-    if (evt.key == 'Enter')
+        doRun()
+    else if (evt.key == 'Enter')
         start(current)
+    else process(evt.key)
 }
-var current  //configuration
+var current  // scenario
 var randomize // colors?
-run.onclick  = doClick
+var numErr // too many collisions
+run.onclick  = doRun
+show.onclick = doShow
 cool.onclick = e => heatUp(1/1.05 - 1)
 warm.onclick = e => heatUp(0.05)
-let m = new ContextMenu(span4, menu4, MENU, cb, 160)
-m.show = evt => m.showAt(0, evt.clientY-220)
-span4.addEventListener('click', evt => m.show(evt)) //not working
-document.onkeydown = doKey
-start(defBalls)
+let m = new ContextMenu(show, scenario, MENU, cb, 160)
+m.show = e => m.showAt(0, e.clientY - 210)
+document.addEventListener('keydown', doKey)
+start(colored)
 </script>
   </body>
 </html>
