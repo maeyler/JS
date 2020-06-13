@@ -9,7 +9,7 @@
       <title>Colliding balls </title>
       <style>
         body { margin: 0; }
-        p { margin: 8px; }
+        p { margin: 8px; white-space: nowrap; }
         #maxNum { width: 40px; }
         #run { font-family: monospace; }
         .selection { display: inline-block; }
@@ -27,7 +27,7 @@
         <button id=cool title="Decrease speed of each ball by 5%">Cooler</button>
         <button id=warm title="Increase speed of each ball by 5%">Warmer</button>
       </p>
-      <div id=scenario class=menu hidden></div>
+      <div id=items class=menu hidden></div>
 
 <script src="../util/Util.js"></script>
 <script>
@@ -50,8 +50,10 @@ function randomColor() { //exclude too dark colors
 
 class Vector {
     constructor(x, y) {
-      this.x = x;
-      this.y = y;
+      this.x = x; this.y = y
+    }
+    clone() {
+      return new Vector(this.x, this.y)
     }
     add(k, that) { //modifies this object
       this.x += k*that.x; this.y += k*that.y
@@ -94,9 +96,9 @@ class Ball {
       ctx.beginPath(); ctx.fillStyle = this.color
       ctx.arc(x, y, this.size, 0, 2 * Math.PI)
       ctx.fill()
-      if (this.id === undefined) return
-      ctx.fillStyle = "black"
-      ctx.fillText(this.id, x-5, y+5)
+    //   if (this.id === undefined) return
+    //   ctx.fillStyle = "black"
+    //   ctx.fillText(this.id, x-5, y+5)
     }
     update(t=1) {
       if (this.pos.x + this.size >= canvas.width)
@@ -107,8 +109,8 @@ class Ball {
          this.vel.y = -Math.abs(this.vel.y);
       if (this.pos.y - this.size <= 0)
          this.vel.y =  Math.abs(this.vel.y);
-      this.pos.x += this.vel.x * t
-      this.pos.y += this.vel.y * t
+      this.pos.add(t, this.vel)
+      updated.add(this)
     }
     collidesWith(b) {
       //  d = Math.sqrt(dx * dx + dy * dy)
@@ -120,8 +122,6 @@ class Ball {
 function collisionData(b1, b2) {
 //based on https://en.wikipedia.org/wiki/Elastic_collision
     let dx = b2.pos.minus(b1.pos) // x2-x1
-    // let len = dx.length // might be too small
-    // if (len < 1) dx.mult(1/len) //normalized
     let dv = b2.vel.minus(b1.vel) // v2-v1
     let m = b1.size + b2.size     // m1+m2
     let k = (2/m)*dv.inner(dx)/dx.inner(dx)
@@ -130,14 +130,15 @@ function collisionData(b1, b2) {
 function checkCollision(i) {
     //Original contribution by M A Eyler
     let b1 = balls[i], t = 1, list = []
+    if (updated.has(b1)) return
     for (let j=i+1; j<balls.length; j++) {
-        let b2 = balls[j];
+        let b2 = balls[j]
         let {dv, dx, m, k} = collisionData(b1, b2)
-        let a = dv.lenSqr
+        let a = dv.lenSqr  // |Δv|²
         if (a < 0.0001) continue //same velocity
-        let b = dv.inner(dx)/a
+        let b = dv.inner(dx)/a  // <Δv,Δx>/<Δv,Δv>
         let c = (dx.lenSqr - m*m)/a
-        //solve t^2 + 2b*t + c = 0
+        //solve t² + 2b*t + c = 0
         if (b*b < c) continue //no real solution 
         if (1+2*b+c > 0) continue //solution t>1
         let tt = (-b-Math.sqrt(b*b-c))
@@ -145,13 +146,14 @@ function checkCollision(i) {
         t = Math.min(t, tt) //collision time with b2
         if (randomize)
             b1.color = b2.color = randomColor()
-        list.push(b2)
+        if (!updated.has(b2)) list.push(b2)
     }
     if (list.length > 2) doError(list)
     b1.update(t) //t==1 if no collision detected
     for (let b2 of list) {
-        b2.update(t)
+        b2.update(t) //before momentum transfer
         let {dx, k} = collisionData(b1, b2)
+        //this step ensures energy conversion
         b1.vel.add(+k*b2.size, dx)
         b2.vel.add(-k*b1.size, dx)
     }
@@ -162,22 +164,20 @@ function drawBalls(alfa) {
     for (let b of balls) b.draw()
 }
 function animate() {
-    drawBalls(0.25); run.innerText = '||'
+    drawBalls(0.25); updated.clear()
+    if (!id) run.innerText = '||'
     for (let i=0; i<balls.length; i++)
       checkCollision(i)
     id = requestAnimationFrame(animate)
 }
 function total(log) {
-    let px = 0, py = 0, te = 0
-    for (let b of balls) {
-      px += b.size * b.vel.x
-      py += b.size * b.vel.y
+    let te = 0
+    for (let b of balls)
       te += b.size * b.vel.lenSqr
-    }
-    te = te.toPrecision(4)
+    te = te.toFixed(0)
     if (!log) return te
-    console.log('Total momentum & energy')
-    console.log(px.toPrecision(3), py.toPrecision(3), te)
+    let n = balls.length
+    console.log(n+' * '+(te/n).toFixed(0)+' =', te)
 }
 function heatUp(a) {
     for (let b of balls)
@@ -192,12 +192,11 @@ function doError(a) {
     let g = Math.max(0, 255 - 20*numErr)
     console.log(a); numErr++
     let col = 'rgb(255,'+g+',0)'
-    if (numErr > 3) col = 'orange'
-    if (numErr > 9) col = 'red'
     maxNum.style.background = col
 }
 function start(initCB) {
     pause(); current = initCB
+    console.log('start '+initCB.name)
     numErr = 0; maxNum.style.background = ''
     canvas.width = window.innerWidth - 4
     canvas.height = window.innerHeight - 50
@@ -215,7 +214,7 @@ function colored() {
         random(size, canvas.width - size),
         random(size, canvas.height - size),
       )
-      let b = new Ball(pos, null, size)  //, null, num)
+      let b = new Ball(pos, null, size, null, num)
       if (balls.some(x => b.collidesWith(x))) continue
       b.vel = new Vector(4, random(-0.1, 0.1))
       // new Vector(random(-7, 7), random(-7, 7))
@@ -228,8 +227,8 @@ function brownian() {
     randomize = false; const size = 3
     let pos = new Vector(canvas.width/2, canvas.height/2)
     let vel = new Vector(0, 0)
-    const B = new Ball(pos, vel, 60, 'orange') //large ball
-    balls = [B]; let num = 0; let iter = 0
+    const B = new Ball(pos, vel, 60, 'orange', 0) //large ball
+    balls = [B]; let num = 1; let iter = 0
     const N = canvas.width * canvas.height
     const max = maxNum.value || Math.round(N/5000)
     while (num < max && iter++ < 2*max) {
@@ -237,10 +236,9 @@ function brownian() {
         random(size, canvas.width - size),
         random(size, canvas.height - size),
       )
-      let b = new Ball(pos, null, size)
+      let b = new Ball(pos, null, size, 'cyan', num)
       if (balls.some(x => b.collidesWith(x))) continue
       b.vel = new Vector(random(-5, 5), random(-5, 5))
-      b.color = 'cyan'
       balls.push(b); num++
     }
     return num
@@ -257,7 +255,7 @@ function evaporate() {
       let vel = new Vector(0, 0)
       if (num < M) //top row moves up
         vel = new Vector(random(-1, 1), random(-6, -3)) 
-      let b = new Ball(pos, vel, size, '#4fc')
+      let b = new Ball(pos, vel, size, '#ff7', num)
       balls.push(b); num++; x += D
       if (x+size < canvas.width) continue
       x = x0; y += D  //next row
@@ -301,12 +299,13 @@ function doKey(evt) {
 }
 var current  // scenario
 var randomize // colors?
-var numErr // too many collisions
+var numErr  // too many collisions
+var updated  = new Set() // of balls
 run.onclick  = doRun
 show.onclick = doShow
 cool.onclick = e => heatUp(1/1.05 - 1)
 warm.onclick = e => heatUp(0.05)
-let m = new ContextMenu(show, scenario, MENU, cb, 160)
+let m = new ContextMenu(show, items, MENU, cb, 160)
 m.show = e => m.showAt(0, e.clientY - 210)
 document.addEventListener('keydown', doKey)
 start(colored)
