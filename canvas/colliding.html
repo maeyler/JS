@@ -91,14 +91,14 @@ class Ball {
       this.color = color;
       if (id !== undefined) this.id = id
     }
-    draw() {
+    draw(withID) {
       let x = this.pos.x, y = this.pos.y
       ctx.beginPath(); ctx.fillStyle = this.color
       ctx.arc(x, y, this.size, 0, 2 * Math.PI)
       ctx.fill()
-    //   if (this.id === undefined) return
-    //   ctx.fillStyle = "black"
-    //   ctx.fillText(this.id, x-5, y+5)
+      if (!withID) return
+      ctx.fillStyle = "black"
+      ctx.fillText(this.id, x-5, y+5)
     }
     update(t=1) {
       if (this.pos.x + this.size >= canvas.width)
@@ -158,10 +158,10 @@ function checkCollision(i) {
         b2.vel.add(-k*b1.size, dx)
     }
 }
-function drawBalls(alfa) {
+function drawBalls(alfa, withID) {
     ctx.fillStyle = 'rgba(0, 0, 0, '+alfa+')'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-    for (let b of balls) b.draw()
+    for (let b of balls) b.draw(withID && randomize)
 }
 function animate() {
     drawBalls(0.25); updated.clear()
@@ -201,7 +201,7 @@ function start(initCB) {
     canvas.width = window.innerWidth - 4
     canvas.height = window.innerHeight - 50
     balls = []; maxNum.value = initCB()
-    total(true); drawBalls(1)
+    total(true); drawBalls(1, true)
 }
 function colored() {
     randomize = true
