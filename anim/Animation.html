@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-US">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width">
+      <meta name="author" content="M A Eyler, Istanbul, 2020">
+      <link rel="icon" sizes="192x192" href="../images/JS.png">
+      <link rel="stylesheet" href="../util/Util.css" media="all">
+      <title>Animation on canvas </title>
+      <style>
+        body { margin: 0; }
+        p { margin: 8px; white-space: nowrap; }
+        #maxNum { width: 40px; }
+        #run { font-family: monospace; }
+        .selection { display: inline-block; }
+      </style>
+   </head>
+  
+   <body>
+      <canvas id=canvas></canvas>
+      <p>
+        <span id=show class=selection
+        title="Select scenario">☰</span>&emsp;
+        Balls:<input id=maxNum type=number value=''
+        title="Enter number of balls -- use empty string for a safe number">
+        <button id=run title="Run/Pause">Run</button>&emsp;
+      </p>
+      <div id=items class=menu hidden></div>
+
+<script src="../util/Util.js"></script>
+<script>
+"use strict";
+const ctx = canvas.getContext('2d')
+var id, current
+
+function random(min, max) {
+   return min + Math.random() * (max-min)
+}
+function randInt(min, max) { //end points included
+   return min + Math.floor(Math.random() * (max-min+1))
+}
+function randomColor() { //exclude too dark colors
+   let h=randInt(0,359), s=randInt(30,100), l=randInt(50,70)
+   return 'hsl('+h+','+s+'%,'+l+'%)'
+}
+
+class Animator { //draw into global ctx
+    doTick() { return 'number of msec until next move' }
+    description() { return 'what does it do?' }
+    author() { return 'who made it?'}
+}
+function loadJS(name) {
+    let js = document.createElement("script")
+    js.src = name+".js"
+    document.body.appendChild(js)
+}
+
+function animate() {
+    let d = current.doTick()
+    id = d? setTimeout(animate, d)
+        : requestAnimationFrame(animate)
+}
+function pause() {
+    if (id) { clearTimeout(id);
+        cancelAnimationFrame(id) }
+    id = undefined; run.innerText = '▶'
+}
+function start(c) {
+    pause(); current = c
+    console.log('start '+c.constructor.name, c)
+    canvas.width = window.innerWidth - 4
+    canvas.height = window.innerHeight - 50
+    ctx.fillStyle = 'black'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    animate()
+}
+
+function doRun(evt) {
+    if (id) pause(); else animate()
+}
+function doShow(evt) {
+    if (m.isHidden) {evt.stopPropagation(); m.show(evt)}
+    // else Propagate to document -- hideAll()
+}
+function doKey(evt) {
+    switch (evt.key) {
+        case 'Escape': case 'R': case 'r': 
+            doRun(); break;
+        case 'Enter': 
+            start(current); break;
+        default: //console.log(c)
+    }
+}
+function cb(m) { //callback -- do not use MENU.indexOf(s)
+    let t = m.current
+    if (!t || !t.innerText) return
+    start(eval('new '+t.innerText))
+}
+run.onclick  = doRun
+show.onclick = doShow
+const MENU = ['Clock_SS', 'Orbit_MAE']
+let m = new ContextMenu(show, items, MENU, cb, 160)
+m.show = e => m.showAt(0, e.clientY - 210)
+document.addEventListener('keydown', doKey)
+for (let c of MENU) loadJS(c)
+// start(new Clock_SS())
+</script>
+  </body>
+</html>
