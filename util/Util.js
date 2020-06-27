@@ -159,7 +159,8 @@ class TabularData {
         }
         if (callback) callback(t)
       }
-      fetch(url).then(x => x.text()).then(toArray)
+    const mode = "no-cors"
+    fetch(url, {mode}).then(x => x.text()).then(toArray)
     }
     toString() {
       return this.keys.join(', ')
@@ -197,11 +198,12 @@ class DocsClient {
     }
     //two ways to read from Google Sheets
     fetchData(success, failure) { //simplest method
-        fetch(this.DOCS_URL)
+        const mode = "no-cors"
+        fetch(this.DOCS_URL, {mode})
         .then(r => r.text()) 
         .then(success).catch(failure)
     }
-    tabularData(success) { //uses fetch
+    tabularData(success) { //uses fetch in readData()
         const B = {time:0, user:0, topic:0, marks:0}
         const bm = new TabularData(B, 'Todo marks') 
         bm.readData(this.DOCS_URL, t => {success(t, bm.data)})
