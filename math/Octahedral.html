@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="images/JS.png">
+    <title>Octahedral Diagonals </title>
+
+  <style> /* CSS code in use */
+    body { max-width: 600px; }
+    #sample { overflow-x: auto; }
+    div pre { display: inline-block; width: 180px; }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<h3>Number of diagonals</h3>
+<p>
+    Each of the solids below have octahedral symmetry. 
+    The distance (squared) to each vertex is calculated.
+    For instance, select vertex v of a cube. <br>
+    It has one vertex at zero distance to v and 
+    three vertices at unit distance to v.
+    There are three diagonals of length 2
+    and one diagonal of length 3
+</p>
+<div id=out></div>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+
+<script src=Octahedral.js></script>
+<script>
+"use strict";
+    title.innerText = document.title
+    sample.innerText = makeSolids
+    for (let c of makeSolids()) {
+        c.report()
+        let p = document.createElement('pre')
+        p.innerText = c.desc+'\n'
+            +c.vert.length+' vertices\n'
+            +c.rep.join('\n')
+        out.append(p)
+    }
+</script>
+
+</body>
+</html>
