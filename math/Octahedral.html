@@ -4,12 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" sizes="192x192" href="images/JS.png">
-    <title>Octahedral Diagonals </title>
+    <title>Octahedral Symmetry</title>
 
   <style> /* CSS code in use */
-    body { max-width: 600px; }
+    body {
+        max-width: 600px;
+        background: #bbffff;
+    }
     #sample { overflow-x: auto; }
-    div pre { display: inline-block; width: 180px; }
+    div pre {
+        display: inline-block;
+        background: blanchedalmond;
+        vertical-align: top;
+        border-radius: 8px;
+        width: 150px;
+        padding: 8px;
+        margin: 4px;
+    }
   </style>
 </head>
 
@@ -18,13 +29,14 @@
 <h2 id=title></h2>
 <h3>Number of diagonals</h3>
 <p>
-    Each of the solids below have octahedral symmetry. 
-    The distance (squared) to each vertex is calculated.
-    For instance, select vertex v of a cube. <br>
-    It has one vertex at zero distance to v and 
-    three vertices at unit distance to v.
-    There are three diagonals of length 2
-    and one diagonal of length 3
+    The seven solids below are uniform, all vertices of each being identical.
+    They have octahedral symmetry and their side length is unit. 
+    The squared distance to each vertex is calculated below. <br>
+    For instance, select a vertex v of a cube.
+    It has one vertex (v itself) at zero distance to v and 
+    three vertices at unit distance (edges) to v.
+    There are three diagonals (next to v) of length √2
+    and one diagonal of length √3.
 </p>
 <div id=out></div>
 <hr />

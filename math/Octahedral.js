@@ -1,6 +1,5 @@
 function toString(x) {
-    let s = ""+x;
-    return (s.endsWith(".0")? s.substring(0,s.length()-2) : s);
+    return Number.isInteger(x)? x : x.toFixed(3)
 }
 
 class Vertex {
@@ -28,10 +27,10 @@ class Vertex {
 class Octahedral {
     // ArraySet<Vertex> vert = new ArraySet<Vertex>(48);
     // Map<Float, Integer> cnt = new TreeMap<Float, Integer>();
-    constructor(s, p, q, r) {
-        this.desc = s; this.p = p; this.q = q; this.r = r;
-        this.vert = []; this.cnt = new Map()
-        this.addVertices(p, q, r); this.count();
+    constructor(p, q, r, d) {
+        this.desc = d; this.p = p; this.q = q; this.r = r;
+        this.vert = []; this.addVertices(p, q, r); 
+        this.rep = this.count(); //cnt is local
     }
     addVertices(p, q, r) {
         this.permute( p, q, r ); this.permute( p,-q, r );
@@ -51,38 +50,38 @@ class Octahedral {
         this.vert.push(v);
     }
     count() {
-        let V = this.vert.length;
         let p0 = this.vert[0];
+        let cnt = new Map()
         for (let p of this.vert) { 
             let d = p0.distance2(p)
             if (!Number.isInteger(d)) //use 3 digits
                 d = Math.round(d*1000)/1000
-            let n = this.cnt.get(d);
-            this.cnt.set(d, (n==null? 1 : n+1));
+            let n = cnt.get(d);
+            cnt.set(d, (n==null? 1 : n+1));
         }
+        let a = []
+        for (let [k, v] of cnt.entries())
+            a.push({k, v});
+        return a.sort((x, y) => x.k - y.k)
+            .map((x) => x.v+" -> "+x.k.toFixed(3))
     }
     report() {
         console.log(this.desc, this.vert.length);
-        let a = []
-        for (let [k, v] of this.cnt.entries())
-            a.push({k, v});
-        this.rep = a.sort((x, y) => x.k - y.k)
-        .map((x) => x.k.toFixed(3)+" -> "+x.v)
         console.log(this.rep);
         console.log('----------------');
     }
 }
 
 function makeSolids() {
-    const K = Math.SQRT1_2; // 0.70711
+    const H = 0.5, K = 0.5 * Math.SQRT2; //0.70711
     return [
-     new Octahedral("Octahedron 3333", 0, 0, K), 
-     new Octahedral("Cube 444", 0.5, 0.5, 0.5), 
-     new Octahedral("Cuboctahedron 3434", 0, K, K),
-     new Octahedral("Rhombicubocta 3444", 0.5, 0.5, K+0.5),
-     new Octahedral("Trunc Cube 388", 0.5, K+0.5, K+0.5),
-     new Octahedral("Trunc Octahedron 466", 0, K, 2*K),
-     new Octahedral("Trunc Cubocta 468", 0.5, K+0.5, 2*K+0.5)
+     new Octahedral(0, 0, K, "Octahedron 3333"), 
+     new Octahedral(H, H, H, "Cube 444"), 
+     new Octahedral(0, K, K, "Cuboctahedron 3434"),
+     new Octahedral(H, H, K+H, "Rhombicubocta 3444"),
+     new Octahedral(H, K+H, K+H, "Trunc Cube 388"),
+     new Octahedral(0, K, 2*K,   "Trunc Octahedron 466"),
+     new Octahedral(H, K+H, 2*K+H, "Trunc Cubocta 468")
     ]
 }
 /* simplified from Java -- 2020 June
