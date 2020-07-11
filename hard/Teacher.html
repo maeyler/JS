@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
+    <title>JS Teacher </title>
+
+  <style>
+    body { max-width: 640px; }
+    textarea {
+      width: 85%; 
+      height:400px;
+      resize: both;
+    }
+    iframe {
+      width: 98%;
+      height: 200px;
+      resize: both;
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<textarea id="code">
+<button onclick=setDate(Date())>
+    Print date</button>
+<button onclick=setDate("??")>
+    Clear</button>
+<button onclick=setColor("blue")>
+    Blue</button>
+<button onclick=setColor("green")>
+    Green</button>
+<p id=out></p>
+<hr />
+
+<script>
+"use strict"
+function setDate(s) {
+    console.log("date: "+s);
+    [s] = s.split(' GMT');
+    out.innerText = "Date is "+s
+}
+function setColor(c) {
+    console.log("color: "+c);
+    out.style.color = c
+}
+setDate("??")
+</script>
+</textarea>
+
+<button id=run>Run</button>
+<br><br>
+<iframe id="output"></iframe>
+<hr />
+
+
+<script>
+"use strict";
+function doError(message, source, lineno, colno, error) {
+    console.error(message, lineno);
+    output.style.color = "red";
+}
+    title.innerText = document.title;
+    output.onerror = doError;
+    output.contentWindow.onerror = doError;
+    run.onclick = () => {output.srcdoc=code.value};
+    run.click()
+</script>
+
+</body>
+</html>
