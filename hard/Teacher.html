@@ -62,13 +62,22 @@ setDate("??")
 <script>
 "use strict";
 function doError(message, source, lineno, colno, error) {
-    console.error(message, lineno);
-    output.style.color = "red";
+    console.error(message, lineno, colno);
+    let a = code.value.split('\n').map(x => x.length)
+    console.log(a)
+    let k = 0
+    for (let n=0; n<lineno; n++) k += a[n]
+    console.log(k, a[lineno])
+    code.selectionStart = k
+    code.selectionEnd = k + a[lineno]
+    code.focus()
+    // code.style.color = "red";
+    return true
 }
-    title.innerText = document.title;
-    output.onerror = doError;
-    output.contentWindow.onerror = doError;
-    run.onclick = () => {output.srcdoc=code.value};
+    title.innerText = document.title
+    output.onload = () => {output.contentWindow.onerror = doError}
+    // code.onchange = () => {code.style.color = ''}
+    run.onclick = () => {output.srcdoc = code.value}
     run.click()
 </script>
 
