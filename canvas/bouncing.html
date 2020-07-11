@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport"    content="width=device-width">
       <link rel="icon" sizes="192x192" href="../images/JS.png">
-      <title>Colliding balls </title>
+      <title>Bouncing balls </title>
       <style>
          body { margin: 0; }
          p { margin: 8px; }
@@ -13,7 +13,7 @@
    </head>
   
    <body>
-      <canvas></canvas>
+      <canvas id=canvas></canvas>
       <p><a target="NewTab"
 href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_building_practice">
          Bouncing</a> &emsp;
@@ -23,7 +23,6 @@ href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_b
       </p>
 <script>
 "use strict";
-const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 var balls = [], id = 0;
 

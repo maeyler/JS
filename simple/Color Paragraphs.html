@@ -34,11 +34,11 @@
 <script>
 "use strict";
 function color(c) {
-  let pa = document.querySelectorAll("p");
-  for (let e of pa) e.style.color = c; 
-  out.innerText = 
-    pa.length+" paragraphs to "+c;
-  console.log(c);
+  let a = document.querySelectorAll('p')
+  // in console jQuery notation: $$('p')
+  for (let e of a) e.style.color = c
+  let s = a.length+" paragraphs "+c
+  console.log(s); out.innerText = s
 }
     title.innerText = document.title;
     sample.innerText = color.toString();
