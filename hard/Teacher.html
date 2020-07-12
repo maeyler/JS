@@ -7,80 +7,96 @@
     <title>JS Teacher </title>
 
   <style>
-    body { max-width: 640px; }
-    textarea {
-      width: 85%; 
-      height:400px;
-      resize: both;
+    div {
+      display: inline-block;
+      width: 100%;
+      max-width: 590px;
+      vertical-align: top;
     }
-    iframe {
+@media screen and (min-width: 800px) {
+    div { width: 49%; }
+}
+    #_code_ {
+      width: 85%; 
+      height: 400px;
+    }
+    #_out_ {
       width: 98%;
       height: 200px;
-      resize: both;
       overflow: auto;
     }
+    #_out_, #_code_ { resize: both; }
+    #_err_ { color: red;}
   </style>
 </head>
 
 <body>
-
-<h2 id=title></h2>
-
-<textarea id="code">
-<button onclick=setDate(Date())>
-    Print date</button>
-<button onclick=setDate("??")>
-    Clear</button>
-<button onclick=setColor("blue")>
-    Blue</button>
-<button onclick=setColor("green")>
-    Green</button>
-<p id=out></p>
-<hr />
-
-<script>
-"use strict"
-function setDate(s) {
-    console.log("date: "+s);
-    [s] = s.split(' GMT');
-    out.innerText = "Date is "+s
-}
-function setColor(c) {
-    console.log("color: "+c);
-    out.style.color = c
-}
-setDate("??")
-</script>
-</textarea>
-
-<button id=run>Run</button>
-<br><br>
-<iframe id="output"></iframe>
-<hr />
-<p>V0.3</p>
+<p>
+    <b id=_title_></b> &emsp;
+    <select id=_menu_></select>
+</p>
+<div>
+    <textarea id=_code_></textarea>
+    <button id=_run_>Run</button>
+</div>
+<div>
+    <pre id=_err_></pre>
+    <iframe id=_out_></iframe>
+    <div id=_text_>Öğretici metin buraya gelecek</div>
+</div>
+<p>V0.4</p>
 
 <script>
 "use strict";
-function doError(message, source, lineno, colno, error) {
-    console.error(message, lineno, colno);
-    let a = code.value.split('\n').map(x => x.length+1)
-    // console.log(a)
-    let k = 0; lineno-- //starts at 1
-    for (let n=0; n<lineno; n++) k += a[n]
-    // console.log(k, a[lineno])
-    code.selectionStart = k
-    code.selectionEnd = k + a[lineno]
-    code.focus()
-    return true
+const HTML = document.createElement('HTML')
+var DATA, LEN;
+function init() {
+    fetch('Teacher_pages.html')
+      .then(x => x.text()).then(readData);
+    _title_.innerText = document.title;
+    _run_.onclick = doClick;
+    _code_.onchange = errorMessage
 }
-    title.innerText = document.title
-    const onload 
-      = () => {output.contentWindow.onerror = doError}
-    run.onclick = () => {
-        output.srcdoc = code.value;
-        setTimeout(onload, 10)
-    }
-    run.click()
+function readData(t) {
+    HTML.innerHTML = t
+    DATA = [...HTML.querySelectorAll('bookpart')]
+    console.log('readData', t.length, DATA.length)
+    let a = [''] //insert '' at a[0]
+    for (let x of DATA) a.push(x.title)
+    _menu_.innerHTML = a.join('<option>')
+    _menu_.onchange = setData;
+    _menu_.selectedIndex = 0; setData()
+}
+function setData() {
+    let k = _menu_.selectedIndex
+    console.log(k, _menu_.value);
+    _code_.value = DATA[k].innerHTML.substring(1)
+    LEN = _code_.value.split('\n').map(x => x.length+1)
+    _run_.click() //compile
+}
+function doError(message, source, lineno, colno) {
+    console.error(message, lineno, colno);
+    errorMessage(message);
+    let k = 0;  //lineno starts at 1
+    for (let n=0; n<lineno-1; n++) k += LEN[n]
+    // console.log(k, LEN[lineno-1])
+    _code_.selectionStart = k
+    _code_.selectionEnd = k + LEN[lineno-1]-1
+    _code_.focus(); return true
+}
+function errorMessage(m='') {
+    _err_.innerText = m
+}
+function onload() {
+    _out_.contentWindow.onerror = doError
+}
+function doClick() {
+    _out_.srcdoc = _code_.value;
+    errorMessage();
+    //for compile-time errors
+    setTimeout(onload, 10)
+}
+init()
 </script>
 
 </body>

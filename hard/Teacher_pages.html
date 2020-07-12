@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="images/JS.png">
+    <title>Teacher Pages </title>
+
+  <style> /* CSS code in use */
+    body { max-width: 440px; }
+  </style>
+</head>
+
+<body>
+<h2 id=title></h2>
+
+<bookpart title="Date & Color">
+<button onclick="setDate(Date())">
+    Print date</button>
+<button onclick="setDate('??')">
+    Clear</button>
+<button onclick="setColor('blue')">
+    Blue</button>
+<button onclick="setColor('magenta')">
+    Magenta</button>
+<p id=output></p>
+<hr />
+
+<script>
+"use strict"
+function setDate(s) {
+    console.log("date: "+s);
+    [s] = s.split(' GMT');
+    output.innerText = "Date is "+s
+}
+function setColor(c) {
+    console.log("color: "+c);
+    output.style.color = c
+}
+setDate("??")
+</script>
+</bookpart>
+
+<bookpart title="Simple Clock">
+<style>
+    #out {
+        font-size: 40px;
+        background: blue;
+        color: yellow;
+        text-align: center;
+        margin: 8px;
+        padding: 20px;
+    }
+</style>
+
+<p id=out></p>
+<hr />
+
+<script>
+"use strict";
+var hm;  //global value
+function twoDigits(t) {
+    if (t>9) return ""+t;
+    return "0"+t;
+}
+function setHourMin() {
+    let d = new Date();
+    hm = twoDigits(d.getHours())+":"
+        +twoDigits(d.getMinutes());
+}
+function tick() {
+    let d = new Date();
+    let sec = twoDigits(d.getSeconds());
+    if (sec == "00") setHourMin();
+    out.innerText = hm+":"+sec;
+    setTimeout(tick, 1000);
+}
+    window.onfocus = setHourMin;
+    setHourMin(); tick();
+</script>
+</bookpart>
+
+<bookpart title="localStorage">
+<style>
+    #para {
+        font-size: 18px;
+        background: brown;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+</style>
+
+<button id=button>Count</button>
+<p id=para></p>
+<hr />
+
+<script>
+"use strict";
+function count() { //localStorage
+    let n = localStorage.counter || 0
+    let s = "counter = "+(n++)
+    console.log(s); para.innerText = s
+    localStorage.counter = n
+}
+button.onclick = count; count()
+</script>   
+</bookpart>
+
+<script>
+    title.innerText = document.title
+</script>
+
+</body>
+</html>
