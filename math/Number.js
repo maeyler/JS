@@ -13,6 +13,7 @@ class Rational {
           return Make.rational(this.num * n.num, this.den * n.den);
         else return n.mult(this);
     }
+    negative() { return Make.rational(-this.num, this.den); }
     inverse() { return Make.rational(this.den, this.num); }
     value() { return this.num/this.den; }
     toString() { return this.num+"/"+this.den; }
@@ -47,6 +48,7 @@ class Decimal {
     constructor(x) { this.re = x; }
     add(n) { return Make.decimal(this.re + n.value()); }
     mult(n) { return Make.decimal(this.re * n.value()); }
+    negative() { return Make.decimal(-this.re); }
     inverse() { return Make.decimal(1/this.re); }
     value() { return this.re; }  
     toString() { return this.re.toString(); }
@@ -67,6 +69,7 @@ class Complex {
         let i = this.re*c.im + this.im*c.re;
         return Make.complex(r, i);
     }
+    negative() { return Make.complex(-this.re, -this.im); }
     inverse() {
         if (this.r2 == 0) throw "division by zero";
         return Make.complex(this.re/this.r2, -this.im/this.r2);
@@ -131,15 +134,12 @@ class Make { //Factory methods for numbers
     static fromString(s) {
         if (typeof s == "number") 
             return Make.decimal(s);
-        let a = s.split('/')
-        if (a.length > 1) 
-            return Make.rational(Number(a[0]), Number(a[1]))
-        a = s.split('+i')
-        if (a.length > 1) 
-            return Make.complex(Number(a[0]), Number(a[1]))
-        a = s.split('-i')
-        if (a.length > 1) 
-            return Make.complex(Number(a[0]), -Number(a[1]))
+        let [n, d] = s.split('/')
+        if (d) return Make.rational(n, d)
+        let [re, im] = s.split('+i')
+        if (im) return Make.complex(re, im)
+        [re, im] = s.split('-i')
+        if (im) return Make.complex(re, -im)
         return Make.decimal(Number(s));
     }
 }
