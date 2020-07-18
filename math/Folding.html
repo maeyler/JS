@@ -28,7 +28,7 @@
 </p>
 <img src="Folding.png">
 <p>
-Enter any fraction 0 &lt; b &lt; 1:
+Enter any fraction 0 &lt; b &lt; 1
 <input type=text id=num value="1/3" onChange="process()">
 <!-- <input type=button value="Calc" onClick="process()"> -->
 </p>
@@ -50,9 +50,10 @@ Enter any fraction 0 &lt; b &lt; 1:
 <script>
 "use strict";
 const ZERO = Make.whole(0), TWO = Make.whole(2)
-function error(s) {
+function error(msg) {
     num.style.background = 'pink'
-    alert(s); throw s
+    setTimeout(()=>alert(msg), 10)
+    throw msg
 }
 function process() {
     num.style.background = ''
@@ -69,7 +70,7 @@ function calc(b) {
     // pick numerators for the triple
     let pqr = !(t2.x instanceof Rational)? [] :
        [t1.m.num, t2.m.num, t2.x.num].sort((x, y) => x-y)
-    out.innerText += t1+'\n'+t2+'\t'+pqr.join('-')+'\n\n'
+    out.innerText += t1+'\n'+t2+'\t'+pqr.join('.')+'\n\n'
 }
 function f(b) {
     function str() {
@@ -85,7 +86,7 @@ function f(b) {
 }
     title.innerText = document.title
     sample.innerText = calc+'\n'+f
-    out.innerText = " b \t1-x \t x  \t y\n"
+    out.innerText = " b \t1-x \t x  \t y\ttriple \n"
     // for (let i=9; i>1; i--) calc("1/"+i)
     const T = "1/2 1/4 1/5 1/7 2/5"
     T.split(' ').forEach(calc)
