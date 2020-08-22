@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"    content="width=device-width">
+  <meta name="author"      content="M A Eyler, Istanbul, 2020" />
+  <link rel="icon" sizes="192x192" href="../images/JS.png">
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<button id=auth onclick="authenticate()">Authorize</button>
+<button id=exec disabled onclick="execute()">Execute</button>
+<pre id=out></pre>
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+/**
+ * Sample JavaScript code for drive.files.list
+ * See instructions for running APIs Explorer code samples locally:
+ * https://developers.google.com/explorer-help/guides/code_samples#javascript
+ */
+function log(msg) { 
+    console.log(msg); out.innerText = msg
+    out.style.color = ""
+}
+function error(e) { 
+    console.error(e); out.innerText = e.error
+    out.style.color = "red"
+}
+function authenticate() {
+    log("Authorization begins");
+    gapi.auth2.getAuthInstance().signIn()
+      .then(signinOK).catch(error)
+}
+function signinOK() {
+    log("Sign-in successful"); loadClient()
+}
+function loadClient() {
+    gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
+      .then(done, error);
+}
+function done() { 
+    log("GAPI client loaded")
+    auth.disabled = true; exec.disabled = false
+}
+// Make sure sign-in is complete before calling this method.
+function execute() {
+    log("Drive API is called");
+    gapi.client.drive.files.list({})
+      .then(report, error)
+}
+function report(response) {
+    // Handle the results here (response.result)
+    let f = response.result.files
+    log("response.result.files: "+f.length);
+    if (f.length == 0) return
+    let a = f.map(x => x.name+'\t'+x.mimeType.split('/')[0])
+    out.innerText = a.join('\n'); console.log(f)
+}
+const 
+  apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
+  clientId = "864962883135-ut9cl3g1jlqv1frlp2p6cq9r3jsfflkv.apps.googleusercontent.com",
+  scope = 'https://www.googleapis.com/auth/drive.readonly';
+function init() {
+  gapi.auth2.init({ apiKey, clientId, scope })
+}
+title.innerText = document.title
+gapi.load("client:auth2", init);
+</script>
+</body>
+</html>
