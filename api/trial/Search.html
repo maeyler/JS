@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"    content="width=device-width">
+    <meta name="author"      content="M A Eyler, Istanbul, 2020" />
+    <link rel="icon" sizes="192x192" href="../images/JS.png">
+    <link href="play_list.css" rel="stylesheet" media="all">
+    <title>Search API </title>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<!-- https://gomakethings.com/how-to-create-a-vanilla-js-search-page-for-a-static-website/ -->
+<form action="https://www.google.com/search" id="form-search">
+	<label for="input-search">Enter your search criteria:</label>
+	<input type="text" name="q" id="input-search" value=" site:maeyler.github.io">
+	<button id="submit-search">Search</button>
+</form>
+<hr />
+<button id=loader onclick="loadClient()">load</button><br> bu kısım çalışmadı
+<div id=exec>
+    Search 
+    <input id=listID type=text size=35 value="kedi burnu">
+    <button onclick="execute()">Run</button>
+    <p id=out></p>
+</div>
+<hr />
+<div id=liste>
+</div>
+
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+var accessKey, owner
+  /**
+   * https://developers.google.com/explorer-help/guides/code_samples#javascript
+   */
+function loadClient() {
+    const GAPI = "https://content.googleapis.com/discovery/v1/apis/customsearch/v1/rest"
+    gapi.client.setApiKey(accessKey); loader.style.display = 'none'
+    return gapi.client.load(GAPI).then(success, console.error)
+}
+function success() {
+    exec.style.display = ''; console.log("GAPI client loaded for API")
+}
+// Make sure the client is loaded before calling this method.
+function execute(query=listID.value) {
+    return gapi.client.search.cse.list({
+      "num": 10, "q": query
+    }).then(report, console.error);
+}
+function report(response) {
+    let a = response.result
+    console.log(a); //useData(a)  //fill data
+    out.innerText = a.length+' items '
+    //navigator.clipboard.writeText(a.join('\n') )
+  }
+// Interaction
+function askUser() {
+    let k = prompt('Please enter Google API key:')
+    if (k) return k
+    const ERR = 'You need an API key'
+    alert(ERR); out.innerText = ERR; console.error(ERR)
+}
+function getAPIkey() {
+    if (origin.startsWith('http') && localStorage) {
+        if (!localStorage.keys) localStorage.keys = '{}'
+        let keys = JSON.parse(localStorage.keys)
+        if (!keys.googleAPI) {
+           keys.googleAPI = askUser()
+           localStorage.keys = JSON.stringify(keys)
+        }
+        accessKey = keys.googleAPI
+    } else { //cannot use localStorage
+        accessKey = askUser()
+    }
+}
+    gapi.load("client"); getAPIkey();
+    title.innerText = document.title
+    exec.style.display = 'none'
+</script>
+
+</body>
+</html>
