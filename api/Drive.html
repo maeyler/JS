@@ -5,13 +5,22 @@
   <meta name="viewport"    content="width=device-width">
   <meta name="author"      content="M A Eyler, Istanbul, 2020" />
   <link rel="icon" sizes="192x192" href="../images/JS.png">
+  <title>Google Drive API</title>
 </head>
 
 <body>
 
 <h2 id=title></h2>
-<button id=auth onclick="authenticate()">Authorize</button>
-<button id=exec disabled onclick="execute()">Execute</button>
+<p>
+    If you give permissson to access Google Drive, 
+    you may get a list of text files in your Drive
+    and upload local text files to your Drive.
+</p>
+<button id=auth onclick="authenticate()">Authorize</button> &nbsp;
+<button id=exec disabled onclick="execute()">List</button> &nbsp;
+<input type=file hidden id=button onChange="fileSelect(this)"
+ accept="text/*, .js, .java, .json, .md">
+<button id=upload disabled onclick="button.click()">Upload</button>
 <pre id=out></pre>
 
 <script src="https://apis.google.com/js/api.js"></script>
@@ -21,51 +30,104 @@
  * See instructions for running APIs Explorer code samples locally:
  * https://developers.google.com/explorer-help/guides/code_samples#javascript
  */
-function log(msg) { 
-    console.log(msg); out.innerText = msg
-    out.style.color = ""
+function stringify(m) {
+    if (typeof m === "string") return m
+    return JSON.stringify(m,'',2)
 }
-function error(e) { 
-    console.error(e); out.innerText = e.error
-    out.style.color = "red"
+function log(m) {
+    if (m.result) { log(m.result); return }
+    console.log(m); out.style.color = ''
+    out.innerText = stringify(m)
+}
+function error(e) {
+    if (e.result) { error(e.result); return }
+    if (e.error) { error(e.error); return }
+    console.error(e); out.style.color = 'red'
+    out.innerText = stringify(e)
 }
 function authenticate() {
     log("Authorization begins");
     gapi.auth2.getAuthInstance().signIn()
-      .then(signinOK).catch(error)
-}
-function signinOK() {
-    log("Sign-in successful"); loadClient()
+      .then(loadClient, error)
 }
 function loadClient() {
-    gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
-      .then(done, error);
+    const DRIVE = 
+    "https://content.googleapis.com/discovery/v1/apis/drive/v3/rest"
+    gapi.client.load(DRIVE).then(done, error);
 }
 function done() { 
-    log("GAPI client loaded")
+    log("GAPI client loaded"); upload.disabled = false;
     auth.disabled = true; exec.disabled = false
 }
 // Make sure sign-in is complete before calling this method.
 function execute() {
     log("Drive API is called");
-    gapi.client.drive.files.list({})
+    //https://developers.google.com/drive/api/v3/search-files
+    let q = "trashed = false and mimeType contains 'text'"
+            +" or mimeType contains 'json'"
+    gapi.client.drive.files.list({q})
       .then(report, error)
+}
+function nameType(nam, typ) {
+    return nam+'\t'+typ.split('/')[0]
 }
 function report(response) {
     // Handle the results here (response.result)
     let f = response.result.files
     log("response.result.files: "+f.length);
     if (f.length == 0) return
-    let a = f.map(x => x.name+'\t'+x.mimeType.split('/')[0])
+    let a = f.map(x => x.id+'\t'+x.name)
     out.innerText = a.join('\n'); console.log(f)
 }
-const 
+function isText(f) {
+    console.assert(f instanceof File);
+    return f.type.startsWith("text") 
+         || f.name.endsWith(".js") || f.name.endsWith(".java")
+         || f.name.endsWith(".json") || f.name.endsWith(".md");
+}
+function fileSelect(t) { //target is the button
+    console.assert(t == button)
+    let f = button.files[0]
+    if (isText(f)) {
+        reader.onload = function(evt) { //text
+            let data = evt.target.result
+            // log(nameType(f.name, f.type))
+            saveFile(f.name, f.type, data)
+        };
+        reader.readAsText(f);
+    } else {
+        error(f.name+" is not a text file")
+    }
+}
+function saveFile(name, mimeType, body) {
+    log(name+' '+mimeType+' '+body.length+' bytes')
+    let resource = {name, mimeType}
+    let media = {mimeType, body}
+    gapi.client.drive.files.create(resource)
+    .then(write, error)
+  function write(p) {
+    let result = p.result
+    if (!result || !result.id) { error(p); return }
+    console.log(result)
+    path = 'https://www.googleapis.com/upload/drive/v3/files/'+result.id
+    method = 'PATCH'; params = { uploadType: 'media' }
+    let headers = new Headers() //not useful
+    headers.append('Content-Type', mimeType)
+    gapi.client.request({path, method, headers, params, body})
+    .then(log, error)
+    // path = 'https://www.googleapis.com/drive/v3/files/'+result.id
+    // gapi.client.request({path, method, params, resource})
+    // .then(console.log, error)  did not write correct type
+  }
+}
+const reader = new FileReader(),
   apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
   clientId = "864962883135-ut9cl3g1jlqv1frlp2p6cq9r3jsfflkv.apps.googleusercontent.com",
-  scope = 'https://www.googleapis.com/auth/drive.readonly';
+  scope = 'https://www.googleapis.com/auth/drive.file'  //readonly'
 function init() {
   gapi.auth2.init({ apiKey, clientId, scope })
 }
+window.onerror = error
 title.innerText = document.title
 gapi.load("client:auth2", init);
 </script>
