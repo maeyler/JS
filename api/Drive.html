@@ -8,10 +8,10 @@
   <title>Google Drive API</title>
 
   <style>
-    body {max-width: 600px;}
+    body {max-width: 540px;}
     img {
         position: fixed;
-        top:6px; right:10px;
+        top:8px; right:8px;
         width: 50px;
     }
     pre { overflow-x: auto; }
@@ -25,8 +25,8 @@
 <img id=image>
 <p>
     If you give permissson to access Google Drive, 
-    you may get a list of text files in your Drive
-    and upload local text files to your Drive.
+    you will get a list of text files in your Drive
+    and may upload local text files to your Drive.
 </p>
 <button id=auth onclick="authenticate()">Authorize</button> &nbsp;
 <button id=exec disabled onclick="execute()">List</button> &nbsp;
@@ -58,19 +58,25 @@ function error(e) {
     console.error(e); out.style.color = 'red'
     out.innerText = stringify(e)
 }
-function authenticate() {
+async function authenticate() {
+  try {
     log("Authorization begins");
-    gapi.auth2.getAuthInstance().signIn()
-      .then(loadClient, error)
-}
-function loadClient() {
+    await gapi.auth2.getAuthInstance().signIn()
+//      .then(loadClient, error)
+// }
+// function loadClient() {
+    log("load drive client");
     const DRIVE = 
     "https://content.googleapis.com/discovery/v1/apis/drive/v3/rest"
-    gapi.client.load(DRIVE).then(done, error);
-}
-function done() { 
-    log("GAPI client loaded"); upload.disabled = false;
-    auth.disabled = true; exec.disabled = false
+    await gapi.client.load(DRIVE)
+//      .then(done, error);
+// }
+// function done() { 
+    exec.disabled = false; upload.disabled = false;
+    log("GAPI client loaded"); exec.click();
+  } catch (e) {
+      error(e)
+  }
 }
 // Make sure sign-in is complete before calling this method.
 function execute() {
