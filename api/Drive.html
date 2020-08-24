@@ -6,11 +6,23 @@
   <meta name="author"      content="M A Eyler, Istanbul, 2020" />
   <link rel="icon" sizes="192x192" href="../images/JS.png">
   <title>Google Drive API</title>
+
+  <style>
+    body {max-width: 600px;}
+    img {
+        position: fixed;
+        top:6px; right:10px;
+        width: 50px;
+    }
+    pre { overflow-x: auto; }
+  </style>
+
 </head>
 
 <body>
 
 <h2 id=title></h2>
+<img id=image>
 <p>
     If you give permissson to access Google Drive, 
     you may get a list of text files in your Drive
@@ -21,6 +33,7 @@
 <input type=file hidden id=button onChange="fileSelect(this)"
  accept="text/*, .js, .java, .json, .md">
 <button id=upload disabled onclick="button.click()">Upload</button>
+&nbsp;<span id=user></span>
 <pre id=out></pre>
 
 <script src="https://apis.google.com/js/api.js"></script>
@@ -63,8 +76,8 @@ function done() {
 function execute() {
     log("Drive API is called");
     //https://developers.google.com/drive/api/v3/search-files
-    let q = "trashed = false and mimeType contains 'text'"
-            +" or mimeType contains 'json'"
+    let q = "trashed = false and (mimeType contains 'text'"
+            +" or mimeType contains 'json')"
     gapi.client.drive.files.list({q})
       .then(report, error)
 }
@@ -72,7 +85,7 @@ function nameType(nam, typ) {
     return nam+'\t'+typ.split('/')[0]
 }
 function report(response) {
-    // Handle the results here (response.result)
+    showProfile()
     let f = response.result.files
     log("response.result.files: "+f.length);
     if (f.length == 0) return
@@ -119,6 +132,12 @@ function saveFile(name, mimeType, body) {
     // gapi.client.request({path, method, params, resource})
     // .then(console.log, error)  did not write correct type
   }
+}
+function showProfile() {
+    let p = gapi.auth2.getAuthInstance()
+        .currentUser.get().getBasicProfile()
+    image.src = p.getImageUrl()
+    user.innerText = p.getEmail()
 }
 const reader = new FileReader(),
   apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
