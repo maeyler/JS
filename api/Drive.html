@@ -141,8 +141,7 @@ function saveFile(name, mimeType, body) {
     console.log(result)
     path = 'https://www.googleapis.com/upload/drive/v3/files/'+result.id
     method = 'PATCH'; params = { uploadType: 'media' }
-    let headers = new Headers() //not useful
-    headers.append('Content-Type', mimeType)
+    let headers = mimeType // Setting the file type. 
     gapi.client.request({path, method, headers, params, body})
     .then(log, error)
     // path = 'https://www.googleapis.com/drive/v3/files/'+result.id
