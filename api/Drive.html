@@ -14,7 +14,10 @@
         top:8px; right:8px;
         width: 50px;
     }
-    pre { overflow-x: auto; }
+    pre {
+        overflow-x: auto;
+        line-height: 1.5;
+    }
   </style>
 
 </head>
@@ -41,7 +44,7 @@
 /**
  * Sample JavaScript code for drive.files.list
  * See instructions for running APIs Explorer code samples locally:
- * https://developers.google.com/explorer-help/guides/code_samples#javascript
+ * https://developers.google.com/explorer-help/guides/code_samples
  */
 function stringify(m) {
     if (typeof m === "string") return m
@@ -83,20 +86,25 @@ function execute() {
     log("Drive API is called");
     //https://developers.google.com/drive/api/v3/search-files
     let q = "trashed = false and (mimeType contains 'text'"
-            +" or mimeType contains 'json')"
-    gapi.client.drive.files.list({q})
+          + " or mimeType contains 'json')"
+    let fields = 'files(id,name,size,modifiedTime,webViewLink)'
+    gapi.client.drive.files.list({q, fields})
       .then(report, error)
-}
-function nameType(nam, typ) {
-    return nam+'\t'+typ.split('/')[0]
 }
 function report(response) {
     showProfile()
     let f = response.result.files
     log("response.result.files: "+f.length);
     if (f.length == 0) return
-    let a = f.map(x => x.id+'\t'+x.name)
-    out.innerText = a.join('\n'); console.log(f)
+    let a = f.map(fileToString)
+    out.innerHTML = a.join('\n'); console.log(f)
+    files = f.map(x => x.id+' '+x.name)
+}
+function fileToString(x) {
+    let [d, h, m] = x.modifiedTime.split(/[T:]/)
+    let s = x.size.padStart(9) //padding with blanks
+    let a = '<a href='+x.webViewLink+' target=drive>'+x.name+'</a>'
+    return d+' '+h+':'+m+' '+s+'  '+a
 }
 function isText(f) {
     console.assert(f instanceof File);
@@ -105,6 +113,9 @@ function isText(f) {
          || f.name.endsWith(".json") || f.name.endsWith(".md");
 }
 function fileSelect(t) { //target is the button
+  function nameType(nam, typ) { //not used
+    return nam+'\t'+typ.split('/')[0]
+  }
     console.assert(t == button)
     let f = button.files[0]
     if (isText(f)) {
@@ -152,6 +163,7 @@ const reader = new FileReader(),
 function init() {
   gapi.auth2.init({ apiKey, clientId, scope })
 }
+var files = []  //array of id+' '+name for each item
 window.onerror = error
 title.innerText = document.title
 gapi.load("client:auth2", init);
