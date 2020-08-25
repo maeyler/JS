@@ -131,22 +131,17 @@ function fileSelect(t) { //target is the button
 }
 function saveFile(name, mimeType, body) {
     log(name+' '+mimeType+' '+body.length+' bytes')
-    let resource = {name, mimeType}
-    let media = {mimeType, body}
-    gapi.client.drive.files.create(resource)
+    gapi.client.drive.files.create({name, mimeType})
     .then(write, error)
-  function write(p) {
+  function write(p) { //inner function uses parameters above
     let result = p.result
     if (!result || !result.id) { error(p); return }
     console.log(result)
     path = 'https://www.googleapis.com/upload/drive/v3/files/'+result.id
     method = 'PATCH'; params = { uploadType: 'media' }
-    let headers = mimeType // Setting the file type. 
+    let headers = {'Content-Type': mimeType}  //file type specified here
     gapi.client.request({path, method, headers, params, body})
     .then(log, error)
-    // path = 'https://www.googleapis.com/drive/v3/files/'+result.id
-    // gapi.client.request({path, method, params, resource})
-    // .then(console.log, error)  did not write correct type
   }
 }
 function showProfile() {
