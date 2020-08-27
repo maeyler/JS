@@ -31,9 +31,9 @@
     you will get a list of text files in your Drive
     and may upload local text files to your Drive.
 </p>
-<button id=auth onclick="authenticate()">Authorize</button> &nbsp;
+<button id=auth onclick="authenticate()">Sign in</button> &nbsp;
 <button id=exec disabled onclick="execute()">List</button> &nbsp;
-<input type=file hidden id=button onChange="fileSelect(this)"
+<input type=file hidden id=button onChange="fileSelect()"
  accept="text/*, .js, .java, .json, .md">
 <button id=upload disabled onclick="button.click()">Upload</button>
 &nbsp;<span id=user></span>
@@ -65,21 +65,19 @@ async function authenticate() {
   try {
     log("Authorization begins");
     await gapi.auth2.getAuthInstance().signIn()
-//      .then(loadClient, error)
-// }
-// function loadClient() {
-    log("load drive client");
+    showFiles()
+  } catch (e) { error(e) }
+}
+async function showFiles() {
     const DRIVE = 
     "https://content.googleapis.com/discovery/v1/apis/drive/v3/rest"
-    await gapi.client.load(DRIVE)
-//      .then(done, error);
-// }
-// function done() { 
-    exec.disabled = false; upload.disabled = false;
-    log("GAPI client loaded"); exec.click();
-  } catch (e) {
-      error(e)
-  }
+    if (!gapi.client.drive) {
+      log("Load drive client");
+      await gapi.client.load(DRIVE)
+      log("GAPI client loaded")
+    }
+    exec.disabled = false; upload.disabled = false; exec.click()
+  
 }
 // Make sure sign-in is complete before calling this method.
 function execute() {
@@ -112,16 +110,11 @@ function isText(f) {
          || f.name.endsWith(".js") || f.name.endsWith(".java")
          || f.name.endsWith(".json") || f.name.endsWith(".md");
 }
-function fileSelect(t) { //target is the button
-  function nameType(nam, typ) { //not used
-    return nam+'\t'+typ.split('/')[0]
-  }
-    console.assert(t == button)
+function fileSelect() {
     let f = button.files[0]
     if (isText(f)) {
         reader.onload = function(evt) { //text
             let data = evt.target.result
-            // log(nameType(f.name, f.type))
             saveFile(f.name, f.type, data)
         };
         reader.readAsText(f);
@@ -144,9 +137,11 @@ function saveFile(name, mimeType, body) {
     .then(log, error)
   }
 }
+function currentUser() {
+    return gapi.auth2.getAuthInstance().currentUser.get()
+}
 function showProfile() {
-    let p = gapi.auth2.getAuthInstance()
-        .currentUser.get().getBasicProfile()
+    let p = currentUser().getBasicProfile()
     image.src = p.getImageUrl()
     user.innerText = p.getEmail()
 }
@@ -154,11 +149,14 @@ const reader = new FileReader(),
   apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
   clientId = "864962883135-ut9cl3g1jlqv1frlp2p6cq9r3jsfflkv.apps.googleusercontent.com",
   scope = 'https://www.googleapis.com/auth/drive.file'  //readonly'
-function init() {
-  gapi.auth2.init({ apiKey, clientId, scope })
+async function init() {
+    await gapi.auth2.init({ apiKey, clientId, scope })
+    if (currentUser().getId()) try {
+      showFiles()
+    } catch (e) { error(e) }  
 }
 var files = []  //array of id+' '+name for each item
-window.onerror = error
+window.onerror = error  //never called
 title.innerText = document.title
 gapi.load("client:auth2", init);
 </script>
