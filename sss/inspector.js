@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.14", ITERABLE = new Object();
+const VERSION = "V2.15", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -178,7 +178,8 @@ function superClasses(obj) {
 function display(f) {
     if (!f) return; let t = typeof f;
     if (t != "string" && t != "object") return;
-    if (f instanceof Promise) { //nothing to display in f
+  //if (f instanceof Promise) nothing to display in f
+    if (f.then && typeof(f.then) == "function") {
         f.then(display, reportError); console.log(f);
         out.innerText = "A Promise was made";
         out.style.background = "cyan"; return;
