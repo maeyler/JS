@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="../images/JS.png">
+    <link href="../sss/inspector.css" rel="stylesheet" media="all">
+    <script src="../sss/inspector.js"></script>
+    <title>GAPI Teacher </title>
+</head>
+
+<body>
+<div id=sss></div>
+
+<script>
+"use strict";
+class GAPI {
+  constructor(n, d) {
+    this.name = n; this.dept = d;
+  }
+  toString() { 
+    return this.name+" — "+this.dept; 
+  }
+}
+class Drive extends GAPI {
+  constructor(n) {
+    super(n, 'general');
+    this.reports = [];
+  }
+  toString() { 
+    return this.name+", the manager"; 
+  }
+}
+
+class GAPI_teacher extends Menu {
+  constructor() {
+    super();
+  }
+  init() {
+    let e = document.createElement('script')
+    e.onload = () => gapi.load("client:auth2", initAuth2)
+    document.body.append(e)
+    e.src = "https://apis.google.com/js/api.js"
+  }
+  loadClient() {
+    const DRIVE = 
+    "https://content.googleapis.com/discovery/v1/apis/drive/v3/rest"
+    if (!gapi.client.drive) {
+      log("Load drive client");
+      gapi.client.load(DRIVE).then(loaded)
+    } else loaded()
+  }
+}
+function loaded() {
+    delete MENU.loadClient
+    MENU.doSignIn = () => {
+        log("Authorization");
+        gapi.auth2.getAuthInstance().signIn()
+    }
+}
+
+function stringify(m) {
+    if (typeof m === "string") return m
+    return JSON.stringify(m,'',2)
+}
+function log(m) {
+    let r = m.result || m
+    console.log(m); out.style.color = ''
+    out.innerText = stringify(r)
+}
+function error(e) {
+    let r = e.error || e.result ||  e
+    console.error(e); out.style.color = 'red'
+    out.innerText = stringify(r)
+}
+const FOLDER = 'application/vnd.google-apps.folder'
+const FIELDS = 'files(id,name,mimeType,parents)'
+function initAuth2() {
+    const
+      apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
+      clientId = "864962883135-ut9cl3g1jlqv1frlp2p6cq9r3jsfflkv.apps.googleusercontent.com",
+      scope = 'https://www.googleapis.com/auth/drive.file';
+    gapi.auth2.init({ apiKey, clientId, scope })
+    display(gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile())
+    //delete MENU.init()
+    MENU.gapi = gapi; display(gapi)
+}
+    try {
+        inspect(sss);
+        MENU = new GAPI_teacher(); //global
+        display(MENU);
+    } catch(e) {
+        error(e);
+    }
+</script>
+
+<p><b>Ref: </b><span id=docName></span> &nbsp;
+<a href="https://maeyler.github.io/JS/sss/" target="NewTab">Read me</a> &nbsp;
+<a href="https://maeyler.github.io/JS/sss/Turkish" target="NewTab" >Turkish</a>
+<p>
+
+<script>
+    docName.innerText = "Inspector "+VERSION;
+</script>
+
+</body>
+</html>

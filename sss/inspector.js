@@ -328,7 +328,7 @@ function inspect(parent, init) {
     <td colSpan=2 id=out></td>
   </tr>
 `
-    init(); 
+    if (init) init(); 
     if (!MENU) menu.style.visibility="hidden";
     inp.selectionEnd = inp.value.length; 
     inp.selectionStart = 0; inp.focus();
