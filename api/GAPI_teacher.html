@@ -7,56 +7,136 @@
     <link href="../sss/inspector.css" rel="stylesheet" media="all">
     <script src="../sss/inspector.js"></script>
     <title>GAPI Teacher </title>
+
+<style>
+    img {
+        position: fixed;
+        top:8px; right:8px;
+        width: 50px;
+    }
+
+</style>
 </head>
 
 <body>
-<div id=sss></div>
+    <h3 id=title></h3>
+    <img id=image>
+    <div id=sss></div>
+<pre>
+When the page loads, GAPI is not loaded yet.
+Drive API will be ready in three stages:
+1. initGAPI() loads and initializes GAPI
+Location: apis.google.com/js/api.js 
+2. signIn() gets authorization from a User account
+(may be skipped if an account is already active)
+3. loadClient() drive client will be used
+Drive_teacher is displayed, with several methods:
 
+createFile(name, mimeType, parent)
+
+createFolder(name, parent)
+
+find(name, type) => fileId
+
+open(fileId)
+
+rename (fileId, name)
+
+upload(fileId, data)
+</pre>
 <script>
 "use strict";
-class GAPI {
-  constructor(n, d) {
-    this.name = n; this.dept = d;
+class Drive_teacher {
+  constructor() {
+    this.FOLDER = 'application/vnd.google-apps.folder'
+    this.fields = 'files(id,name,mimeType,parents)'
+    // this.fileId = (fileId) => ({fileId})
   }
-  toString() { 
-    return this.name+" — "+this.dept; 
+  createFile(name, mimeType, parent) {
+    log("create "+name);
+    let resource = {name, mimeType}
+    if (parentId) resource.parents = [parentId]
+    return gapi.client.drive.files.create(resource)
   }
-}
-class Drive extends GAPI {
-  constructor(n) {
-    super(n, 'general');
-    this.reports = [];
+  createFolder(name, parent) {
+    return createFile(name, this.FOLDER, parent) 
   }
-  toString() { 
-    return this.name+", the manager"; 
+  find(name, type) {
+    log("find "+name)
+    let q = "trashed=false and name='"+name+"'"
+    if (type)
+       q += " and mimeType contains '"+type+"'"
+    return gapi.client.drive.files.list({q})
   }
+  rename(fileId, name) {
+    log("rename "+name)
+    resource = {name}
+    return gapi.client.drive.files.update({fileId, resource})
+  }
+  async open(fileId) {
+    let fields = 'files(id,name,webViewLink)'
+    let {result} = await gapi.client.drive.files.get({fileId, fields})
+    if (result.id !== id) throw 'unexpected id '+result.id
+    log("open "+result.name+" in another tab")
+    open(result.webViewLink, "NewTab")
+  }
+  upload(id, body) {
+    log("upload "+id) //requires low-level HTTP request
+    let path = 'https://www.googleapis.com/upload/drive/v3/files/'+id
+    let method = 'PATCH', params = {uploadType: 'media'}
+    // let headers = {'Content-Type': mimeType}
+    return gapi.client.request({path, method, params, body})
+  }
+  toString() { return "Drive_teacher" }
 }
 
-class GAPI_teacher extends Menu {
+class GAPI_teacher {
   constructor() {
-    super();
+    this.window = window
   }
-  init() {
+  s1_initGAPI() {
+    if (window.gapi) throw "gapi already initialized";
     let e = document.createElement('script')
-    e.onload = () => gapi.load("client:auth2", initAuth2)
+    e.onload = () => gapi.load("client:auth2", stage1)
     document.body.append(e)
     e.src = "https://apis.google.com/js/api.js"
   }
-  loadClient() {
+  s2_signIn() {
+    log("2. Authorization");
+    gapi.auth2.getAuthInstance().signIn().then(showProfile)
+  }
+  s3_loadClient() {
     const DRIVE = 
     "https://content.googleapis.com/discovery/v1/apis/drive/v3/rest"
-    if (!gapi.client.drive) {
-      log("Load drive client");
-      gapi.client.load(DRIVE).then(loaded)
-    } else loaded()
+    if (gapi.client.drive) stage3()
+    else {
+      log("3. Load drive client");
+      gapi.client.load(DRIVE).then(stage3)
+    }  
   }
+  signOut() {
+    gapi.auth2.getAuthInstance().signOut().then(log)
+    image.src = ''; image.title = ''
+  }
+  toString() { return "GAPI_teacher" }
 }
-function loaded() {
-    delete MENU.loadClient
-    MENU.doSignIn = () => {
-        log("Authorization");
-        gapi.auth2.getAuthInstance().signIn()
-    }
+
+async function stage1() { //called after initGAPI()
+    const
+      apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
+      clientId = "864962883135-ut9cl3g1jlqv1frlp2p6cq9r3jsfflkv.apps.googleusercontent.com",
+      scope = 'https://www.googleapis.com/auth/drive.file';
+    await gapi.auth2.init({ apiKey, clientId, scope })
+    addToMENU(gapi, 'gapi')
+    if (currentUser().getId()) showProfile()
+}
+async function stage3() { //called after loadClient()
+    log("3. Drive client is loaded")
+    // if (Menu.client) return
+    // addToMENU(gapi.client, 'client', 'gapi.client')
+    // addToMENU(gapi.client.drive, 'drive', 'gapi.client.drive')
+    // addToMENU(gapi.client.drive.files, 'files', 'gapi.client.drive.files')
+    display(new Drive_teacher())
 }
 
 function stringify(m) {
@@ -73,34 +153,22 @@ function error(e) {
     console.error(e); out.style.color = 'red'
     out.innerText = stringify(r)
 }
-const FOLDER = 'application/vnd.google-apps.folder'
-const FIELDS = 'files(id,name,mimeType,parents)'
-function initAuth2() {
-    const
-      apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
-      clientId = "864962883135-ut9cl3g1jlqv1frlp2p6cq9r3jsfflkv.apps.googleusercontent.com",
-      scope = 'https://www.googleapis.com/auth/drive.file';
-    gapi.auth2.init({ apiKey, clientId, scope })
-    display(gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile())
-    //delete MENU.init()
-    MENU.gapi = gapi; display(gapi)
+function addToMENU(obj, name, str=name) {
+    obj.toString = () => str  //used in display()
+    MENU[name] = obj; display(obj)
 }
-    try {
-        inspect(sss);
-        MENU = new GAPI_teacher(); //global
-        display(MENU);
-    } catch(e) {
-        error(e);
-    }
-</script>
-
-<p><b>Ref: </b><span id=docName></span> &nbsp;
-<a href="https://maeyler.github.io/JS/sss/" target="NewTab">Read me</a> &nbsp;
-<a href="https://maeyler.github.io/JS/sss/Turkish" target="NewTab" >Turkish</a>
-<p>
-
-<script>
-    docName.innerText = "Inspector "+VERSION;
+function currentUser() {
+    return gapi.auth2.getAuthInstance().currentUser.get()
+}
+function showProfile() {
+    let p = currentUser().getBasicProfile()
+    image.src = p.getImageUrl()
+    image.title = p.getName()+'\n'+p.getEmail()
+    addToMENU(p, 'user', 'Profile')
+}
+    title.innerText = document.title
+    MENU = new GAPI_teacher(); //global
+    inspect(sss); display(MENU);
 </script>
 
 </body>
