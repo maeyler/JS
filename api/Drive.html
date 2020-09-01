@@ -24,7 +24,7 @@
 
 <body>
 
-<h2 id=title></h2>
+<h3 id=title></h3>
 <img id=image>
 <p>
     If you give permissson to access Google Drive, 
@@ -41,6 +41,7 @@
 
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
+"use strict";
 /**
  * Sample JavaScript code for drive.files.list
  * See instructions for running APIs Explorer code samples locally:
@@ -130,8 +131,8 @@ function saveFile(name, mimeType, body) {
     let result = p.result
     if (!result || !result.id) { error(p); return }
     console.log(result)
-    path = 'https://www.googleapis.com/upload/drive/v3/files/'+result.id
-    method = 'PATCH'; params = { uploadType: 'media' }
+    let path = 'https://www.googleapis.com/upload/drive/v3/files/'+result.id
+    let method = 'PATCH', params = { uploadType: 'media' }
     let headers = {'Content-Type': mimeType}  //file type specified here
     gapi.client.request({path, method, headers, params, body})
     .then(log, error)
