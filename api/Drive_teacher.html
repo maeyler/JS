@@ -6,7 +6,7 @@
     <link rel="icon" href="../images/JS.png">
     <link href="../sss/inspector.css" rel="stylesheet" media="all">
     <script src="../sss/inspector.js"></script>
-    <title>GAPI Teacher </title>
+    <title>Google Drive Teacher </title>
 
 <style>
     img {
@@ -65,7 +65,7 @@ class Drive_teacher {
     let {result} = await gapi.client.drive.files.get({fileId, fields})
     if (result.id !== fileId) throw 'unexpected id '+result.id
     log("open "+result.name); console.log(result.webViewLink)
-    open(result.webViewLink, "NewTab")
+    window.open(result.webViewLink, "NewTab")
   }
   async upload(id, body) {
     log("upload "+id) //requires low-level HTTP request
@@ -78,7 +78,7 @@ class Drive_teacher {
   toString() { return "Drive_teacher" }
 }
 
-class GAPI_teacher {
+class GAPI_menu {
   constructor() {
     this.window = window
   }
@@ -109,7 +109,7 @@ class GAPI_teacher {
     gapi.auth2.getAuthInstance().signOut().then(log)
     image.src = ''; image.title = ''
   }
-  toString() { return "GAPI_teacher" }
+  toString() { return "GAPI_menu" }
 }
 
 async function stage1() { //called after initGAPI()
@@ -141,7 +141,7 @@ function stage3() { //called after loadClient()
     msg.innerHTML = STAGE3
 }
 const STAGE0 = `
-When the page loads, gapi is undefined yet.
+When the page loads, gapi is not defined yet.
 
 Drive API will be ready in three stages:
 s1_initGAPI() loads and initializes GAPI
@@ -151,7 +151,7 @@ s3_loadClient() drive client will be used
               Now click initGAPI()
               No arguments needed`
 const STAGE1 = `
-1. initGAPI() GAPI was initialized
+1. initGAPI: GAPI was initialized
 
 &lt;script> element is made on the fly
 Location: apis.google.com/js/api.js
@@ -161,20 +161,20 @@ Its client object will be loaded at stage 3...
 
         Now click button M then signIn()`
 const STAGE2 = `
-2. signIn() we have authorization 
+2. signIn: we have authorization 
 
 If an account is already active, 
-authorization will be skipped.
+authorization step is skipped.
 
 We have completed sign-in proces required by 
 the Drive client, so we see the user profile.
 
         Now click button M then loadClient()`
 const STAGE3 = `
-3. loadClient() drive client was loaded
-Drive_teacher is displayed
+3. loadClient: Drive client is loaded
+and Drive_teacher is displayed
 
-You are ready use its methods in any order:
+You are ready to use its methods in any order:
 createFile(name, mimeType, parent)
 createFolder(name, parent)
 findName(name) => fileId
@@ -201,7 +201,7 @@ function addToMENU(obj, name, str) {
 }
     title.innerText = document.title
     msg.innerHTML = STAGE0
-    MENU = new GAPI_teacher(); //global
+    MENU = new GAPI_menu(); //global
     inspect(sss); display(MENU);
 </script>
 
