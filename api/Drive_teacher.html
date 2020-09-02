@@ -29,36 +29,38 @@ const
     FOLDER = 'application/vnd.google-apps.folder',
     fields = 'files(id,name,mimeType,parents)',
     fileId = (fileId) => ({fileId});
+var a,b,c,s,t,id; //may be used in Inspector
 class Drive_teacher {
   constructor() {
     let x = {FOLDER, fields, fileId}
     x.toString = () => 'util'
     this.util = x
   }
-  createFile(name, mimeType, parent) {
+  async createFile(name, mimeType="text/plain", parent) {
     log("create "+name);
     let resource = {name, mimeType}
     if (parent) resource.parents = [parent]
-    return gapi.client.drive.files.create(resource)
+    let r = await gapi.client.drive.files.create(resource)
+    let x = r.result; setObjStr(x, x.name); return x
   }
-  createFolder(name, parent) {
+  async createFolder(name, parent) {
     return this.createFile(name, this.util.FOLDER, parent) 
   }
-  findName(name) {
+  async findName(name) {
     log("find "+name)
     let q = "trashed=false and name='"+name+"'"
-    return gapi.client.drive.files.list({q})
+    return listFiles(q)
   }
-  findType(type) {
+  async findType(type) {
     log("find "+type)
-    let q = "trashed=false and "
-          + "mimeType contains '"+type+"'"
-    return gapi.client.drive.files.list({q})
+    let q = "trashed=false and mimeType contains '"+type+"'"
+    return listFiles(q)
   }
-  rename(fileId, name) {
+  async rename(fileId, name) {
     log("rename "+name)
     let resource = {name}
-    return gapi.client.drive.files.update({fileId, resource})
+    let r = await gapi.client.drive.files.update({fileId, resource})
+    let x = r.result; setObjStr(x, x.name); return x
   }
   async open(fileId) {
     let fields = 'id,name,webViewLink' //'files(id,name,webViewLink)'
@@ -69,13 +71,20 @@ class Drive_teacher {
   }
   async upload(id, body) {
     log("upload "+id) //requires low-level HTTP request
-    let {result} = await gapi.client.drive.files.get({fileId: id})
+    let r = await gapi.client.drive.files.get({fileId: id})
     let path = 'https://www.googleapis.com/upload/drive/v3/files/'+id
     let method = 'PATCH', params = {uploadType: 'media'}
-    let headers = {'Content-Type': result.mimeType}
+    let headers = {'Content-Type': r.result.mimeType}
     return gapi.client.request({path, method, headers, params, body})
   }
   toString() { return "Drive_teacher" }
+}
+async function listFiles(q) {
+    let r = await gapi.client.drive.files.list({q})
+    let a = r.result.files
+    setObjStr(a, a.length+' files')
+    for (let x of a) setObjStr(x, x.name)
+    return a
 }
 
 class GAPI_menu {
@@ -91,9 +100,10 @@ class GAPI_menu {
     e.src = "https://apis.google.com/js/api.js"
   }
   s2_signIn() {
-    if (currentUser().getId()) { stage2(); return }
+    if (image.src) throw "user is active -- signOut first";
     log("2. Authorization");
-    //   const MSG = 'Account is active. Do you want to switch?'
+    if (currentUser().isSignedIn()) { stage2(); return }
+    //   const MSG = 'Account is active. Do you want to switch user?'
     //   if (!window.confirm(MSG)) { stage2(); return }
     // }
     gapi.auth2.getAuthInstance().signIn().then(stage2)
@@ -105,9 +115,11 @@ class GAPI_menu {
     log("3. Load drive client");
     gapi.client.load(DRIVE).then(stage3)
   }
-  signOut() {
-    gapi.auth2.getAuthInstance().signOut().then(log)
+  async signOut() {
     image.src = ''; image.title = ''
+    let r = await gapi.auth2.getAuthInstance().signOut()
+    log('signOut'); console.log(r)
+    gapi.auth2.getAuthInstance().disconnect()
   }
   toString() { return "GAPI_menu" }
 }
@@ -140,8 +152,8 @@ function stage3() { //called after loadClient()
     addToMENU(new Drive_teacher(), 'teacher')
     msg.innerHTML = STAGE3
 }
-const STAGE0 = `
-When the page loads, gapi is not defined yet.
+const STAGE0 = 
+`When the page loads, gapi is not defined yet.
 
 Drive API will be ready in three stages:
 s1_initGAPI() loads and initializes GAPI
@@ -150,8 +162,8 @@ s3_loadClient() drive client will be used
 
               Now click initGAPI()
               No arguments needed`
-const STAGE1 = `
-1. initGAPI: GAPI was initialized
+const STAGE1 = 
+`1. initGAPI: GAPI was initialized
 
 &lt;script> element is made on the fly
 Location: apis.google.com/js/api.js
@@ -160,8 +172,8 @@ We see <b>gapi</b> object that does all the action
 Its client object will be loaded at stage 3...
 
         Now click button M then signIn()`
-const STAGE2 = `
-2. signIn: we have authorization 
+const STAGE2 = 
+`2. signIn: we have authorization 
 
 If an account is already active, 
 authorization step is skipped.
@@ -170,8 +182,8 @@ We have completed sign-in proces required by
 the Drive client, so we see the user profile.
 
         Now click button M then loadClient()`
-const STAGE3 = `
-3. loadClient: Drive client is loaded
+const STAGE3 = 
+`3. loadClient: Drive client is loaded
 and Drive_teacher is displayed
 
 You are ready to use its methods in any order:
