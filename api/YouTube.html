@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport"    content="width=device-width">
     <meta name="author"      content="M A Eyler, Istanbul, 2020" />
-    <link rel="icon" sizes="192x192" href="../images/JS.png">
+    <link rel="icon" href="../images/JS.png">
     <link href="play_list.css" rel="stylesheet" media="all">
     <title>YouTube API </title>
+    <style>
+        li a {
+          margin: 8px;
+          display: inline-block;
+        }
+        #nav a {
+          font-size: 20px;
+          font-weight:bolder;
+          cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-
 <h2 id=title></h2>
-<!-- <button id=loader onclick="loadClient()">load</button><br> -->
 <div>
     <p id=exec hidden>
         Number desired
@@ -22,6 +31,10 @@
         <button onclick="location.hash=listID.value">Run</button>
     </p>
     <p id=out>Please reload if not started automatically</p>
+    <div id=nav>
+        Previous video: <a onclick="prevPage()">⇦</a> &emsp;
+        Next video: <a onclick="nextPage()">⇨</a><br><br>
+    </div>
 </div>
 <iframe id=player frameborder="0" allowfullscreen
   allow="accelerometer; encrypted-media; gyroscope; picture-in-picture">
@@ -31,21 +44,16 @@
 </div>
 <hr />
 
-<script src="https://apis.google.com/js/api.js"></script>
-<!-- <script src="../util/Util.js"></script> -->
 <script>
 "use strict";
-const access = { _key:'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU' } 
-        //new KeyHolder('googleAPI')
-var chanTitle, listTitle
-  /**
-   * https://developers.google.com/explorer-help/guides/code_samples#javascript
-   */
+const _key = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU'
+var chanTitle, listTitle, current
+//https://developers.google.com/explorer-help/guides/code_samples#javascript
 function loadClient() {
-    const GAPI = "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
-    gapi.client.setApiKey(access._key);  //loader.style.display = 'none'
+    const YT = "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
+    gapi.client.setApiKey(_key)
     out.innerText = "Loading client"
-    gapi.client.load(GAPI).then(success, console.error)
+    gapi.client.load(YT).then(success, console.error)
 }
 function success() {
     exec.hidden = false; out.innerText = "GAPI client loaded"
@@ -77,12 +85,22 @@ function getItems(response) {
     out.innerText = a.length+' items by '+chanTitle+'\n'+listTitle
     useData(a)  //fill data
   }
-// Interaction
 function doClick(evt) {
     let t = evt.target
-    let h = t.ref || t.parentNode.ref
-    // console.log(t.tagName, h)
-    if (h) player.src = h
+    setCurrent(t.ref? t : t.parentNode)
+}
+function prevPage() {
+    setCurrent(current.previousElementSibling || liste.lastElementChild)
+}
+function nextPage() {
+    setCurrent(current.nextElementSibling || liste.firstElementChild)
+}
+function setCurrent(i) {
+    console.log(i, i.ref)
+    if (!i) return
+    const HREF = 'https://www.youtube.com/embed/'
+    current = i; player.src = i.ref
+    player.scrollIntoView()
 }
 function useData(data) {
     const IMG1 = 'https://img.youtube.com/vi/'
@@ -98,7 +116,8 @@ function useData(data) {
         t.ref = HREF+x.vid; t.title = x.tit
         liste.append(t)
     }
-    player.src = liste.querySelector('li').ref
+    // player.src = liste.querySelector('li').ref
+    setCurrent(liste.querySelector('li'))
 }
 function hashModified() {
     let id = location.hash
@@ -106,13 +125,11 @@ function hashModified() {
     console.log('hashModified', id)
     listID.value = id.substring(1); execute()
 }
-    if (!access._key) throw 'You need an API key'
-    gapi.load("client")
     title.innerText = document.title
     window.onhashchange = hashModified
-    setTimeout(loadClient, 200)
     liste.onclick = doClick
 </script>
-
+<script src="https://apis.google.com/js/api.js" 
+onload ="gapi.load('client', loadClient)"></script>
 </body>
 </html>
