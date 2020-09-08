@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="../images/JS.png">
+    <link href="../sss/inspector.css" rel="stylesheet" media="all">
+    <script src="../sss/inspector.js"></script>
+    <title>YouTube Teacher </title>
+
+<style>
+    body { max-width: 1000px; }
+    #left { width: 420px; }
+    #right { width: 560px; }
+    #left, #right { display: inline-block; }
+</style>
+</head>
+
+<body>
+<div id=left>
+  <h3 id=title></h3>
+  <div id=sss></div>
+  <pre id=msg></pre>
+</div>
+<div id=right>
+  <iframe id=player frameborder=0 width=560 height=315 allowfullscreen
+  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture">
+  </iframe>
+  <hr>
+  <p id=refs><b>Reference:</b> &emsp;
+    <a href="https://developers.google.com/youtube/v3/docs/playlists" 
+     target="NewTab">YouTube API playlists V3</a>
+  </p>  
+  <p><b>Problem:</b> Write two methods </p>
+</div>
+  <!-- <pre>
+1. listFolder(fileId) List contents of given folder
+
+2. move(fileId, parent) Move file/folder to new folder
+  </pre> -->
+  <br>
+
+<script>
+"use strict";
+var a,b,c,s,t,id; //may be used in Inspector
+class YouTube_teacher {
+  constructor() { }
+  playVideo(id) {
+    if (!id) id ='K4wNaM5FM2U'  //sample video
+    new VideoItem('none', id).playItem()
+  }
+  async playlistItems(id, maxResults=30) {
+    if (!id) id ='PLC20F52B96F3E8206'  //sample playlist
+    chanTitle = ''; listTitle = ''
+    out.innerText = "Loading play list "+id
+    let part = "snippet"
+    let r1 = await gapi.client.youtube.playlists.list({part, id})
+    getTitle(r1)
+    let playlistId = id, arg = {part, maxResults, playlistId}
+    let r2 = await gapi.client.youtube.playlistItems.list(arg)
+    getItems(r2)
+  }
+  toString() { return "YouTube_teacher" }
+}
+function getTitle(response) {
+    let x = response.result.items[0]
+    chanTitle = x.snippet.channelTitle
+    listTitle = x.snippet.title
+    console.log(listTitle, x)
+  }
+function getItems(response) {
+    let a = response.result.items  //might .reverse()
+    console.log('getItems', a)
+    a = a.map(x => 
+      new VideoItem(x.snippet.title, x.snippet.resourceId.videoId))
+    console.log(a.length+' items by '+chanTitle+'\n'+listTitle)
+    display(a)  //fill data
+  }
+
+class VideoItem {
+  constructor(title, id) {
+    this.title = title; this.id = id
+  }
+  playItem() {
+    log("playVideo "+this.id);
+    const HREF = 'https://www.youtube.com/embed/'
+    player.src = HREF+this.id
+    player.scrollIntoView()
+  }
+  toString() { return this.title }
+}
+
+class GAPI_menu {
+  constructor() {
+    this.window = window
+  }
+  s1_initGAPI() {
+    if (window.gapi) throw "gapi is already initialized";
+    log("1. Load and start GAPI");
+    let e = document.createElement('script')
+    e.onload = () => gapi.load("client", stage1)
+    document.body.append(e)
+    e.src = "https://apis.google.com/js/api.js"
+  }
+  s2_loadClient() {
+    const YT = 
+      "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
+    if (gapi.client.youtube) throw "client is already loaded"
+    log("2. Load YouTube client")
+    gapi.client.load(YT).then(stage2)
+  }
+  toString() { return "GAPI_menu" }
+}
+
+var chanTitle, listTitle
+const apiKey = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU',
+    clientId = "864962883135-ut9cl3g1jlqv1frlp2p6cq9r3jsfflkv"
+        +".apps.googleusercontent.com";
+async function stage1() { //called after initGAPI()
+    let r = await gapi.auth2.init({ apiKey, clientId })
+    addToMENU(gapi, 'gapi', 'gapi'); //console.log(r)
+    msg.innerHTML = STAGE1
+}
+function stage2() { //called after loadClient()
+    log("YouTube client is loaded")
+    gapi.client.setApiKey(apiKey)
+    setObjStr(gapi.client, 'gapi.client')
+    setObjStr(gapi.client.youtube, 'gapi.client.youtube')
+    let v = gapi.client.youtube.videos
+    setObjStr(v, 'gapi.client.youtube.videos')
+    let p = gapi.client.youtube.playlists
+    setObjStr(p, 'gapi.client.youtube.playlists')
+    let i = gapi.client.youtube.playlistItems
+    setObjStr(i, 'gapi.client.youtube.playlistItems')
+    addToMENU(new YouTube_teacher(), 'teacher')
+    msg.innerHTML = STAGE2
+}
+const STAGE0 = 
+`When the page loads, gapi is not defined yet.
+
+YouTube API will be ready in two stages:
+s1_initGAPI() loads and initializes GAPI
+s2_loadClient() YouTube client will be used
+Authorization step is not needed
+
+              Now click initGAPI()
+              No arguments needed`
+const STAGE1 = 
+`1. initGAPI: GAPI was initialized
+
+&lt;script> element is made on the fly
+Location: apis.google.com/js/api.js
+
+We see <b>gapi</b> object that does all the action
+Its client object will be loaded at stage 2...
+
+        Now click button M then loadClient()`
+const STAGE2 = 
+`2. loadClient: YouTube client is loaded
+and YouTube_teacher is displayed
+
+You are ready to use its methods in any order:
+playVideo(videoId)
+playlistItems(playlistId, maxResults=30)
+`
+
+function stringify(m) {
+    if (typeof m === "string") return m
+    return JSON.stringify(m,'',2)
+}
+function log(m) {
+    let r = m.result || m
+    console.log(m); out.style.color = ''
+    out.innerText = stringify(r)
+}
+function setObjStr(obj, str=obj.name) {
+    obj.toString = () => str  //used in display()
+    return obj
+}
+function addToMENU(obj, name, str) {
+    if (str) setObjStr(obj, str)
+    MENU[name] = obj; display(obj)
+}
+    title.innerText = document.title
+    msg.innerHTML = STAGE0
+    MENU = new GAPI_menu(); //global
+    inspect(sss); display(MENU);
+</script>
+
+</body>
+</html>
