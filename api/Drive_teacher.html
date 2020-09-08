@@ -13,6 +13,7 @@
         position: fixed;
         top:8px; right:8px;
         width: 50px;
+        z-index: 2;
     }
 
 </style>
@@ -42,7 +43,7 @@
 "use strict";
 const
     FOLDER = 'application/vnd.google-apps.folder',
-    fields = 'files(id,name,mimeType,parents)',
+    fields = 'files(id,name,mimeType,size,modifiedTime)',
     fileId = (fileId) => ({fileId});
 var a,b,c,s,t,id; //may be used in Inspector
 class Drive_teacher {
@@ -55,15 +56,15 @@ class Drive_teacher {
     log("create "+name);
     let resource = {name, mimeType}
     if (parent) resource.parents = [parent]
-    let r = await gapi.client.drive.files.create(resource)
-    let x = r.result; setObjStr(x, x.name); return x
-  }
+    let {result} = await gapi.client.drive.files.create(resource)
+    return setObjStr(result)
+}
   async createFolder(name, parent) {
     return this.createFile(name, this.util.FOLDER, parent) 
   }
   async findName(name) {
     log("find "+name)
-    let q = "trashed=false and name='"+name+"'"
+    let q = "trashed=false and name contains '"+name+"'"
     return listFiles(q)
   }
   async findType(type) {
@@ -73,9 +74,9 @@ class Drive_teacher {
   }
   async rename(fileId, name) {
     log("rename "+name)
-    let resource = {name}
-    let r = await gapi.client.drive.files.update({fileId, resource})
-    let x = r.result; setObjStr(x, x.name); return x
+    let resource = {name}, arg = {fileId, resource}
+    let {result} = await gapi.client.drive.files.update(arg)
+    return setObjStr(result)
   }
   async open(fileId) {
     let fields = 'id,name,webViewLink' //'files(id,name,webViewLink)'
@@ -84,21 +85,34 @@ class Drive_teacher {
     log("open "+result.name); console.log(result.webViewLink)
     window.open(result.webViewLink, "NewTab")
   }
+  async getFile(id) {
+    log("getFile "+id)
+    let arg = {fileId: id, fields: "*"}
+    let {result} = await gapi.client.drive.files.get(arg)
+    let info = result; setObjStr(info)
+    let name = info.name
+    arg = {fileId: id, alt: "media"}
+    let r = await gapi.client.drive.files.get(arg)
+    //result is false, body contains file contents
+    let data = r.body; console.log(r)
+    return setObjStr({info, data}, 'File info & content')
+  }
   async upload(id, body) {
     log("upload "+id) //requires low-level HTTP request
-    let r = await gapi.client.drive.files.get({fileId: id})
+    let {result} = await gapi.client.drive.files.get({fileId: id})
     let path = 'https://www.googleapis.com/upload/drive/v3/files/'+id
     let method = 'PATCH', params = {uploadType: 'media'}
-    let headers = {'Content-Type': r.result.mimeType}
-    return gapi.client.request({path, method, headers, params, body})
+    let headers = {'Content-Type': result.mimeType}
+    await gapi.client.request({path, method, headers, params, body})
+    return setObjStr(result)
   }
   toString() { return "Drive_teacher" }
 }
 async function listFiles(q) {
-    let r = await gapi.client.drive.files.list({q})
-    let a = r.result.files
+    let {result} = await gapi.client.drive.files.list({q, fields})
+    let a = result.files
     setObjStr(a, a.length+' files')
-    for (let x of a) setObjStr(x, x.name)
+    for (let x of a) setObjStr(x)
     return a
 }
 
@@ -115,7 +129,7 @@ class GAPI_menu {
     e.src = "https://apis.google.com/js/api.js"
   }
   s2_signIn() {
-    if (image.src) throw "user is active -- signOut first";
+    // if (image.src) throw "user is active -- signOut first";
     log("2. Authorization");
     if (currentUser().isSignedIn()) { stage2(); return }
     //   const MSG = 'Account is active. Do you want to switch user?'
@@ -206,6 +220,7 @@ createFile(name, mimeType, parent)
 createFolder(name, parent)
 findName(name) => fileId
 findType(type) => fileId
+getFile(fileId)
 open(fileId)
 rename(fileId, name)
 upload(fileId, data)`
@@ -219,8 +234,9 @@ function log(m) {
     console.log(m); out.style.color = ''
     out.innerText = stringify(r)
 }
-function setObjStr(obj, str) {
+function setObjStr(obj, str=obj.name) {
     obj.toString = () => str  //used in display()
+    return obj
 }
 function addToMENU(obj, name, str) {
     if (str) setObjStr(obj, str)

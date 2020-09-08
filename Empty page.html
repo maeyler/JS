@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" sizes="192x192" href="images/JS.png">
+    <link rel="icon" href="/JS/images/JS.png">
     <title>Empty Page xxx </title>
-
+    
   <style> /* CSS code in use */
     body { max-width: 440px; }
     #sample { overflow-x: auto; }
@@ -19,20 +19,14 @@
   </style>
 </head>
 
-<!-- Modify or remove all items marked xxx -->
-
 <body>
-
+<!-- Modify all items marked xxx -->
 <h2 id=title></h2>
-
-<input type=button id=xxx value=Count>
-
+<input type=button onclick="count()" value=xxx>
 <p id=out></p>
-
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
-
 <hr />
 <p>Ref: <a href="https://www.w3schools.com/js/" 
    target="NewTab">JS Tutorial</a>
@@ -50,9 +44,7 @@ function count() {
     title.innerText = document.title
     sample.innerText = count.toString()
     out.innerText = "Modify all items marked xxx"
-    xxx.onclick = () => count()
     var counter = 0; count()
 </script>
-
 </body>
 </html>
