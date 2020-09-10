@@ -31,30 +31,68 @@
     <a href="https://developers.google.com/youtube/v3/docs/playlists" 
      target="NewTab">YouTube API playlists V3</a>
   </p>  
-  <p><b>Problem:</b> Write two methods </p>
-</div>
-  <!-- <pre>
-1. listFolder(fileId) List contents of given folder
-
-2. move(fileId, parent) Move file/folder to new folder
-  </pre> -->
+  <p><b>Problems:</b>
+<br><br>
+1. Write a method to list all playlists in a channel
+<br><br>
+2. Modify list methods to display more than 50 items
+  </p>
   <br>
+</div>
 
 <script>
 "use strict";
 var a,b,c,s,t,id; //may be used in Inspector
 
-class PlayList {
-  constructor(title, id, chan, items) {
-    this.title = title; this.id = id; this.channelTitle = chan
-    this.items = setObjStr(items, items.length+' videos')
+function checkError(r) {
+  if (r.status>200 || !r.result.items) throw r.result
+}
+class Channel {
+  constructor(id, title) {
+    this.id = id; this.title = title || "Channel"
+  }
+  async listVideos(maxResults=50) {
+    function toVideoItem({id, snippet}) {
+      snippet.id = id.videoId
+      return Object.setPrototypeOf(snippet, VideoItem.prototype)
+    }
+    let part = "snippet", channelId = this.id
+    let arg = {part, maxResults, channelId}
+    let r = await gapi.client.youtube.search.list(arg)
+    checkError(r)
+    let a = r.result.items.map(toVideoItem)
+    if (!a || a.length==0) throw "not found: "+this.id
+    setObjStr(a, a.length+' videos')
+    return new Promise((resolve) => resolve(a))
+  }
+  toString() { return this.title }
+}
+
+class Playlist {
+  constructor(id, title) {
+    this.id = id; this.title = title || "Playlist"
+  }
+  async listVideos(maxResults=50) {
+    function toVideoItem({snippet}) {
+      snippet.id = snippet.resourceId.videoId
+      return Object.setPrototypeOf(snippet, VideoItem.prototype)
+    }
+    let part = "snippet", playlistId = this.id
+    let arg = {part, maxResults, playlistId}
+    let r = await gapi.client.youtube.playlistItems.list(arg)
+    checkError(r); console.log('getItems', r)
+    let a = r.result.items.map(toVideoItem)
+    if (!a || a.length==0) throw "not found: "+this.id
+    setObjStr(a, a.length+' videos')
+    return new Promise((resolve) => resolve(a))
+    //same as display(a) -- resolve is display
   }
   toString() { return this.title }
 }
 
 class VideoItem {
-  constructor(title, id) {
-    this.title = title; this.id = id
+  constructor(id, title) {
+    this.id = id; this.title = title || "VideoItem"; 
   }
   playItem() {
     log("playVideo "+this.id);
@@ -65,6 +103,17 @@ class VideoItem {
   toString() { return this.title }
 }
 
+async function getUser(arg) {  
+    arg.part = "snippet"
+    let r = await gapi.client.youtube.channels.list(arg)
+    checkError(r)
+    //return new Promise((resolve, reject) => reject(r.result))
+    let [x] = r.result.items
+    if (!x) throw "not found: "+arg.id
+    let s = x.snippet; s.id = x.id
+    Object.setPrototypeOf(s, Channel.prototype)
+    return new Promise((resolve) => resolve(s))
+}
 class GAPI_menu {
   constructor() {
     this.window = window
@@ -77,30 +126,26 @@ class GAPI_menu {
     document.body.append(e)
     e.src = "https://apis.google.com/js/api.js"
   }
-  playVideo(id) {
-    if (!id) id ='K4wNaM5FM2U'  //sample video
-    new VideoItem('none', id).playItem()
+  async userFromName(forUsername) {
+    return getUser({forUsername})
   }
-  async playlistItems(id, maxResults=30) {
+  async userFromId(id) {
+    return getUser({id})
+  }
+  async playlistFromId(id) {
     if (!id) id ='PLC20F52B96F3E8206'  //sample playlist
     log("Loading play list "+id)
     let part = "snippet"
-    let r1 = await gapi.client.youtube.playlists.list({part, id})
-    if (r1.status > 200)
-      return new Promise((resolve, reject) => reject(r1.result))
-    let [x] = r1.result.items
-    let channelTitle = x.snippet.channelTitle
-    let title = x.snippet.title
-    let playlistId = id, arg = {part, maxResults, playlistId}
-    let r2 = await gapi.client.youtube.playlistItems.list(arg)
-    if (r2.status > 200)
-      return new Promise((resolve, reject) => reject(r2.result))
-    let a = r2.result.items.map(x =>  //getItems(r2)
-      new VideoItem(x.snippet.title, x.snippet.resourceId.videoId))
-    let p = new PlayList(title, id, channelTitle, a)
-    console.log('getItems', r2)
+    let r = await gapi.client.youtube.playlists.list({part, id})
+    checkError(r); let [x] = r.result.items
+    let {title, channelTitle, channelId} = x.snippet
+    let p = new Playlist(id, title)
+    p.channelId = channelId; p.channelTitle = channelTitle
     return new Promise((resolve) => resolve(p))
-    //same as display(p) -- resolve is display
+  }
+  playVideo(id) {
+    if (!id) id ='K4wNaM5FM2U'  //sample video
+    new VideoItem(id).playItem()
   }
   toString() { return "GAPI_menu" }
 }
@@ -114,14 +159,6 @@ async function loadClient() { //called after initGAPI()
     //set MENU items
     addToMENU(gapi, 'gapi', 'gapi')
     setObjStr(gapi.client, 'gapi.client')
-    setObjStr(gapi.client.youtube, 'gapi.client.youtube')
-    let v = gapi.client.youtube.videos
-    setObjStr(v, 'gapi.client.youtube.videos')
-    let p = gapi.client.youtube.playlists
-    setObjStr(p, 'gapi.client.youtube.playlists')
-    let i = gapi.client.youtube.playlistItems
-    setObjStr(i, 'gapi.client.youtube.playlistItems')
-    // addToMENU(new YouTube_teacher(), 'teacher')
     msg.innerHTML = STAGE2
 }
 const STAGE0 = 
@@ -138,7 +175,9 @@ const STAGE2 =
 
 You may use these methods in any order:
 * playVideo(videoId)
-* playlistItems(playlistId, maxResults=30)`
+* playlistFromId(playlistId)
+* userFromId(channelId)
+* userFromName(channelTitle)`
 
 function stringify(m) {
     if (typeof m === "string") return m
