@@ -56,8 +56,8 @@ class Channel {
       snippet.id = id.videoId
       return Object.setPrototypeOf(snippet, VideoItem.prototype)
     }
-    let part = "snippet", channelId = this.id
-    let arg = {part, maxResults, channelId}
+    let part = "snippet", channelId = this.id, type= "video"
+    let arg = {part, channelId, maxResults, type}
     let r = await gapi.client.youtube.search.list(arg)
     checkError(r)
     let a = r.result.items.map(toVideoItem)
@@ -95,10 +95,11 @@ class VideoItem {
     this.id = id; this.title = title || "VideoItem"; 
   }
   playItem() {
-    log("playVideo "+this.id);
+    let id = this.id
+    if (!id) throw 'No videoId on this object'
+    log("playVideo "+id);
     const HREF = 'https://www.youtube.com/embed/'
-    player.src = HREF+this.id
-    player.scrollIntoView()
+    player.src = HREF+id; player.scrollIntoView()
   }
   toString() { return this.title }
 }
@@ -127,13 +128,15 @@ class GAPI_menu {
     e.src = "https://apis.google.com/js/api.js"
   }
   async userFromName(forUsername) {
+    if (!forUsername) forUsername ='vihart'  //default user
     return getUser({forUsername})
   }
   async userFromId(id) {
+    if (!id) id = 'UCOGeU-1Fig3rrDjhm9Zs_wg'  //default user id
     return getUser({id})
   }
   async playlistFromId(id) {
-    if (!id) id ='PLC20F52B96F3E8206'  //sample playlist
+    if (!id) id ='PLC20F52B96F3E8206'  //default playlist id
     log("Loading play list "+id)
     let part = "snippet"
     let r = await gapi.client.youtube.playlists.list({part, id})
@@ -144,7 +147,7 @@ class GAPI_menu {
     return new Promise((resolve) => resolve(p))
   }
   playVideo(id) {
-    if (!id) id ='K4wNaM5FM2U'  //sample video
+    if (!id) id ='K4wNaM5FM2U'  //default video id
     new VideoItem(id).playItem()
   }
   toString() { return "GAPI_menu" }
@@ -173,11 +176,12 @@ Authorization step is not needed.
 const STAGE2 = 
 `YouTube client is loaded now. 
 
-You may use these methods in any order:
+Use these methods to list & play videos:
 * playVideo(videoId)
 * playlistFromId(playlistId)
 * userFromId(channelId)
-* userFromName(channelTitle)`
+* userFromName(channelTitle)
+Try these with no arguments first`
 
 function stringify(m) {
     if (typeof m === "string") return m
