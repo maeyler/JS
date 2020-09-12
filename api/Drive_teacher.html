@@ -9,22 +9,29 @@
     <title>Google Drive Teacher </title>
 
 <style>
+    body { max-width: 1000px; }
+    #left { width: 420px; }
+    #right { width: 560px; }
+    #left, #right { display: inline-block; }
     #image {
-        position: fixed;
-        top:8px; right:8px;
-        width: 50px;
-        z-index: 2;
+      position: absolute;
+      width: 50px;
+      top: 8px;
+      left: 350px;
+      z-index: 2;
     }
 </style>
 </head>
 
 <body>
+<div id=left>
   <h3 id=title></h3>
   <img id=image>
   <div id=sss></div>
   <pre id=msg></pre>
-  <hr>
-  <iframe src="https://www.youtube.com/embed/K4wNaM5FM2U" frameborder="0" 
+</div>
+  <div id=right>
+    <iframe src="https://www.youtube.com/embed/K4wNaM5FM2U" frameborder="0" 
     allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" 
     width="560" height="315"  allowfullscreen></iframe>
   <hr>
@@ -32,12 +39,17 @@
     <a href="https://developers.google.com/drive/api/v3/reference/files" 
      target="NewTab">drive.api.files V3</a>
   </p>  
-  <p><b>Problem:</b> Write two methods </p>
-  <pre>
-1. listFolder(fileId) List contents of given folder
-
-2. move(fileId, parent) Move file/folder to new folder
-  </pre> <br>
+  <p><b>Problems:</b>
+<br><br>
+1. Modify find methods to display more than 100 items
+<br><br>
+2. Add two methods:<br>
+a) listFolder(fileId) List contents of given folder<br>
+b) move(fileId, parent) Move file/folder to new folder
+<br><br>
+3. Convert these methods to a web page with a UI
+  </p>
+</div>
 <script>
 "use strict";
 const
