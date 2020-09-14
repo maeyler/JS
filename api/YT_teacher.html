@@ -9,16 +9,17 @@
     <title>YouTube Teacher </title>
 
 <style>
-    body { max-width: 1000px; }
-    #left { width: 420px; }
+    body { max-width: 1020px; }
+    #title { margin: 8px; }
+    #left { width: 420px; margin-right: 16px; }
     #right { width: 560px; }
-    #left, #right { display: inline-block; }
+    #title, #left, #right { display: inline-block; }
 </style>
 </head>
 
 <body>
 <div id=left>
-  <h3 id=title></h3>
+  <b id=title></b>
   <div id=sss></div>
   <pre id=msg></pre>
 </div>
@@ -149,7 +150,7 @@ class GAPI_menu {
     return new Promise((resolve) => resolve(p))
   }
   playVideo(id) {
-    if (!id) id ='K4wNaM5FM2U'  //default video id
+    if (!id) id ='KQTBbB9gftE'  //default video id
     new VideoItem(id).playItem()
   }
   toString() { return "GAPI_menu" }
