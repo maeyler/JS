@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
+    <title>İBB Şehir Haritası </title>
+
+  <style>
+    body { margin: 0; }
+    h2 { margin: 10px 0; }
+    div { margin: 10px; }
+    #mapFrame {
+        height:500px; width:100%;
+        box-sizing: border-box;
+        border: 0;
+    }
+    #err {
+        display:none;
+        color:red
+    }
+  </style>
+</head>
+
+<body>
+<div>
+    <h2 id=title></h2>
+    <input id=but type=button value="Run" onClick="start()"> &emsp;
+    <span id=out></span>
+    <!-- <input type=checkbox onClick="mapType(checked)">Satellite -->
+</div>
+<hr />
+<iframe id=mapFrame></iframe>  
+<hr />
+<div>
+    <b>Sample code</b>
+    <pre id=sample></pre>
+    <hr />
+    <p id=err>You need an API key 
+    <a href="https://sehirrehberi.ibb.gov.tr/developer/index.html#ilkadim" 
+       target="NewTab">here</a> 
+    </p>
+    <p>Ref: 
+    <a href="https://sehirharitasi.ibb.gov.tr/developerconsole/baslangic.html" 
+       target="NewTab">Başlangıç</a> &emsp;
+    <a href="https://sehirrehberi.ibb.gov.tr/developer/api.html" 
+       target="NewTab">Şehir Haritası API</a>
+    </p>
+</div>
+
+<script src="http://sehirharitasi.ibb.gov.tr/api/map2.js"></script>
+<script src="../util/Util.js"></script>
+<script>
+"use strict";
+const access = new KeyHolder('ibbmap'),
+   arg = {mapFrame:"mapFrame", apiKey:access._key},
+   {Map} = new SehirHaritasiAPI(arg, init);
+const MIN = 11, MAX = 20;
+var zoom, incr;
+function init() {
+    //initial coordinates are given: 50. Yil Parki
+    let lat = 40.970021, lon = 29.057876
+    zoom = 11; let point = {lat, lon, zoom}
+    console.log(Map, point); Map.Goto(point)
+}
+function stop() {
+    but.value = "Run";
+    but.onclick = start;
+    out.innerText = "";
+    incr = 0;
+}
+function start() {
+    but.value = "Stop";
+    but.onclick = stop;
+    incr = 1; setZoom();
+}
+function setZoom() {
+    if (!incr) return;
+    zoom += incr
+    Map.SetZoom({zoom});
+    out.innerText = "Zoom = "+zoom;
+    if (zoom >= MAX) incr = -1;
+    if (zoom <= MIN) incr = 1;
+    setTimeout(setZoom, 700);
+}
+function error() {
+    err.style.display = "block"; //show
+    throw 'You need an API key'
+}
+    title.innerText = document.title;
+    sample.innerText = init;
+    mapFrame.src = "http://sehirharitasi.ibb.gov.tr"
+    if (!access._key) error()
+</script>
+
+</body>
+</html>

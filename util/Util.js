@@ -237,7 +237,7 @@ function verifyTC(s) {
 class KeyHolder {
     constructor(name) {
       function askUser() {
-          let k = prompt('Please enter key for '+name)
+          let k = prompt('(No quotes) Enter key for '+name)
           if (k) return k
           const ERR = 'You need an API key'
           console.error(ERR)

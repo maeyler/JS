@@ -7,48 +7,49 @@
     <title>MapBoxGL </title>
 
   <style>
-    body { margin:10px; }
+    body { margin: 0; }
+    h2 { margin: 10px 0; }
+    #one, #two { margin: 10px; }
     #map {
-        width:600px;
-        height:600px
+        height:500px; width:100%;
+        box-sizing: border-box;
+        border: 0;
     }
     #err {
         display:none;
         color:red
     }
   </style>
-
-<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
-
 </head>
 
 <body>
-
-<h2 id=title></h2>
-
-<input id=but type=button value="Run" onClick="start()"> &emsp;
-<span id=out></span>
-<input type=checkbox onClick="mapType(checked)">Satellite
-
+<div id=one>
+    <h2 id=title></h2>
+    <input id=but type=button value="Run" onClick="start()"> &emsp;
+    <span id=out></span>
+    <input type=checkbox onClick="mapType(checked)">Satellite
+</div>
 <hr />
 <div id=map></div>
-
 <hr />
-<b>Sample code</b>
-<pre id=sample></pre>
-<hr />
-<p id=err>You need an API access token to configure Mapbox 
-<a href="https://account.mapbox.com/auth/signin/?route-to=%22/access-tokens/%22" 
-   target="NewTab">here</a> 
-</p>
-<p>Ref: 
-<a href="https://www.mapbox.com/help/how-web-apps-work/" 
-   target="NewTab">Map web apps</a>&emsp;
-<a href="https://www.mapbox.com/mapbox-gl-js/example/simple-map/" 
-   target="NewTab">MapBox Example</a>
-</p>
+<div id=two>
+    <b>Sample code</b>
+    <pre id=sample></pre>
+    <hr />
+    <p id=err>You need an API access token to configure Mapbox 
+    <a href="https://account.mapbox.com/auth/signin/?route-to=%22/access-tokens/%22" 
+       target="NewTab">here</a> 
+    </p>
+    <p>Ref: 
+    <a href="https://www.mapbox.com/help/how-web-apps-work/" 
+       target="NewTab">Map web apps</a>&emsp;
+    <a href="https://www.mapbox.com/mapbox-gl-js/example/simple-map/" 
+       target="NewTab">MapBox Example</a>
+    </p>
+</div>
 
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
 <script src="../util/Util.js"></script>
 <script>
 "use strict";
@@ -65,7 +66,7 @@ function init(point) {
     container: 'map',
     center: [point.lng, point.lat],
     style: 'mapbox://styles/mapbox/streets-v9',
-    zoom: 15
+    zoom: 10
 });
 }
 const MIN = 2, MAX = 19;
