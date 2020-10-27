@@ -13,7 +13,7 @@
   }
   #touch, #long { 
     font: 13px arial, sans-serif;
-    width: 340px; height: 180px;
+    width: 340px; height: 150px;
   }
   #long {
     margin: 0;
@@ -36,16 +36,15 @@ We are listening to click events and to touch events on
 this element. Multiple touches are recognized and the red 
 circle(s) are movable if a touch screen is available.
 <br><br>
-Scroll events below are reflected on the blue bar.
-<br><br>
 The total number of event calls on either listener is reported 
 below. Horizontal swipes are also reported.
+<br><br>
+Scroll events are reflected on the blue bar.
 </p>
 <p id=out></p>
-
+""
 <div id=bar></div>
 <p id=long></p>
-
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
@@ -121,12 +120,14 @@ function scroller(evt) {
     out.innerText = (count+":  scroll "+w); 
     count++; bar.style.width = w;
 }
-
     title.innerText = document.title;
     sample.innerText = scroller.toString();
     out.innerText = "Start";
-    long.innerText = "Modify all items marked xxx ".repeat(200);
-    long.addEventListener("scroll", scroller);
+    let s = '', n= 100
+    while (++n <= 300) 
+        s += "Modify items marked "+n+" "
+    long.innerText = s
+    long.addEventListener("scroll", scroller)
     
     touch.addEventListener("touchstart", doTouchS);
     touch.addEventListener("touchmove", doTouchM);

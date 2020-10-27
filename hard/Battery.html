@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+    <title>Battery Status </title>
+    
+  <style> /* CSS code in use */
+    body { max-width: 440px; }
+    #progress { width: 200px; }
+  </style>
+</head>
+
+<body>
+<h2 id=title></h2>
+<div id="charging"></div>
+<div>
+   <progress id="progress" value="0" max="100" ></progress> 
+   <span id="levelTxt" ></span>
+</div>
+<div id="message"></div>
+<p>Ref: <a href=
+"https://developer.tizen.org/dev-guide/2.4.0/org.tizen.tutorials/html/web/w3c/device/battery_tutorial_w.htm" 
+   target="NewTab">Battery Tutorial</a>
+</p>
+<h2>Internet Status</h2>
+<p id=out></p>
+<p id=online></p>
+
+
+<script>
+  "use strict";
+  function getBatteryState(evt) {
+      // console.log(evt.type)
+      let battery = evt.target;
+      let state = "", msg = "";
+      let level = Math.round(battery.level * 100);
+      if (battery.charging) { 
+         state = level==100? "Fully charged" : "Charging...";
+         if (battery.chargingTime < Infinity) {
+           let tf = getTimeFormat(battery.chargingTime);
+           msg = tf.hour + ":" + tf.minute + " to full charge";
+         }
+      } else { //if (!battery.charging) {  
+        state = level>15? "Discharging..." : "Connect the charger"
+        if (battery.dischargingTime < Infinity) {
+          let tf = getTimeFormat(battery.dischargingTime);
+          msg = tf.hour + ":" + tf.minute + " remaining";
+         }
+      }
+      console.log(level, battery.charging, msg)
+      charging.innerText = state;
+      progress.value = level;
+      levelTxt.innerText = level + "%";
+      message.innerText = msg;
+  }
+
+  /* Time is received in seconds, converted to hours and minutes */
+  function getTimeFormat(time) {
+      /* time parameter is second */
+      let m = time / 60;
+      let hour = parseInt(m / 60);
+      let minute = parseInt(m % 60);
+      minute = minute < 10 ? "0" + minute : minute;
+      return {hour, minute};
+  }
+
+  function init(b) {
+      getBatteryState({type:'init', target:b})
+      b.onlevelchange = getBatteryState
+      b.onchargingchange = getBatteryState
+    //b.onchargingtimechange = getBatteryState
+    //b.ondischargingtimechange = getBatteryState
+  }
+  function showOnline(b) {
+    let msg
+    if (b) {
+        msg = 'connected -- online'
+        online.style.color = 'blue'
+    } else {
+        msg = 'disconnected -- offline'
+        online.style.color = 'red'
+    }
+    online.innerText = msg; console.log(msg)
+  }
+  title.innerText = document.title;
+  onoffline = () => showOnline(false)
+  ononline  = () => showOnline(true)
+  showOnline(navigator.onLine)
+  if (navigator.getBattery)
+      navigator.getBattery().then(init)
+  else throw "getBattery not found"
+
+</script>
+</body>
+</html>
