@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.15", ITERABLE = new Object();
+const VERSION = "V2.16", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -127,6 +127,15 @@ Request.prototype.toString = function() {
 // 'this' is undefined in ()=>"File: "+this.name;
 File.prototype.toString = function() {
     return "[F] "+this.name
+}
+FileList.prototype.toString = function () {
+  return '[object FileList] '+this.length
+}
+Blob.prototype.toString = function () {
+  return '[object Blob] '+this.size
+}
+ArrayBuffer.prototype.toString = function () {
+  return '[object ArrayBuffer] '+this.byteLength
 }
 function checkFile(f) { //not used
     if (Reflect.ownKeys(f).includes("toString")) return;
