@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="icon" href="../images/icon192.png">
+  <title>Countries</title>
+  <style>
+    body {
+        max-width: 600px;
+    }
+    img {
+        display: inline-block;
+        vertical-align: text-top;
+        width: 40%;
+        border: 1px solid;
+        margin-right: 6%;
+    }
+    span {
+        cursor: pointer;
+        color: blue;
+    }
+    #main {
+        box-sizing: border-box;
+        background: lavender;
+    }
+    #out {
+        display: inline-block;
+        vertical-align: text-top;
+        margin: 0px;
+        width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<p>
+    <input type=text id=country value=TUR size=8>
+    <b id=nam></b>
+</p>
+<div id=main>
+    <img id=img>
+    <p id=out></p>
+    <p id=pop></p>
+</div>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="https://restcountries.eu/" target=NewTab>Countries API</a>
+</p>
+
+<script>
+"use strict";
+function error(t) {
+    out.style.color = 'red'
+    out.innerText = t; throw t
+}
+const data = {}
+async function readData() {
+    const u = "https://restcountries.eu/rest/v2/all"
+    let r = await fetch(u)
+    if (!r.ok) error(r.statusText)
+    let a = await r.json()
+    if (!a) error('Country data not found')
+    for (let x of a) data[x.alpha3Code] = x
+    display()
+}
+function languages(x) {
+    let b = x.languages
+    return b.map(y => y.name).join(", ")
+}
+function population(x) {
+    const M = 1_000_000
+    return x.population > M?
+        Math.round(x.population/M)+'M'
+      : Math.round(x.population/1000)+'K'
+}
+function borders(x) {
+    const _S = '<span>', S_ = '</span>'
+    let b = x.borders
+    return _S+b.join(S_+', '+_S)+S_
+}
+function doBorder(evt) {
+    let c = evt.target.innerText
+    if (c && c.length==3) display(c)
+}
+function display(c=country.value) { //Country code
+    const BR = "<BR>"
+    let x = data[c.toUpperCase()]
+    if (!x) error('Country '+c+' not found')
+    nam.innerText = x.name; console.log(x.name)
+    country.value = c
+    out.style.color = '' //; out.innerHTML = ''
+    //image for the flag
+    img.src = x.flag
+    //add location
+    out.innerHTML = x.nativeName+BR
+        +x.subregion+BR+x.capital+BR
+    //add link to web 
+    let h = "country/"+x.alpha3Code
+    let a = document.createElement("a")
+    a.href = "https//countries.petethompson.net/#/"+h
+    a.target = "NewTab"; a.innerText = h
+    out.appendChild(a)
+    //add population
+    pop.innerHTML = 'Population: '+population(x)
+        +BR+'Area: '+(x.area/1000).toFixed(3)
+        +BR+'Borders: '+borders(x)
+        +BR+BR+languages(x)
+}
+    title.innerText = document.title
+    sample.innerText = readData +'\n'+ display
+    out.innerText = "Reading data"
+    country.onchange = ()=>display()
+    pop.onclick = doBorder
+    readData()
+</script>
+
+</body>
+</html>
