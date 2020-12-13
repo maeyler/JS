@@ -9,6 +9,7 @@
   <style>
     body { margin: 0; }
     h2 { margin: 10px 0; }
+    pre { overflow-x: auto; }
     #one, #two { margin: 10px; }
     #map {
         height:500px; width:100%;
@@ -60,14 +61,17 @@ function mapType(sat) {
       'mapbox://styles/mapbox/satellite-v9' :
       'mapbox://styles/mapbox/streets-v9')
 }
-function init(point) {
-  console.log(point);
-  MAP = new mapboxgl.Map({
-    container: 'map',
-    center: [point.lng, point.lat],
-    style: 'mapbox://styles/mapbox/streets-v9',
-    zoom: 10
-});
+function init() {
+    mapboxgl.accessToken = access._key
+    //initial coordinates are given: 50. Yil Parki
+    let p = {lat:40.970021, lng:29.057876}
+    console.log('init at', p)
+    MAP = new mapboxgl.Map({
+      container: 'map',
+      center: [p.lng, p.lat],
+      zoom: 10
+    })
+    mapType() //street map
 }
 const MIN = 2, MAX = 19;
 var incr = 0;
@@ -97,12 +101,9 @@ function error() {
     err.style.display = "block"; //show
     throw 'You need an API access token'
 }
-    if (!access._key) error()
-    title.innerText = document.title;
-    sample.innerText = init;
-    mapboxgl.accessToken = access._key
-    //initial coordinates are given: 50. Yil Parki
-    init({lat:40.970021, lng:29.057876});
+if (!access._key) error()
+title.innerText = document.title;
+sample.innerText = init; init();
 </script>
 
 </body>
