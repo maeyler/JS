@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+    <title>CSS resize on iframe</title>
+    
+  <style>
+    body {
+      background: lightgray;
+      cursor: crosshair;
+    }
+    * { box-sizing: border-box; }
+    .resizable {
+      display: inline-block;
+      resize: horizontal;
+      overflow: auto;
+      border: 1px solid black;
+      min-width: 200px;
+      min-height: 200px;
+      width: 30%;
+      height: 320px;
+    }
+    #div2 {
+      background-color: white;
+      width: 37%;
+    }
+    #txt2 { padding: 0 .5em; }
+    #frm3 {
+      width: 100%;
+      height: 98%;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+<h2 id=title></h2>
+<p>
+  <input id=both type=checkbox>Both &emsp;
+    Ref: <a href="https://css-tricks.com/almanac/properties/r/resize/" 
+    target="NewTab">CSS resize</a>
+</p>
+<iframe id=frm1 class=resizable src="simple page.html"></iframe>
+<div id=div2 class=resizable>
+  <pre id=txt2>We have three panels on this window:
+* Left: iframe with some simple text
+* Middle: div contains pre (this text)
+* Right: div contains another iframe
+Default cursor is a plus sign.
+
+<b>Problem behavior:</b> (with mouse events)
+Resize left or right panels and release 
+mouse out of resize icon. Resize event 
+doesn't end, cursor remains <b>pointer</b>!
+Resizing continues until a mouseup 
+event on one of the resize icons.
+
+Problem is not observed on this panel.
+
+Click on the checkbox for a quick fix:
+You cannot release the mouse out of the
+resize icon and the problem is solved.
+  </pre>
+</div>
+<div id=div3 class=resizable>
+  <iframe id=frm3 src="simple page.html"></iframe>
+</div>
+
+<script>
+"use strict";
+function doClick(e) {
+    let t = e.target.checked? 'both' : 'horizontal'
+    console.log('resize', t)
+    frm1.style.resize = t
+    div2.style.resize = t
+    div3.style.resize = t
+}
+    title.innerText = document.title
+    both.onclick = doClick
+    // for (let b of document.querySelectorAll('button'))
+    //     b.onclick = doClick
+</script>
+</body>
+</html>
