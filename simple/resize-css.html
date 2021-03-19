@@ -38,9 +38,8 @@
 <body>
 <h2 id=title></h2>
 <p>
-  <input id=both type=checkbox>Both &emsp;
-    Ref: <a href="https://css-tricks.com/almanac/properties/r/resize/" 
-    target="NewTab">CSS resize</a>
+  <input id=both type=checkbox><code>resize:both</code>&emsp;
+  (The problem disappears when checked)
 </p>
 <iframe id=frm1 class=resizable src="simple page.html"></iframe>
 <div id=div2 class=resizable>
@@ -67,6 +66,15 @@ resize icon and the problem is solved.
 <div id=div3 class=resizable>
   <iframe id=frm3 src="simple page.html"></iframe>
 </div>
+<p>To reproduce the problem behavior: <br>
+1. Select some text in the middle panel (cursor is <b>plus</b>) <br>
+2. Resize the panel on the left and release the mouse outside the resize icon (cursor becomes <b>pointer</b>, indication of the bug) <br>
+3. Try to select some text again in the middle panel (you cannot select, the left panel is resizing) <br>
+The most important thing is to <b>drag</b> outside the resize icon, not just a click)
+</p>
+<p>Ref:&emsp;<a href="https://css-tricks.com/almanac/properties/r/resize/">CSS resize</a>&emsp;
+<a href="https://bugs.chromium.org/p/chromium/issues/detail?id=1188063">Bug report</a>
+</p>
 
 <script>
 "use strict";
