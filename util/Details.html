@@ -20,10 +20,15 @@
     }
     div > span {
         cursor: pointer;
+        padding: 3px;
+        line-height: 1.4;
     }
     div > span:hover {
         background: yellow;
         color: blue;
+    }
+    pre {
+        color: darkred;
     }
     details {
         color: blue;
@@ -38,6 +43,10 @@
     }
     #det5 > summary {
         list-style: none;
+    }
+    #det6 li {
+        list-style: none;
+        margin-left: 1.2em;
     }
     #flavor {
         position: relative;
@@ -74,22 +83,35 @@
 <body>
 <h2><span id=title></span> &emsp; <button id=closeAll>Close all</button></h2>
 <h3>1. Structure</h3>
-<details open>
+<details id=det1 open=true>
     <summary>Summary is always visible</summary>
     Details may be hidden<br>
     <small>Click on the summary to hide</small>
 </details>
-<h3>2. Hidden answer</h3>
+<br>
 <details>
+    <summary>HTML code</summary>
+    <pre id=pre1></pre>
+</details>
+
+<h3>2. Hidden answer</h3>
+<details id=det2>
     <summary>I have keys but no doors. <br>
        &emsp;I have space but no room. <br>
        &emsp;You can enter but can’t leave. <br>
        &emsp;What am I?</summary>
     &emsp;Keyboard
 </details>
-<h3>3. Multiple levels</h3>
+<br>
 <details>
-    <summary>What are the first two programming languages in 1950's?</summary>
+    <summary>HTML code</summary>
+    <pre id=pre2></pre>
+</details>
+
+<h3>3. Multiple levels</h3>
+<details id=det3>
+    <summary>What are the first two 
+      programming languages in 1950's?</summary>
     <details>
         <summary>Scientific/Engineering</summary>
         Fortran
@@ -99,25 +121,37 @@
         Cobol
     </details>
 </details>
+<br>
+<details>
+    <summary>HTML code</summary>
+    <pre id=pre3></pre>
+</details>
+
 <h3>4. Menu selection</h3>
 <details id=det4>
     <summary>Select flavor</summary>
     <div id=flavor>
-<span>Vanilla</span><br>
-<span>Chocolate</span><br>
-<span>Coconut</span><br>
-<span>Cranberry</span><br>
-<span>Mint</span><br>
-<span>Melon</span><br>
-<span>Mulberry</span><br>
-<span>Strawberry</span>
+        <span>Vanilla</span><br>
+        <span>Chocolate</span><br>
+        <span>Coconut</span><br>
+        <span>Cranberry</span><br>
+        <span>Mint</span><br>
+        <span>Melon</span><br>
+        <span>Mulberry</span><br>
+        <span>Strawberry</span>
     </div>
 </details>
+<br>
+<details>
+    <summary>HTML code</summary>
+    <pre id=pre4></pre>
+</details>
+
 <h3>5. Dialog interface</h3>
 <small>Summary is an icon with no text or marker.<br>
 ESC key cancels the menu and the dialog.</small>
 <details id=det5>
-    <summary>😊 </summary>
+    <summary>😊</summary>
     <div id=bkgd>
         <div id=dialog>
             <span id=smiley>😊</span>&emsp;
@@ -125,13 +159,66 @@ ESC key cancels the menu and the dialog.</small>
         </div>
     </div>
 </details>
+<br>
+<details>
+    <summary>HTML code</summary>
+    <pre id=pre5></pre>
+</details>
+
+<h3>6. Simplification</h3>
+<small>The state of the art before &lt;details> tag.<br>
+Compare this with the complexity here:
+<a href="https://www.w3schools.com/howto/howto_js_treeview.asp"
+    target="NewTab">How TO - Tree View</a></small>
+<details id=det6 open=true>
+    <summary>Beverages</summary>
+    <li>Water</li>
+    <li>Coffee</li>
+    <details>
+        <summary>Tea</summary>
+        <li>Black Tea</li>
+        <li>White Tea</li>
+        <details>
+            <summary>Green Tea</summary>
+            <li>Sencha</li>
+            <li>Gyokuro</li>
+            <li>Matcha</li>
+            <li>Pi Lo Chun</li>
+        </details>
+    </details>
+</details>
+<br>
+<details>
+    <summary>HTML code</summary>
+    <pre id=pre6></pre>
+</details>
+
+<h3>7. Tree display</h3>
+<small>Previous example hints the possibility of recursive trees.
+Thus, we have a mechanism to display trees within HTML.</small>
+<details id=det7>
+    <summary>Several live examples</summary>
+    <a href="https://maeyler.github.io/Sunumlar/toprak/aile%20agaci.html"
+    target="NewTab" >Family tree</a><br>
+    <a href="https://maeyler.github.io/JS/auto/Expression.html"
+    target="NewTab" >Expression tree</a><br>
+    <a href=""
+    target="NewTab" ></a>DOM tree -- to be done<br>
+    <a href=""
+    target="NewTab" ></a>Directory -- to be done<br>
+</details>
+<br>
 <hr />
-<p>Ref: I have learned about Details tag from 
+<p>I have learned about Details tag from 
 <a href="https://jen4web.substack.com/p/details"
     target="NewTab" >#30DaysofHTML</a>. <br>
 <a href="https://docs.google.com/presentation/d/1hvnPpsJo44BTPfJx28CV95vqk_dt6na1awUbk0kmZYM/edit#slide=id.g3e31444916_0_56"
     target="NewTab" >Details on &lt;details&gt;</a>
-explains its use at GitHub.
+explains its use at GitHub. <br>
+<br>
+These examples require no JavaScript. 
+All functionality is provided by HTML and CSS.
+About 20 lines of JS were sufficient for the dynamics of the page.
 </p>
 
 <script>
@@ -153,6 +240,12 @@ flavor.onclick = (evt) => {
 ok.onclick = () => closeDetail(det5)
 const da = document.querySelectorAll('details')
 closeAll.onclick = () => closeDetail(...da)
+pre1.innerText = det1.outerHTML
+pre2.innerText = det2.outerHTML
+pre3.innerText = det3.outerHTML
+pre4.innerText = det4.outerHTML
+pre5.innerText = det5.outerHTML
+pre6.innerText = det6.outerHTML
 </script>
 </body>
 </html>
