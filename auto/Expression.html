@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Expression Tree</title>
   <style>
     body  {
-        background: #4ff;
+        max-width: 440px;
+        background: #cff;
         font-size: 17px;
     }
     details {
@@ -27,30 +28,36 @@
     }
     #pfix { background: cornsilk; }
     #outx { font: 17px monospace; }
+    .red { color: red; }
   </style>
 </head>
 
 <body>
 <h2 id=title></h2>
 <p>
-Expression <input type=text id=inpx
+<b>Expression</b> <input type=text id=inpx
 value='3*8-(5-3)*7-5/(2+3)'>
 <span id=outx></span>
 </p>
 <p>
-Postfix &emsp; <span id=pfix></span>
+<b>Postfix</b> &ensp; &emsp;<span id=pfix></span>
 </p>
 <p>
-Binary Tree <br>
-<small>Click on the operations below to show sub-expressions</small>
+<b>Binary Tree</b> <br>
+<small>Click on an operation below to see its expression</small>
 <div id=tree>
 </div>
 </p>
 <hr />
 <p>Ref:&emsp; 
-<a href="https://maeyler.github.io/Automata-2019/microJ/">Automata microJ</a>&emsp;
-<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details">HTML Details</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details"
+    target="NewTab" >HTML Details</a><br>
+This page is modified from
+<a href="https://maeyler.github.io/Automata-2019/microJ/Expression.html"
+    target="NewTab" >microJ page</a> on automata theory.
+<b>Details</b> tag is useful to display trees (such as JTree in Java).
 </p>
+
 <script src="https://maeyler.github.io/Automata-2019/microJ/Lexical.js"></script>
 <script src="https://maeyler.github.io/Automata-2019/microJ/Expression.js"></script>
 <script>
@@ -82,6 +89,7 @@ function doParse(str = inpx.value) {
         let e = expression()
         match(EOF);
         outx.innerText = ' = '+e.fValue()
+        outx.className = ''
         tree.innerHTML = e.toTree()
         pfix.innerText = e.toPostfix()
         console.log(e)
@@ -90,7 +98,8 @@ function doParse(str = inpx.value) {
         return e
     } catch(x) {
         showError(inpx)
-        outx.innerText = ''
+        outx.innerText = 'Error'
+        outx.className = 'red'
         tree.innerText = ''
         pfix.innerText = x
     }

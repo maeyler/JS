@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+    <title>Details-Summary</title>
+    
+  <style> /* CSS code in use */
+    body { max-width: 440px; }
+    details {
+        margin-left: 1em;
+    }
+    h3 {
+        margin-block-start: 1.5em;
+        margin-block-end: 2px;
+    }
+    span, small {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    div > span {
+        cursor: pointer;
+    }
+    div > span:hover {
+        background: yellow;
+        color: blue;
+    }
+    details {
+        color: blue;
+    }
+    summary {
+        border: 1px solid white;
+        color: black;
+        cursor: pointer;
+    }
+    summary:hover {
+        border: 1px solid cyan;
+    }
+    #det5 > summary {
+        list-style: none;
+    }
+    #flavor {
+        position: relative;
+        left: 1em;
+        width: 85px;
+        font-size: 18px;
+        background: blue;
+        color: white;
+        padding: 10px;
+    }
+    #bkgd {
+        position: fixed;
+        left: 0; top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(136, 136, 136, 0.6);
+    }
+    #dialog {
+        position: relative;
+        top: 30%;
+        width: 130px;
+        height: 70px;
+        padding: 50px;
+        margin: auto;
+        background: white;
+        border: 5px double orange;
+    }
+    #smiley {
+        font-size: 48px;
+    }
+  </style>
+</head>
+
+<body>
+<h2><span id=title></span> &emsp; <button id=closeAll>Close all</button></h2>
+<h3>1. Structure</h3>
+<details open>
+    <summary>Summary is always visible</summary>
+    Details may be hidden<br>
+    <small>Click on the summary to hide</small>
+</details>
+<h3>2. Hidden answer</h3>
+<details>
+    <summary>I have keys but no doors. <br>
+       &emsp;I have space but no room. <br>
+       &emsp;You can enter but can’t leave. <br>
+       &emsp;What am I?</summary>
+    &emsp;Keyboard
+</details>
+<h3>3. Multiple levels</h3>
+<details>
+    <summary>What are the first two programming languages in 1950's?</summary>
+    <details>
+        <summary>Scientific/Engineering</summary>
+        Fortran
+    </details>
+    <details>
+        <summary>Business/Finance</summary>
+        Cobol
+    </details>
+</details>
+<h3>4. Menu selection</h3>
+<details id=det4>
+    <summary>Select flavor</summary>
+    <div id=flavor>
+<span>Vanilla</span><br>
+<span>Chocolate</span><br>
+<span>Coconut</span><br>
+<span>Cranberry</span><br>
+<span>Mint</span><br>
+<span>Melon</span><br>
+<span>Mulberry</span><br>
+<span>Strawberry</span>
+    </div>
+</details>
+<h3>5. Dialog interface</h3>
+<small>Summary is an icon with no text or marker.<br>
+ESC key cancels the menu and the dialog.</small>
+<details id=det5>
+    <summary>😊 </summary>
+    <div id=bkgd>
+        <div id=dialog>
+            <span id=smiley>😊</span>&emsp;
+            <button id=ok>OK</button>
+        </div>
+    </div>
+</details>
+<hr />
+<p>Ref: I have learned about Details tag from 
+<a href="https://jen4web.substack.com/p/details"
+    target="NewTab" >#30DaysofHTML</a>. <br>
+<a href="https://docs.google.com/presentation/d/1hvnPpsJo44BTPfJx28CV95vqk_dt6na1awUbk0kmZYM/edit#slide=id.g3e31444916_0_56"
+    target="NewTab" >Details on &lt;details&gt;</a>
+explains its use at GitHub.
+</p>
+
+<script>
+"use strict";
+title.innerText = document.title
+function closeDetail(...a) {
+    for (let d of a) d.open = false
+}
+document.onkeyup = (evt) => {
+    if (evt.key == "Escape") closeDetail(det4, det5)
+}
+flavor.onclick = (evt) => {
+    let t = evt.target;
+    // console.log(t.innerText)
+    if (t.tagName != 'SPAN') return
+    det4.firstElementChild.innerText = t.innerText
+    closeDetail(det4)
+}
+ok.onclick = () => closeDetail(det5)
+const da = document.querySelectorAll('details')
+closeAll.onclick = () => closeDetail(...da)
+</script>
+</body>
+</html>
