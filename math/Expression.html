@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Expression Tree</title>
+  <style>
+    body  {
+        background: #4ff;
+        font-size: 17px;
+    }
+    details {
+        margin: 4px;
+        margin-left: 1em;
+        white-space: pre-wrap;
+    }
+    summary {
+        list-style: none;
+        cursor: pointer;
+    }
+    span, small, details {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    #inpx {
+        width: 210px;
+        font-size: 17px;
+    }
+    #pfix { background: cornsilk; }
+    #outx { font: 17px monospace; }
+  </style>
+</head>
+
+<body>
+<h2 id=title></h2>
+<p>
+Expression <input type=text id=inpx
+value='3*8-(5-3)*7-5/(2+3)'>
+<span id=outx></span>
+</p>
+<p>
+Postfix &emsp; <span id=pfix></span>
+</p>
+<p>
+Binary Tree <br>
+<small>Click on the operations below to show sub-expressions</small>
+<div id=tree>
+</div>
+</p>
+<hr />
+<p>Ref:&emsp; 
+<a href="https://maeyler.github.io/Automata-2019/microJ/">Automata microJ</a>&emsp;
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details">HTML Details</a>
+</p>
+<script src="https://maeyler.github.io/Automata-2019/microJ/Lexical.js"></script>
+<script src="https://maeyler.github.io/Automata-2019/microJ/Expression.js"></script>
+<script>
+"use strict";
+const map = {'+':'ADD', '-':'SUB', '*':'MUL', '/':'DIV'}
+Binary.prototype.toTree = function() { //override
+    let op = map[this.oper]+' '+this.oper
+    return '<details id="'+op+'"" open>'
+      +'<summary>'+this.toString()+'</summary>'
+      +this.left.toTree()+this.right.toTree()
+      +'</details>'
+}
+const EM_SPACE = String.fromCharCode(8195)
+Constant.prototype.toTree = function() { //override
+    return EM_SPACE+this.num+'\n'
+}
+function toggle(evt) {
+    let d = evt.target   //details
+    let s = d.firstChild //summary
+    let t = s.innerText  //swap
+    s.innerText = d.id
+    d.id = t
+}
+function doParse(str = inpx.value) {
+    if (!str) return
+    tokens = Token.list(str)
+    try {
+        tok = tokens.reverse().pop()
+        let e = expression()
+        match(EOF);
+        outx.innerText = ' = '+e.fValue()
+        tree.innerHTML = e.toTree()
+        pfix.innerText = e.toPostfix()
+        console.log(e)
+        const da = document.querySelectorAll('details')
+        for (let d of da) d.ontoggle = toggle
+        return e
+    } catch(x) {
+        showError(inpx)
+        outx.innerText = ''
+        tree.innerText = ''
+        pfix.innerText = x
+    }
+}
+function doKey(evt) {
+    if (evt.key == "Enter") doParse()
+}
+    title.innerText = document.title
+    inpx.onkeyup = doKey
+    inpx.focus(); doParse()
+</script>
+
+</body>
+</html>
