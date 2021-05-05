@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+    <title>DOM Tree</title>
+  <style>
+    body  {
+        max-width: 440px;
+        background: honeydew;
+    }
+    details {
+        margin: 3px;
+        margin-left: 1em;
+    }
+    details > summary {
+        list-style: none;
+        cursor: pointer;
+        color: red;  
+    }
+    details[open] > summary {
+        color: blue;
+    }
+    #output { color: green; }
+  </style>
+</head>
+
+<body>
+<div id=main>
+  <h2>Page made by JavaScript</h2>
+  <hr>
+  <blockquote><span>No book can ever be finished. While working on it we learn just enough to find it immature the moment we turn away from it.
+    </span>
+    <p>— <b>Karl Popper</b>, preface to the second editon of <i>The Open Society and Its Enemies</i>, 1950</p>
+  </blockquote>
+  <hr>
+  <div><b>Sample code</b>
+    <pre id=sample></pre>
+  </div>
+  <div>Ref: <a href="http://eloquentjavascript.net/14_dom.html#h_AlX6HES+2D">Creating nodes</a>
+  </div>
+  <hr>
+</div>
+  <input id=kind type="checkbox"> Use <code>&lt;details&gt;</code>
+  <p id=output></p>
+<script>
+"use strict";
+const tree = [], SPACE = '&emsp;', MAX = 26;
+function textOf(e) {
+  let c = e.firstChild
+  if (!c || c instanceof Element) c = ''
+  else c = SPACE+c.textContent
+  if (c.length>MAX+3) c = c.substring(0, MAX)+'…'
+  return e.tagName+c
+}
+function toTree(e, space) {
+  if (e.tagName === 'BR') return
+  tree.push(space+'+ '+textOf(e))
+  for (let c of e.children)
+      toTree(c, space+SPACE)
+}
+function toDetails(e) {
+  if (e.tagName === 'BR') return ''
+  let detail = ''
+  for (let x of e.children)
+      detail += toDetails(x)
+  let num = '[+'+e.childElementCount+']'
+  return '<details id="'+textOf(e)+'" open>'
+      +'<summary>'+e.tagName+SPACE+num
+      +'</summary>'+detail+'</details>\n'
+}
+function toggle(evt) {
+    let d = evt.target   //details
+    let s = d.firstChild //summary
+    let t = s.innerText  //swap
+    s.innerText = d.id
+    d.id = t
+}
+function init() {
+  sample.innerText = toTree+'\n'+toDetails
+  if (kind.checked) {
+    output.innerHTML = toDetails(main)
+    let da = output.querySelectorAll('details')
+    for (let d of da) d.ontoggle = toggle
+  } else {
+    tree.length = 0; toTree(main, '')
+    output.innerHTML = tree.join('<br>')
+  }
+}
+kind.onchange = init
+init()
+</script>
+</body>
+</html>
