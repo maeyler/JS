@@ -10,25 +10,30 @@
         max-width: 440px;
         background: honeydew;
     }
-    details {
-        margin: 3px;
+    details, li {
+        margin: 0;
         margin-left: 1em;
     }
     details > summary {
         list-style: none;
         cursor: pointer;
-        color: red;  
+        color: darkred;  
     }
-    details[open] > summary {
+    /* details[open] > summary { } */
+    details > li {
+        list-style: none;
         color: blue;
     }
-    #output { color: green; }
+    #output {
+        color: green;
+        line-height: 1.4;
+    }
   </style>
 </head>
 
 <body>
 <div id=main>
-  <h2>Page made by JavaScript</h2>
+  <h2>Sample formatted text</h2>
   <hr>
   <blockquote><span>No book can ever be finished. While working on it we learn just enough to find it immature the moment we turn away from it.
     </span>
@@ -42,7 +47,7 @@
   </div>
   <hr>
 </div>
-  <input id=kind type="checkbox"> Use <code>&lt;details&gt;</code>
+  <input id=detailed type="checkbox"> Use <code>&lt;details&gt;</code>
   <p id=output></p>
 <script>
 "use strict";
@@ -61,14 +66,19 @@ function toTree(e, space) {
       toTree(c, space+SPACE)
 }
 function toDetails(e) {
-  if (e.tagName === 'BR') return ''
   let detail = ''
-  for (let x of e.children)
-      detail += toDetails(x)
-  let num = '[+'+e.childElementCount+']'
+  let num = 0  //e.childElementCount
+  //skip <br> tags -- ignore them
+  for (let c of e.children) {
+    if (c.tagName === 'BR') continue
+    detail += toDetails(c); num++ 
+  }
+  if (num === 0) //no children
+    return '<li>'+textOf(e)+'</li>\n'
+  let sum = e.tagName+SPACE+'[+'+num+']'
   return '<details id="'+textOf(e)+'" open>'
-      +'<summary>'+e.tagName+SPACE+num
-      +'</summary>'+detail+'</details>\n'
+      +'<summary>'+sum+'</summary>'
+      +detail+'</details>\n'
 }
 function toggle(evt) {
     let d = evt.target   //details
@@ -77,9 +87,9 @@ function toggle(evt) {
     s.innerText = d.id
     d.id = t
 }
-function init() {
-  sample.innerText = toTree+'\n'+toDetails
-  if (kind.checked) {
+function render() {
+  sample.innerText = textOf+'\n'+toTree+'\n'+toDetails
+  if (detailed.checked) {
     output.innerHTML = toDetails(main)
     let da = output.querySelectorAll('details')
     for (let d of da) d.ontoggle = toggle
@@ -88,8 +98,8 @@ function init() {
     output.innerHTML = tree.join('<br>')
   }
 }
-kind.onchange = init
-init()
+detailed.onchange = render
+render()
 </script>
 </body>
 </html>

@@ -62,9 +62,10 @@ This page is modified from
 <script src="https://maeyler.github.io/Automata-2019/microJ/Expression.js"></script>
 <script>
 "use strict";
-const map = {'+':'ADD', '-':'SUB', '*':'MUL', '/':'DIV'}
+const map  = {'+':'ADD', '-':'SUB', '*':'MUL', '/':'DIV'}
+const sign = {'+':'⊕',  '-':'⊖',  '*':'⊗',   '/':'⊘'}
 Binary.prototype.toTree = function() { //override
-    let op = map[this.oper]+' '+this.oper
+    let op = map[this.oper]+EM_SPACE+sign[this.oper]
     return '<details id="'+op+'"" open>'
       +'<summary>'+this.toString()+'</summary>'
       +this.left.toTree()+this.right.toTree()
