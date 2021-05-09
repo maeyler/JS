@@ -7,9 +7,34 @@
     <title>DOM Tree</title>
   <style>
     body  {
-        max-width: 440px;
-        background: honeydew;
+      background: honeydew;
+      margin: 0;
+      }
+    small {
+      font-weight: normal;
+      font-size: 17px;
     }
+    iframe {
+      height: 99vh;
+      border: none;
+      background: white;
+      margin: 0;
+    }
+    div {
+      margin: 0 0 0 8px;
+    }
+    iframe, div {
+      display: inline-block;
+      box-sizing: border-box;
+      vertical-align: top;
+      max-height: 99vh;
+      overflow-y: auto;
+      width: 100%;
+    }
+@media screen and (min-width: 600px) {
+  iframe { width: 53%; }
+  div { width: 45%; }
+}
     details, li {
         margin: 0;
         margin-left: 1em;
@@ -32,26 +57,20 @@
 </head>
 
 <body>
-<div id=main>
-  <h2>Sample formatted text</h2>
-  <hr>
-  <blockquote><span>No book can ever be finished. While working on it we learn just enough to find it immature the moment we turn away from it.
-    </span>
-    <p>— <b>Karl Popper</b>, preface to the second editon of <i>The Open Society and Its Enemies</i>, 1950</p>
-  </blockquote>
-  <hr>
-  <div><b>Sample code</b>
-    <pre id=sample></pre>
+  <iframe id=frm src="/JS/"></iframe>
+  <div>
+    <h2><span id=title></span>
+      <small>for the selected page</small>
+    </h2>
+    <input id=detailed type="checkbox">
+    Use <code>&lt;details&gt;</code>
+    <p id=output></p>
   </div>
-  <div>Ref: <a href="http://eloquentjavascript.net/14_dom.html#h_AlX6HES+2D">Creating nodes</a>
-  </div>
-  <hr>
-</div>
-  <input id=detailed type="checkbox"> Use <code>&lt;details&gt;</code>
-  <p id=output></p>
+
 <script>
 "use strict";
-const SPACE = '&emsp;', MAX = 26;
+const SPACE = '&emsp;', MAX = 32;
+const SKIP = ['BR', 'SCRIPT'] //ignore these tags
 function textOf(e) {
   let c = e.firstChild
   if (!c || c instanceof Element) c = ''
@@ -62,24 +81,24 @@ function textOf(e) {
 function toTree(e, space) {
   let tree = space+'+ '+textOf(e)+'<br>\n'
   for (let c of e.children) {
-    if (c.tagName === 'BR') continue
+    if (SKIP.includes(c.tagName)) continue
     tree += toTree(c, space+SPACE)
   }
   return tree
 }
-function toDetails(e) {
+function toDetails(e, lev) {
   let detail = ''
   let num = 0  //e.childElementCount
-  //skip <br> tags -- ignore them
   for (let c of e.children) {
-    if (c.tagName === 'BR') continue
-    detail += toDetails(c); num++ 
+    if (SKIP.includes(c.tagName)) continue
+    detail += toDetails(c, lev+1); num++ 
   }
   if (num === 0) //no children
     return '<li>'+textOf(e)+'</li>\n'
   let sum = e.tagName+SPACE+'[+'+num+']'
-  return '<details id="'+textOf(e)+'" open>'
-      +'<summary>'+sum+'</summary>'
+  return '<details id="'+textOf(e)+'"'
+      +(num>10 && lev>0 ? '' : ' open')
+      +'><summary>'+sum+'</summary>'
       +detail+'</details>\n'
 }
 function toggle(evt) {
@@ -90,17 +109,18 @@ function toggle(evt) {
     d.id = t
 }
 function render() {
-  sample.innerText = textOf+'\n'+toTree+'\n'+toDetails
+  let main = frm.contentWindow.document.body
   if (detailed.checked) {
-    output.innerHTML = toDetails(main)
+    output.innerHTML = toDetails(main, 0)
     let da = output.querySelectorAll('details')
     for (let d of da) d.ontoggle = toggle
   } else {
     output.innerHTML = toTree(main, '')
   }
 }
+title.innerText = document.title
 detailed.onchange = render
-render()
+frm.onload = render
 </script>
 </body>
 </html>
