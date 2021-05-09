@@ -51,7 +51,7 @@
   <p id=output></p>
 <script>
 "use strict";
-const tree = [], SPACE = '&emsp;', MAX = 26;
+const SPACE = '&emsp;', MAX = 26;
 function textOf(e) {
   let c = e.firstChild
   if (!c || c instanceof Element) c = ''
@@ -60,10 +60,12 @@ function textOf(e) {
   return e.tagName+c
 }
 function toTree(e, space) {
-  if (e.tagName === 'BR') return
-  tree.push(space+'+ '+textOf(e))
-  for (let c of e.children)
-      toTree(c, space+SPACE)
+  let tree = space+'+ '+textOf(e)+'<br>\n'
+  for (let c of e.children) {
+    if (c.tagName === 'BR') continue
+    tree += toTree(c, space+SPACE)
+  }
+  return tree
 }
 function toDetails(e) {
   let detail = ''
@@ -94,8 +96,7 @@ function render() {
     let da = output.querySelectorAll('details')
     for (let d of da) d.ontoggle = toggle
   } else {
-    tree.length = 0; toTree(main, '')
-    output.innerHTML = tree.join('<br>')
+    output.innerHTML = toTree(main, '')
   }
 }
 detailed.onchange = render

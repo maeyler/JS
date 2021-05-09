@@ -82,6 +82,10 @@
 
 <body>
 <h2><span id=title></span> &emsp; <button id=closeAll>Close all</button></h2>
+This page contains several use-cases for the Details-Summary tags combined.
+Note that <code>&lt;summary&gt;</code> must be the first child 
+of the enclosing <code>&lt;details&gt;</code> element.
+
 <h3>1. Structure</h3>
 <details id=det1 open=true>
     <summary>Summary is always visible</summary>
@@ -166,10 +170,10 @@ ESC key cancels the menu and the dialog.</small>
 </details>
 
 <h3>6. Simplification</h3>
-<small>The state of the art before &lt;details> tag.<br>
-Compare this with the complexity here:
+<small>Compare this with the complexity here:
 <a href="https://www.w3schools.com/howto/howto_js_treeview.asp"
-    target="NewTab">How TO - Tree View</a></small>
+    target="NewTab">How TO - Tree View</a>
+that represents the state of the art before &lt;details&gt; tag.</small>
 <details id=det6 open=true>
     <summary>Beverages</summary>
     <li>Water</li>
@@ -198,12 +202,10 @@ Compare this with the complexity here:
 Thus, we have a mechanism to display trees within HTML.</small>
 <details id=det7>
     <summary>Several live examples</summary>
-    <a href="/JS/hard/DOM tree.html"
-    target="NewTab" >DOM tree</a><br>
+    <a href="/JS/hard/DOM tree.html">DOM tree</a><br>
     <a href="/Sunumlar/toprak/aile%20agaci.html"
     target="NewTab" >Family tree</a><br>
-    <a href="/JS/auto/Expression.html"
-    target="NewTab" >Expression tree</a><br>
+    <a href="/JS/auto/Expression.html">Expression tree</a><br>
     <a href=""
     target="NewTab" ></a>Directory -- to be done<br>
 </details>
@@ -211,12 +213,13 @@ Thus, we have a mechanism to display trees within HTML.</small>
 <hr />
 <p>I have learned about Details tag from 
 <a href="https://jen4web.substack.com/p/details"
-    target="NewTab" >#30DaysofHTML</a>. <br>
+    target="NewTab" >#30DaysofHTML</a>. 
+<br><br>
 <a href="https://docs.google.com/presentation/d/1hvnPpsJo44BTPfJx28CV95vqk_dt6na1awUbk0kmZYM/edit#slide=id.g3e31444916_0_56"
     target="NewTab" >Details on &lt;details&gt;</a>
-explains its use at GitHub. <br>
-<br>
-These examples require no JavaScript. 
+explains its use at GitHub. 
+<br><br>
+These examples (except #4 and #5) require no JavaScript. 
 All functionality is provided by HTML and CSS.
 About 20 lines of JS were sufficient for the dynamics of the page.
 </p>
