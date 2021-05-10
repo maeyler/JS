@@ -104,8 +104,9 @@ const SKIP = ['BR', 'SCRIPT'] //ignore tags
 function textOf(e) {
   let s = e.tagName
   if (e.id) s += '#'+e.id
+  if (e.className) s += '.'+e.className
   let c = e.firstChild
-  if (c && !(c instanceof Element))
+  if (c && !c.children)
     s += SPACE+c.textContent
   if (s.length > MAX+3)
     s = s.substring(0, MAX)+'…'
