@@ -32,7 +32,7 @@
       width: 100%;
     }
 @media screen and (min-width: 600px) {
-  iframe { width: 53%; }
+  iframe { width: 50%; }
   div { width: 45%; }
 }
     details, li {
@@ -53,30 +53,63 @@
         color: green;
         line-height: 1.4;
     }
+    #items {
+        position: relative;
+        left: -1em;
+        width: 190px;
+        background: blue;
+        color: white;
+        padding: 10px;
+    }
+    #menu {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13pt;
+    }
+    #menu summary {
+        color: blue;
+    }
+    #menu span {
+        cursor: pointer;
+        padding: 3px;
+        line-height: 1.4;
+    }
+    #menu span:hover {
+        background: yellow;
+        color: blue;
+    }
   </style>
 </head>
 
 <body>
-  <iframe id=frm src="/JS/"></iframe>
+  <iframe id=frm></iframe>
   <div>
     <h2><span id=title></span>
       <small>for the selected page</small>
     </h2>
-    <input id=detailed type="checkbox">
+    <details id=menu>
+      <summary id=select>&ensp;▼</summary>
+      <div id=items>
+      </div>
+  </details>
+  <br>
+      <input id=detailed type="checkbox">
     Use <code>&lt;details&gt;</code>
     <p id=output></p>
   </div>
 
 <script>
 "use strict";
-const SPACE = '&emsp;', MAX = 32;
-const SKIP = ['BR', 'SCRIPT'] //ignore these tags
+const SPACE = '&emsp;', MAX = 42;
+const SKIP = ['BR', 'SCRIPT'] //ignore tags
 function textOf(e) {
+  let s = e.tagName
+  if (e.id) s += '#'+e.id
   let c = e.firstChild
-  if (!c || c instanceof Element) c = ''
-  else c = SPACE+c.textContent
-  if (c.length>MAX+3) c = c.substring(0, MAX)+'…'
-  return e.tagName+c
+  if (c && !(c instanceof Element))
+    s += SPACE+c.textContent
+  if (s.length > MAX+3)
+    s = s.substring(0, MAX)+'…'
+  return s
 }
 function toTree(e, space) {
   let tree = space+'+ '+textOf(e)+'<br>\n'
@@ -118,9 +151,48 @@ function render() {
     output.innerHTML = toTree(main, '')
   }
 }
+function loadSample(key) {
+    select.innerHTML = key+'&ensp;▼'
+    frm.src = URL[key]; menu.open = false
+}
+document.onkeyup = (evt) => {
+    if (evt.key == "Escape") menu.open = false
+}
+items.onclick = (evt) => {
+    let t = evt.target;
+    // console.log(t.innerText)
+    if (t.tagName != 'SPAN') return
+    loadSample(t.innerText)
+}
+const DATA = `/JS/simple/Date%20test.html	Date and Color
+/JS/simple/Color%20Paragraphs.html	Color Paragraphs
+/JS/simple/Compare%20Colors.html	Compare Colors
+/JS/simple/Counter.html	Click Count
+/JS/simple/Timer.html	Simple Timer
+/JS/simple/JS_Animation.html	JS Animation
+/JS/simple/JSON_Teacher.html	JSON Teacher
+/JS/simple/JS%20page.html	Page made by JS
+/JS/math/Folding.html	Pythagorean Triples
+/JS/canvas/Pie%20Chart.html	Pie Chart
+/JS/canvas/webcam.html	Camera
+/JS/canvas/colliding.html	Colliding balls
+/JS/canvas/solar_system.html	Solar System
+/JS/hard/Battery.html	Battery & Internet
+/JS/hard/Dragging.html	Draggable Elements
+/JS/hard/URL_parts.html	URL Parts
+/JS/hard/Select%20file.html	Read local file
+/JS/hard/JSON_Hilite.html	JSON Highlight`
+const URL = {}, KEYS = []
+for (const d of DATA.split('\n')) {
+    let [url, key] = d.split('\t')
+    URL[key] = url; KEYS.push(key)
+}
+let a = KEYS.map(k => '<span>'+k+'</span>')
+items.innerHTML = a.join('<br>\n')
 title.innerText = document.title
 detailed.onchange = render
 frm.onload = render
+loadSample(KEYS[0])
 </script>
 </body>
 </html>
