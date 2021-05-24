@@ -10,62 +10,64 @@
     body { max-width: 440px; }
     #sample { overflow-x: auto; }
     #out {
-        font-size: 18px;
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
         background: blue;
         color: white;
         text-align: center;
         padding: 10px;
+    }
+    p span {
+        display: inline-block;
+        padding: 6px 6px 4px;
+        border: 1px solid;
+        border-radius: 3px;
+        background: beige;
+        color: blue;
     }
   </style>
 </head>
 
 <body>
 
-<h2 id=title></h2>
-
-<button id=button>count</button>
-
+<h2>
+    <span id=title></span> &emsp;
+    <button id=counter>count</button>
+</h2>
 <p id=out></p>
-
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
-
 <hr />
 <p>Ref: 
-<a href="https://www.w3schools.com/jsref/prop_win_localstorage.asp" 
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" 
    target="NewTab">Local Storage</a>
 </p>
 
 <script>
 "use strict";
-var counter
-function report(n) {
-    let s = "counter = "+n
-    console.log(s); out.innerText = s
+function setCount(n) {
+    if (Number.isInteger(n))
+        localStorage.counter = n
+    report()
 }
-function init() {
-    if (location.protocol.startsWith('http') 
-          && localStorage) { //HTTP required
-        button.onclick = count1
-    } else { //global var
-        counter = 0
-        button.onclick = count2
-    }
-    button.onclick()
+function count() { //localStorage
+    if (localStorage.counter)
+         localStorage.counter++
+    else localStorage.counter = 1
+    report()
 }
-function count1() { //localStorage
-    if (!localStorage.counter) 
-         localStorage.counter = 0
-    report(++localStorage.counter)
+function report(n = 4) {
+    let s = localStorage.counter || '0'
+    let a = [...s.padStart(n, '0')]
+    if (a.length > n) a.splice(0, a.length-n)
+    out.innerHTML =
+     a.map(c => '<span>'+c+'</span>').join('')
+    console.log(s)
 }
-function count2() { //global var
-    report(++counter)
-}
-    title.innerText = document.title
-    sample.innerText = init+'\n'+count1+'\n'+count2
-    out.innerText = "Starting..."
-    init()
+title.innerText = document.title
+sample.innerText = setCount+'\n'+count+'\n'+report
+counter.onclick = count; report()
 </script>
 
 </body>
