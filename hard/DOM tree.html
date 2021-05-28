@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/JS/images/JS.png">
+    <link rel="stylesheet" href="DOM_tree.css" media="all">
     <title>DOM Tree</title>
   <style>
     body  {
+      max-width: 900px;
       background: honeydew;
       margin: 0;
       }
@@ -20,69 +22,35 @@
       background: white;
       margin: 0;
     }
-    div {
-      margin: 0 0 0 8px;
-    }
-    iframe, div {
-      display: inline-block;
-      box-sizing: border-box;
-      vertical-align: top;
-      max-height: 99vh;
-      overflow-y: auto;
-      width: 100%;
-    }
-@media screen and (min-width: 600px) {
-  iframe { width: 50%; }
-  div { width: 45%; }
-}
-    details, li {
-        margin: 0;
-        margin-left: 1em;
-    }
-    details > summary {
-        list-style: none;
-        cursor: pointer;
-        color: darkred;  
-    }
-    /* details[open] > summary { } */
-    details > li {
-        list-style: none;
-        color: blue;
-    }
-    #output {
-        color: green;
-        line-height: 1.4;
-    }
     #items {
-        position: relative;
-        left: -1em;
-        width: 190px;
-        background: blue;
-        color: white;
-        padding: 10px;
+      position: absolute;
+      width: 190px;
+      background: blue;
+      color: white;
+      padding: 10px;
     }
     #menu {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 13pt;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13pt;
     }
     #menu summary {
-        color: blue;
+      color: blue;
     }
     #menu span {
-        cursor: pointer;
-        padding: 3px;
-        line-height: 1.4;
+      cursor: pointer;
+      padding: 3px;
+      line-height: 1.4;
     }
     #menu span:hover {
-        background: yellow;
-        color: blue;
+      background: yellow;
+      color: blue;
     }
   </style>
 </head>
 
 <body>
-  <iframe id=frm></iframe>
-  <div>
+  <iframe id=main class="column"></iframe>
+  <div id=tree class="column">
     <h2><span id=title></span>
       <small>for the selected page</small>
     </h2>
@@ -92,76 +60,21 @@
       </div>
   </details>
   <br>
-      <input id=detailed type="checkbox">
-    Use <code>&lt;details&gt;</code>
-    <p id=output></p>
   </div>
 
+<script src="DOM_tree.js"></script>
 <script>
 "use strict";
-const SPACE = '&emsp;', MAX = 42;
-const SKIP = ['BR', 'SCRIPT'] //ignore tags
-function textOf(e) {
-  let s = e.tagName
-  if (e.id) s += '#'+e.id
-  if (e.className) s += '.'+e.className
-  let c = e.firstChild
-  if (c && !c.children)
-    s += SPACE+c.textContent
-  if (s.length > MAX+3)
-    s = s.substring(0, MAX)+'…'
-  return s
-}
-function toTree(e, space) {
-  let tree = space+'+ '+textOf(e)+'<br>\n'
-  for (let c of e.children) {
-    if (SKIP.includes(c.tagName)) continue
-    tree += toTree(c, space+SPACE)
-  }
-  return tree
-}
-function toDetails(e, lev) {
-  let detail = ''
-  let num = 0  //e.childElementCount
-  for (let c of e.children) {
-    if (SKIP.includes(c.tagName)) continue
-    detail += toDetails(c, lev+1); num++ 
-  }
-  if (num === 0) //no children
-    return '<li>'+textOf(e)+'</li>\n'
-  let sum = e.tagName+SPACE+'[+'+num+']'
-  return '<details id="'+textOf(e)+'"'
-      +(num>10 && lev>0 ? '' : ' open')
-      +'><summary>'+sum+'</summary>'
-      +detail+'</details>\n'
-}
-function toggle(evt) {
-    let d = evt.target   //details
-    let s = d.firstChild //summary
-    let t = s.innerText  //swap
-    s.innerText = d.id
-    d.id = t
-}
-function render() {
-  let main = frm.contentWindow.document.body
-  if (detailed.checked) {
-    output.innerHTML = toDetails(main, 0)
-    let da = output.querySelectorAll('details')
-    for (let d of da) d.ontoggle = toggle
-  } else {
-    output.innerHTML = toTree(main, '')
-  }
-}
 function loadSample(key) {
     select.innerHTML = key+'&ensp;▼'
-    frm.src = URL[key]; menu.open = false
+    main.src = URL[key]; menu.open = false
 }
 document.onkeyup = (evt) => {
     if (evt.key == "Escape") menu.open = false
 }
 items.onclick = (evt) => {
     let t = evt.target;
-    // console.log(t.innerText)
+    console.log(t.innerText)
     if (t.tagName != 'SPAN') return
     loadSample(t.innerText)
 }
@@ -192,7 +105,7 @@ let a = KEYS.map(k => '<span>'+k+'</span>')
 items.innerHTML = a.join('<br>\n')
 title.innerText = document.title
 detailed.onchange = render
-frm.onload = render
+main.onload = render
 loadSample(KEYS[0])
 </script>
 </body>
