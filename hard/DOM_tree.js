@@ -44,21 +44,28 @@ function toggle(evt) {
 }
 function render() {
   let main = document.querySelector('#main.column')
+  if (!main) throw "#main.column not found"
   if (main.tagName === 'IFRAME')
       main = main.contentDocument.body
-  if (detailed.checked) {
-    output.innerHTML = toDetails(main, 0)
-    let da = output.querySelectorAll('details')
+  let out = document.querySelector('p#output')
+  if (!out) throw "p#output not found"
+  let det = document.querySelector('input#detail')
+  if (det && det.checked) {
+    out.innerHTML = toDetails(main, 0)
+    let da = out.querySelectorAll('details')
     for (let d of da) d.ontoggle = toggle
   } else {
-    output.innerHTML = toTree(main, '')
+    out.innerHTML = toTree(main, '')
   }
 }
-let tree = document.querySelector('#tree.column')
-let h = tree.innerHTML || '<h2>DOM Tree</h2>'
-tree.innerHTML = h+`
-<input id=detailed type="checkbox">
-Use <code>&lt;details&gt;</code>
-<p id=output></p>`
-detailed.onchange = render
-window.onload = render
+function init() {
+  let tree = document.querySelector('#tree.column')
+  if (!tree) throw "#tree.column not found"
+  let h = tree.innerHTML || '<h2>DOM Tree</h2>'
+  tree.innerHTML = h+
+  `<input id=detail type="checkbox" onchange="render()">
+  Use <code>&lt;details&gt;</code> <p id=output></p>`
+  render()
+}
+// window.onload = init
+init()

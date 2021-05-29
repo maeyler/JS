@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/JS/images/JS.png">
-    <link rel="stylesheet" href="DOM_tree.css" media="all">
     <title>DOM Tree</title>
   <style>
     body  {
@@ -62,6 +61,7 @@
   <br>
   </div>
 
+<link rel="stylesheet" href="DOM_tree.css">
 <script src="DOM_tree.js"></script>
 <script>
 "use strict";
@@ -104,8 +104,7 @@ for (const d of DATA.split('\n')) {
 let a = KEYS.map(k => '<span>'+k+'</span>')
 items.innerHTML = a.join('<br>\n')
 title.innerText = document.title
-detailed.onchange = render
-main.onload = render
+main.onload = render //defined in DOM_tree.js
 loadSample(KEYS[0])
 </script>
 </body>
