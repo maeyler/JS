@@ -1,0 +1,35 @@
+.column {
+  display: inline-block;
+  box-sizing: border-box;
+  vertical-align: top;
+  overflow-y: auto;
+  width: 100%;
+}
+@media screen and (min-width: 550px) {
+  .column { width: 47%; }
+}
+iframe.column {
+  min-height: 100vh;
+  border: none;
+  margin: 0;
+}
+dom-tree.column  {
+  background: honeydew;
+  padding: 0 8px;
+}
+details, li {
+  margin: 0;
+  margin-left: 1em;
+}
+details > li {
+  list-style: none;
+  color: blue;
+}
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+dom-tree > #output {
+  color: green;
+  line-height: 1.5;
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+    <title>dom-tree Test Page</title>
+  <style>
+    body  {max-width: 800px;}
+    input[type="range"] {width: 25%;}
+    #D1, #D2 {
+        height:180px;
+        text-align: center;
+        float: left;
+        width: 50%;
+    }
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+  </style>
+</head>
+
+<body>
+<div id=main class="column">
+  <h2>Compare Colors</h2>
+
+  <pre id=out></pre>
+  <p>
+  R<input id=R type="range" min=0 max=255 value=232 onChange=setColor()>
+  G<input id=G type="range" min=0 max=255 value= 68 onChange=setColor()>
+  B<input id=B type="range" min=0 max=255 value=127 onChange=setColor()>
+  </p>
+  <div class=row>
+    <div id=D2>Inverse color </div>
+    <div id=D1>Selected color </div>
+  </div>
+  
+  <hr />
+  <p>Ref: 
+  <a href="https://www.w3schools.com/colors/" 
+     target="NewTab">JS Color Tutorial</a>
+  </p>
+</div>
+<dom-tree root="main" class="column"></dom-tree>
+
+<link rel="stylesheet" href="dom-tree.css">
+<script src="dom-tree.js"></script>
+<script>
+"use strict";
+function twoDigits(s) {
+    s = Number(s).toString(16);
+    while (s.length < 2) s = "0"+s;
+    return s;
+}
+function getRGB(r,g,b) {
+    //return "rgb("+r+","+g+","+b+")";
+    return "#"+twoDigits(r)+twoDigits(g)+twoDigits(b);
+}
+function getColor() {
+    let r = R.value, g = G.value, b = B.value;
+    return getRGB(r,g,b);
+}
+function inverseC() {
+    let r = 255-R.value, g = 255-G.value, b = 255-B.value;
+    return getRGB(r,g,b);
+}
+function useColor(hex, elt) {
+    let col = hex;
+    elt.style.background = col;
+    let nam = codeToName.get(hex);
+    if (nam) col += " "+nam;
+    return col;
+}
+function setColor() {
+    let c1 = useColor(getColor(), D1);
+    let c2 = useColor(inverseC(), D2);
+    let s = "Inverse: "+c2+"   Color: "+c1;
+    out.innerText = s;
+}
+const cName = ["Aqua", "Beige", "Black", "Blue", "Brown", "Coral", "Crimson", 
+    "Cyan", "DimGray", "Gold", "Gray", "Green", "Indigo ", "Ivory", "Lime", 
+    "Magenta", "Navy", "OldLace", "Olive", "Orange", "Pink", "Purple", "Red", 
+    "Silver", "Tan", "Turquoise", "Violet", "White", "Yellow"];
+const cCode = ["00FFFF", "F5F5DC", "000000", "0000FF", "A52A2A", "FF7F50", "DC143C", 
+    "00FFFF", "696969", "FFD700", "808080", "008000", "4B0082", "FFFFF0", "00FF00", 
+    "FF00FF", "000080", "FDF5E6", "808000", "FFA500", "FFC0CB", "800080", "FF0000", 
+    "C0C0C0", "D2B48C", "40E0D0", "EE82EE", "FFFFFF", "FFFF00"];
+
+    var codeToName = new Map();
+    for (let i=0; i<cName.length; i++) 
+        codeToName.set("#"+cCode[i].toLowerCase(), cName[i]);
+    setColor();
+
+</script>
+</body>
+</html>
