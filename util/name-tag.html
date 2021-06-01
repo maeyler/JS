@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+	<title>Web Components</title>
+	<style>
+		body {
+			max-width: 450px;
+		}
+		summary { cursor: pointer; }
+		name-tag { color: blue; }
+		#local, #menu {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 17px;
+		}
+		#picker { position: absolute; }
+		#uni { font-size: 24px; }
+		#out, #clr { margin: 6px; }
+	</style>
+  </head>
+
+  <body>
+	<h2 id=title></h2>
+	<p id=local>
+		&lt;name-tag&gt; is a local module<br>
+		First element:
+		<name-tag name="a name-tag"></name-tag><br>
+		Next element:
+		<name-tag name="just another"></name-tag>
+	</p>
+	<br>
+	<details id=menu>
+	    <summary>&lt;emoji-picker&gt; is external
+	    </summary>
+	  <emoji-picker id=picker></emoji-picker>
+	</details>
+	<p id=result>
+		<div id=uni></div>
+		<div id=out></div>
+		<button id=clr>Clear</button>
+	</p>
+<script src="name-tag.js" type="module"></script>
+<script type="module">
+import emojiPickerElement from "https://cdn.skypack.dev/emoji-picker-element";
+function clearText() {
+	uni.innerText = ''
+	out.innerText = ''
+}
+function report(evt) {
+	let e = evt.detail.emoji
+	console.log(e); menu.open = false
+	uni.innerText += e.unicode
+	out.innerText += e.annotation+'\n'
+}
+title.innerText = document.title
+clr.addEventListener("click", clearText)
+picker.addEventListener("emoji-click", report)
+</script>
+  </body>
+</html>
