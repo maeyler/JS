@@ -6,7 +6,7 @@
     <link rel="icon" href="/JS/images/JS.png">
     <title>Details-Summary</title>
     
-  <style> /* CSS code in use */
+  <style>
     body { max-width: 440px; }
     details {
         margin-left: 1em;
@@ -15,17 +15,12 @@
         margin-block-start: 1.5em;
         margin-block-end: 2px;
     }
-    span, small {
+    h3 span {
+        font-size: 12px;
+        font-weight: normal;
+    }
+    h3 span, small {
         font-family: Arial, Helvetica, sans-serif;
-    }
-    div > span {
-        cursor: pointer;
-        padding: 3px;
-        line-height: 1.4;
-    }
-    div > span:hover {
-        background: yellow;
-        color: blue;
     }
     pre {
         color: darkred;
@@ -41,40 +36,74 @@
     summary:hover {
         border: 1px solid cyan;
     }
-    #det5 > summary {
+    #det5, #dia5 {
+        width: 100px;
+        display: inline-block;
+        vertical-align: top;
+        margin: 6px;
+    }
+    #det5 summary, #dia5 summary {
         list-style: none;
     }
     #det6 li {
         list-style: none;
         margin-left: 1.2em;
     }
-    #flavor {
-        position: relative;
-        left: 1em;
-        width: 85px;
-        font-size: 18px;
-        background: blue;
-        color: white;
-        padding: 10px;
-    }
-    #bkgd {
+/* styles from Jen Kramer https://codepen.io/jen4web/pen/ExWQpPG */
+.menu {
+  vertical-align: top;
+  display: inline-block;
+  width: 140px;
+  font-family: Arial, sans-serif;
+  border-radius: 10px;
+  padding-bottom: 0.5rem;
+}
+.menu summary {
+  background-color: #4b7bec;
+  padding: 0.5rem;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+}
+.menu[open] {
+  background-color: #f7b731;
+}
+.flavors {
+  position: relative;
+  width: 140px;
+  padding: 0;
+  margin: 0;
+  background-color: #f7b731;
+}
+li {
+  list-style: none;
+  padding: 8px 1em;
+  cursor: pointer;
+}
+li:hover {
+  background-color: #a55eea;
+  color: white;
+}
+
+    .bkgd {
         position: fixed;
         left: 0; top: 0;
         width: 100%;
         height: 100%;
         background: rgba(136, 136, 136, 0.6);
     }
-    #dialog {
+    .dialog {
         position: relative;
         top: 30%;
         width: 130px;
         height: 70px;
         padding: 50px;
+        display: block;
         margin: auto;
         background: white;
         border: 5px double orange;
     }
-    #smiley {
+    .smiley {
         font-size: 48px;
     }
   </style>
@@ -131,21 +160,41 @@ of the enclosing <code>&lt;details&gt;</code> element.
     <pre id=pre3></pre>
 </details>
 
-<h3>4. Menu selection</h3>
-<details id=det4>
+<h3>4. Menu selection &emsp;
+  <span title="Use Relative/Absolute position in  menus">
+    <input type="checkbox" onclick="setPosition(this.checked)">
+    Absolute position
+  </span>
+</h3>
+<p>What is your favorite ice cream?</p>
+<details id=det4 class=menu>
     <summary>Select flavor</summary>
-    <div id=flavor>
-        <span>Vanilla</span><br>
-        <span>Chocolate</span><br>
-        <span>Coconut</span><br>
-        <span>Cranberry</span><br>
-        <span>Mint</span><br>
-        <span>Melon</span><br>
-        <span>Mulberry</span><br>
-        <span>Strawberry</span>
-    </div>
+    <ul class="flavors">
+        <li>Vanilla</li>
+        <li>Chocolate</li>
+        <li>Coconut</li>
+        <li>Blueberry</li>
+        <li>Pistachio</li>
+        <li>Strawberry</li>
+    </ul>
 </details>
-<br>
+<details id=menu4 class=menu>
+    <summary>Select flavor</summary>
+    <details-menu class="flavors">
+        <li>Vanilla</li>
+        <li>Chocolate</li>
+        <li>Coconut</li>
+        <li>Blueberry</li>
+        <li>Pistachio</li>
+        <li>Strawberry</li>
+    </details-menu>
+</details>
+<p>Styles are from 
+<a href="https://codepen.io/jen4web/pen/ExWQpPG">Jen Kramer</a></p>
+<p><small>The menu on the left is plain &lt;UL&gt;.<br>
+The other menu is 
+<a href="https://github.com/github/details-menu-element"
+>details-menu</a> element<br></small></p>
 <details>
     <summary>HTML code</summary>
     <pre id=pre4></pre>
@@ -153,17 +202,29 @@ of the enclosing <code>&lt;details&gt;</code> element.
 
 <h3>5. Dialog interface</h3>
 <small>Summary is an icon with no text or marker.<br>
-ESC key cancels the menu and the dialog.</small>
+ESC key cancels the menu and the dialog.</small><br>
 <details id=det5>
     <summary>😊</summary>
-    <div id=bkgd>
-        <div id=dialog>
-            <span id=smiley>😊</span>&emsp;
-            <button id=ok>OK</button>
-        </div>
+    <div class=bkgd>
+      <div class=dialog>
+        <span class=smiley>😊</span>&emsp;
+        <button id=ok>OK</button>
+      </div>
     </div>
 </details>
-<br>
+<details id=dia5>
+    <summary>🙂</summary>
+    <div class=bkgd>
+      <details-dialog class=dialog>
+        <span class=smiley>🙂</span>&emsp;
+        <button data-close-dialog>OK</button>
+      </details-dialog>
+    </div>
+</details>
+<p><small>The dialog on the left is plain &lt;DIV&gt;.<br>
+The other dialog is 
+<a href="https://github.com/github/details-dialog-element"
+>details-dialog</a> element<br></small></p>
 <details>
     <summary>HTML code</summary>
     <pre id=pre5></pre>
@@ -221,8 +282,11 @@ explains its use at GitHub.
 <br><br>
 These examples (except #4 and #5) require no JavaScript. 
 All functionality is provided by HTML and CSS.
-About 20 lines of JS were sufficient for the dynamics of the page.
+About 30 lines of JS were needed for the menus.
 </p>
+
+<script type="module" src="https://unpkg.com/@github/details-menu-element@latest"></script>
+<script type="module" src="https://unpkg.com/@github/details-dialog-element@latest"></script>
 
 <script>
 "use strict";
@@ -231,14 +295,23 @@ function closeDetail(...a) {
     for (let d of a) d.open = false
 }
 document.onkeyup = (evt) => {
-    if (evt.key == "Escape") closeDetail(det4, det5)
+    if (evt.key == "Escape") closeDetail(det4, menu4, det5, dia5)
 }
-flavor.onclick = (evt) => {
+function doClick(evt) {
     let t = evt.target;
-    // console.log(t.innerText)
-    if (t.tagName != 'SPAN') return
-    det4.firstElementChild.innerText = t.innerText
-    closeDetail(det4)
+    if (t.tagName !== 'LI') return
+    let det = t.closest('DETAILS')
+    if (!det) return
+    let sum = det.querySelector('summary')
+    sum.innerText = t.innerText
+    closeDetail(det)
+}
+det4.querySelector('.flavors').onclick = doClick
+menu4.querySelector('.flavors').onclick = doClick
+//.addEventListener('details-menu-select', console.log)
+function setPosition(abs) {
+    for (let f of document.querySelectorAll('.flavors')) 
+        f.style.position = abs ? 'absolute' : ''
 }
 ok.onclick = () => closeDetail(det5)
 const da = document.querySelectorAll('details')
@@ -246,8 +319,8 @@ closeAll.onclick = () => closeDetail(...da)
 pre1.innerText = det1.outerHTML
 pre2.innerText = det2.outerHTML
 pre3.innerText = det3.outerHTML
-pre4.innerText = det4.outerHTML
-pre5.innerText = det5.outerHTML
+pre4.innerText = det4.outerHTML+'\n'+menu4.outerHTML
+pre5.innerText = det5.outerHTML+'\n'+dia5.outerHTML
 pre6.innerText = det6.outerHTML
 </script>
 </body>
