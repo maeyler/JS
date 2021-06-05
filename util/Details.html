@@ -44,6 +44,7 @@
     }
     #det5 summary, #dia5 summary {
         list-style: none;
+        text-align: center;
     }
     #det6 li {
         list-style: none;
@@ -75,12 +76,12 @@
   margin: 0;
   background-color: #f7b731;
 }
-li {
+.flavors li {
   list-style: none;
   padding: 8px 1em;
   cursor: pointer;
 }
-li:hover {
+.flavors li:hover {
   background-color: #a55eea;
   color: white;
 }
@@ -116,7 +117,7 @@ Note that <code>&lt;summary&gt;</code> must be the first child
 of the enclosing <code>&lt;details&gt;</code> element.
 
 <h3>1. Structure</h3>
-<details id=det1 open=true>
+<details id=det1 open>
     <summary>Summary is always visible</summary>
     Details may be hidden<br>
     <small>Click on the summary to hide</small>
@@ -166,7 +167,7 @@ of the enclosing <code>&lt;details&gt;</code> element.
     Absolute position
   </span>
 </h3>
-<p>What is your favorite ice cream?</p>
+<p>What is your favorite flavor of ice cream?</p>
 <details id=det4 class=menu>
     <summary>Select flavor</summary>
     <ul class="flavors">
@@ -189,7 +190,7 @@ of the enclosing <code>&lt;details&gt;</code> element.
         <li>Strawberry</li>
     </details-menu>
 </details>
-<p>Styles are from 
+<p>Menu styles are from 
 <a href="https://codepen.io/jen4web/pen/ExWQpPG">Jen Kramer</a></p>
 <p><small>The menu on the left is plain &lt;UL&gt;.<br>
 The other menu is 
@@ -235,15 +236,15 @@ The other dialog is
 <a href="https://www.w3schools.com/howto/howto_js_treeview.asp"
     target="NewTab">How TO - Tree View</a>
 that represents the state of the art before &lt;details&gt; tag.</small>
-<details id=det6 open=true>
+<details id=det6 open>
     <summary>Beverages</summary>
     <li>Water</li>
     <li>Coffee</li>
-    <details>
+    <details open>
         <summary>Tea</summary>
         <li>Black Tea</li>
         <li>White Tea</li>
-        <details>
+        <details open>
             <summary>Green Tea</summary>
             <li>Sencha</li>
             <li>Gyokuro</li>
@@ -261,14 +262,12 @@ that represents the state of the art before &lt;details&gt; tag.</small>
 <h3>7. Tree display</h3>
 <small>Previous example hints the possibility of recursive trees.
 Thus, we have a mechanism to display trees within HTML.</small>
-<details id=det7>
+<details id=det7 open>
     <summary>Several live examples</summary>
     <a href="/JS/hard/DOM tree.html">DOM tree</a><br>
     <a href="/Sunumlar/toprak/aile%20agaci.html"
     target="NewTab" >Family tree</a><br>
     <a href="/JS/auto/Expression.html">Expression tree</a><br>
-    <a href=""
-    target="NewTab" ></a>Directory -- to be done<br>
 </details>
 <br>
 <hr />
