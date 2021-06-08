@@ -11,15 +11,8 @@
       background: honeydew;
       margin: 0;
       }
-    small {
-      font-weight: normal;
-      font-size: 17px;
-    }
     iframe {
-      height: 99vh;
-      border: none;
       background: white;
-      margin: 0;
     }
     #items {
       position: absolute;
@@ -49,24 +42,24 @@
 
 <body>
   <iframe id=main class="column"></iframe>
-  <div id=tree class="column">
-    <h2><span id=title></span>
-      <small>for the selected page</small>
-    </h2>
+  <div class="column">
     <details id=menu>
-      <summary id=select>&ensp;▼</summary>
-      <div id=items>
-      </div>
-  </details>
-  <br>
+      <summary id=select>Select</summary>
+      <div id=items></div>
+    </details>
+    <dom-tree id=tree root="main"></dom-tree>
+    <p>Tree style from 
+      <a href="https://codepen.io/jen4web/pen/WNpJVgK" 
+         target="NewTab">Jen Kramer</a>
+    </p>
   </div>
 
-<link rel="stylesheet" href="DOM_tree.css">
-<script src="DOM_tree.js"></script>
+<link rel="stylesheet" href="/JS/util/dom-tree.css">
+<script src="/JS/util/dom-tree.js"></script>
 <script>
 "use strict";
 function loadSample(key) {
-    select.innerHTML = key+'&ensp;▼'
+    select.innerHTML = key  //+'&ensp;▼'
     main.src = URL[key]; menu.open = false
 }
 document.onkeyup = (evt) => {
@@ -103,8 +96,8 @@ for (const d of DATA.split('\n')) {
 }
 let a = KEYS.map(k => '<span>'+k+'</span>')
 items.innerHTML = a.join('<br>\n')
-title.innerText = document.title
-main.onload = render //defined in DOM_tree.js
+// render() defined in DOM_tree.js
+main.onload = () => tree.render()
 loadSample(KEYS[0])
 </script>
 </body>

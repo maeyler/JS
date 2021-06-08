@@ -9,7 +9,7 @@
   .column { width: 47%; }
 }
 iframe.column {
-  min-height: 100vh;
+  height: 100vh;
   border: none;
   margin: 0;
 }

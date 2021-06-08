@@ -36,25 +36,26 @@ class DOMTree extends HTMLElement {
     sr.innerHTML = CODE
     let root = this.getAttribute('root')
     if (!root) throw "root not found"
-    let main = document.querySelector('#'+root)
-    if (!main) throw '#'+root+" not found"
-    this.main = (main.tagName === 'IFRAME') ?
-         main.contentDocument.body : main
+    this.main = document.querySelector('#'+root)
+    if (!this.main) throw '#'+root+" not found"
     this.output = sr.querySelector('#output')
     this.detail = sr.querySelector('#detail')
     this.detail.onclick = this.render.bind(this)
     this.render()
   }
   render() {
+    let main = this.main
+    if (main.tagName === 'IFRAME')
+      main = main.contentDocument.body
     let out = this.output
     if (this.detail.checked) {
-      out.innerHTML = toDetails(this.main, 0)
+      out.innerHTML = toDetails(main, 0)
       let da = out.querySelectorAll('details')
       for (let d of da) d.ontoggle = toggle
     } else {
-      out.innerHTML = toTree(this.main, '')
+      out.innerHTML = toTree(main, '')
     }
-}
+  }
 }
 customElements.define('dom-tree', DOMTree);
 
