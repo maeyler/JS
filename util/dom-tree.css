@@ -17,13 +17,13 @@ dom-tree.column  {
   background: honeydew;
   padding: 0 8px;
 }
+/** hard-coded within JS
 #output details {
   max-width: 300px;
   margin: 4px;
   margin-left: 1em;
   border: 3px solid green;
   border-radius: 8px;
-  /* opacity: 0.9; */
 }
 #output li {
   list-style: none;
@@ -40,3 +40,4 @@ dom-tree.column  {
   color: green;
   line-height: 1.5;
 }
+*/

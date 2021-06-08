@@ -1,31 +1,58 @@
 "use strict";
 const SPACE = '&emsp;', MAX = 40;
 const SKIP = ['BR', 'SCRIPT'] //ignore tags
+const CODE = `<style>
+#output details {
+  max-width: 300px;
+  margin: 4px;
+  margin-left: 1em;
+  border: 3px solid green;
+  border-radius: 8px;
+}
+#output li {
+  list-style: none;
+  margin: 0;
+  margin-left: 1em;
+  color: blue;
+}
+#output summary {
+  cursor: pointer;
+  color: white;
+  background: green;
+}
+#output {
+  color: green;
+  line-height: 1.5;
+}
+</style>
+<h2>DOM Tree</h2>
+<input id=detail type="checkbox">
+Use <code>&lt;details&gt;</code>
+<p id=output></p>`
 class DOMTree extends HTMLElement {
   constructor() {
     super();
-    this.innerHTML = `<h2>DOM Tree</h2>
-    <input id=detail type="checkbox">
-    Use <code>&lt;details&gt;</code> <p id=output></p>`
+    let sr = this.attachShadow({mode: 'open'})
+    sr.innerHTML = CODE
     let root = this.getAttribute('root')
     if (!root) throw "root not found"
     let main = document.querySelector('#'+root)
     if (!main) throw '#'+root+" not found"
     this.main = (main.tagName === 'IFRAME') ?
          main.contentDocument.body : main
-    this.out = this.querySelector('p#output')
-    this.det = this.querySelector('input#detail')
-    this.det.onclick = () => this.render()
-    
+    this.output = sr.querySelector('#output')
+    this.detail = sr.querySelector('#detail')
+    this.detail.onclick = this.render.bind(this)
     this.render()
   }
   render() {
-    if (this.det.checked) {
-      this.out.innerHTML = toDetails(this.main, 0)
-      let da = this.out.querySelectorAll('details')
+    let out = this.output
+    if (this.detail.checked) {
+      out.innerHTML = toDetails(this.main, 0)
+      let da = out.querySelectorAll('details')
       for (let d of da) d.ontoggle = toggle
     } else {
-      this.out.innerHTML = toTree(this.main, '')
+      out.innerHTML = toTree(this.main, '')
     }
 }
 }
