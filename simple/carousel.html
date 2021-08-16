@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+    <title>Image Carousel</title>
+    
+  <style> /* CSS code in use */
+body { max-width: 500px; }
+#sample { overflow-x: auto; }
+#container {
+  width: 95%;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  position: relative;    
+}
+img { width: 100%; }
+#prev, #next {  
+  position: absolute;
+  top: 30px;
+  cursor: pointer;
+  padding: 16px;
+  color: gray;
+  font-weight: bold;
+  user-select: none;
+}
+#prev{ left: 0; }
+#next{ right: 0; }
+#prev:hover, #next:hover {
+  background: rgba(0, 0, 0, 0.5);
+} 
+</style>
+</head>
+
+<body>
+<h2 id=title></h2>
+<div id=container>
+    <div><img src="../images/JS.png"></div>
+    <div><img src="../images/305A.png"></div>
+    <div><img src="../images/cache.jpg"></div>
+    <div><img src="../images/cache.png"></div>
+    <div><img src="../images/Canvas_sun.png"></div>
+    <div><img src="../images/complex.png"></div>
+    <a id=prev onclick="show_slide(-1)">&#10094;</a>
+    <a id=next onclick="show_slide(1)">&#10095;</a>
+</div>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: <a href="https://dev.to/codefoxx/15-beginner-javascript-projects-to-improve-your-front-end-skills-5bcj" 
+   target="NewTab">#3 Image Carousel</a>
+</p>
+
+<script>
+"use strict";
+var index = 0;
+const images = document.querySelectorAll('img')
+function show_slide(i) {
+  //increment/decrement slide index
+  index += i;
+  // adjust index at two ends
+  if (index > images.length - 1) index = 0 ;
+  if (index < 0) index = images.length - 1;
+  // hide all the images except one
+  for (i = 0; i < images.length; i++) 
+    if (i === index) {
+      console.log("show_slide", index)
+      images[i].hidden = false
+    } else {
+      images[i].hidden = true
+    }
+}
+title.innerText = document.title;
+sample.innerText = show_slide;
+show_slide(0)
+</script>
+</body>
+</html>
