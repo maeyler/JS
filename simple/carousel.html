@@ -12,14 +12,17 @@ body { max-width: 500px; }
 #container {
   width: 95%;
   margin: auto;
-  justify-content: center;
-  align-items: center;
+  font-size: larger; 
   position: relative;    
 }
-img { width: 100%; }
+div { text-align: center; }
+img {
+  width: 100%;
+  margin-top: 6px;
+}
 #prev, #next {  
   position: absolute;
-  top: 30px;
+  top: -20px;
   cursor: pointer;
   padding: 16px;
   color: gray;
@@ -37,12 +40,12 @@ img { width: 100%; }
 <body>
 <h2 id=title></h2>
 <div id=container>
-    <div><img src="../images/JS.png"></div>
-    <div><img src="../images/305A.png"></div>
-    <div><img src="../images/cache.jpg"></div>
-    <div><img src="../images/cache.png"></div>
-    <div><img src="../images/Canvas_sun.png"></div>
-    <div><img src="../images/complex.png"></div>
+    <div>JS icon<img src="../images/JS.png"></div>
+    <div>Inspector Page<img src="../images/305A.png"></div>
+    <div>Hand-made figure<img src="../images/cache.jpg"></div>
+    <div>Service worker<img src="../images/cache.png"></div>
+    <div>Background Sun<img src="../images/Canvas_sun.png"></div>
+    <div>Sample JS code<img src="../images/complex.png"></div>
     <a id=prev onclick="show_slide(-1)">&#10094;</a>
     <a id=next onclick="show_slide(1)">&#10095;</a>
 </div>
@@ -57,7 +60,7 @@ img { width: 100%; }
 <script>
 "use strict";
 var index = 0;
-const images = document.querySelectorAll('img')
+const images = container.querySelectorAll('div')
 function show_slide(i) {
   //increment/decrement slide index
   index += i;
