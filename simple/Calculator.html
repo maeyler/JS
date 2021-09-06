@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" sizes="192x192" href="../images/JS.png">
-    <title>Calculate using #</title>
+    <title></title>
 
   <style>
     body { max-width: 440px; }
@@ -22,34 +22,49 @@
 
 <body>
 
-<h2 id="title"></h2>
-<b>Very simple calculator.</b>
-<p>Enter an expression in the box (inp.value) below <br>
-or in the address bar after # (location.hash)</p>
+<h2>Calculate using #</h2>
+<b>Very simple calculator</b>
+<p>Enter an expression in the box (<code>inp.value</code>) below <br>
+or in the address bar after # (<code>location.hash</code>)</p>
 <p>
-  <input id=inp onchange="location.hash=value" value="20*35">
-  = <span id=out></span>
+  <input id=inp value="20*35"> = <span id=out></span>
 </p>
 
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
 <hr />
+<p>Ref: <a 
+  href="https://developer.mozilla.org/en-US/docs/Web/API/HashChangeEvent" 
+  target="NewTab">HashChangeEvent</a>
+</p>
 
 <script>
 "use strict";
 function process() {
-    let h = location.hash.slice(1), s = ''
-    try { s = eval(h) } 
-    catch (e) { s = e.toString() }
-    out.innerText = s
-    console.log(h+' = '+s)
+    let h = location.hash.slice(1)
+    try {
+        let s = eval(h) //may fail
+        out.style.color = ''
+        out.innerText = s
+        document.title = h+' = '+s
+    } catch (e) {
+        out.style.color = 'red'
+        out.innerText = e.message
+        document.title = h+' error'
+    }
+    console.log(document.title)
     if (inp.value !== h) inp.value = h
 }
-title.innerText = document.title
-sample.innerText = process.toString()
-window.onhashchange = process
-inp.onchange()
+function init() {
+    inp.onchange 
+    = () => location.hash=inp.value
+    window.onhashchange = process
+    if (location.hash) process()
+    else inp.onchange()
+}
+sample.innerText = process+'\n'+init
+init()
 </script>
 
 </body>
