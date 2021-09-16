@@ -6,7 +6,7 @@
     <link rel="icon" href="/JS/images/JS.png">
     <title>Battery Status </title>
     
-  <style> /* CSS code in use */
+  <style>
     body { max-width: 440px; }
     #progress { width: 200px; }
   </style>
@@ -26,10 +26,14 @@
    <a href="https://groups.google.com/u/1/g/mozilla.dev.platform/c/5U8NHoUY-1k/discussion"
    target="NewTab">Removal</a>
 </p>
+
+<h2>Screen Size</h2>
+<p id=scrSize></p>
+<p id=winSize></p>
+
 <h2>Online Status</h2>
 <p id=out></p>
 <p id=online></p>
-
 
 <script>
   "use strict";
@@ -86,6 +90,14 @@
     }
     online.innerText = msg; console.log(msg)
   }
+  function doResize() {
+    let ss = `Screen: ${screen.width}x${screen.height}`
+          +'&ensp; x'+devicePixelRatio.toFixed(2)
+    scrSize.innerHTML = ss
+    let ws = `Window: ${innerWidth}x${innerHeight}`
+    winSize.innerText = ws
+    console.log(ss, ws)
+  }
   title.innerText = document.title;
   onoffline = () => showOnline(false)
   ononline  = () => showOnline(true)
@@ -93,6 +105,8 @@
   if (navigator.getBattery)
       navigator.getBattery().then(init)
   else throw "getBattery not found"
+  window.onresize = doResize
+  doResize()
 
 </script>
 </body>
