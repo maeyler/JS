@@ -94,6 +94,7 @@ const NAV =
       <a href="/JS/hard/Console.html">Console</a>
       <a href="/JS/auto/Auto.html">Automata</a>
       <a href="/JS/auto/Expression.html">Expression tree</a>
+      <a href="/JS/hard/DOM%20tree.html">DOM tree</a>
       <a href="/JS/hard/JSON_Hilite.html">JSON Highlight</a>
       <a href="/JS/hard/Philosophers.html">Dining Philosophers</a>
       <a href="/JS/sss/inspector.html">Inspector</a>

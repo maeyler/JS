@@ -1,6 +1,6 @@
 "use strict";
 const SPACE = '&emsp;', MAX = 40;
-const SKIP = ['BR', 'SCRIPT'] //ignore tags
+const SKIP = ['BR', 'SCRIPT', 'NAV'] //ignore tags
 const CODE = `<style>
 #output details {
   max-width: 300px;
