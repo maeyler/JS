@@ -137,12 +137,16 @@ function setNavbar() {
   let nav = document.createElement('nav')
   nav.innerHTML = NAV
   document.body.append(nav)
-  document.querySelectorAll("li[id]").forEach(li => {
-      let ul = li.querySelector("ul."+li.id)
+  let w = nav.offsetWidth
+  nav.querySelectorAll("li[id]").forEach(li => {
+    let ul = li.querySelector("ul."+li.id)
     //   console.log(li.id, ul)
-      li.onmouseenter = () => { ul.style.display = 'block'; 
-              ul.style.left = li.offsetLeft+'px' }
-      li.onmouseleave = () => { ul.style.display = '' }
+    li.onmouseenter = () => {
+        ul.style.display = 'block';
+        ul.style.left = 
+          Math.min(li.offsetLeft, w-ul.offsetWidth)+'px'
+    }
+    li.onmouseleave = () => { ul.style.display = '' }
   })
 }
 setNavbar()
