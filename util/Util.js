@@ -36,7 +36,12 @@ class ContextMenu {
             if (evt.key == 'Escape') ContextMenu.hideAll()
         }
         document.onclick = (evt) => {
-            evt.preventDefault(); ContextMenu.hideAll()
+            for (let e of document.querySelectorAll('.menu')) 
+                if (!e.hidden) {
+                    ContextMenu.hideAll()
+                    evt.preventDefault()
+                    return
+                }
         }
     }
     /** Display menu at the position of the click or touch */
