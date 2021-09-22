@@ -53,8 +53,8 @@ nav li:hover, nav a:hover {
 
 const NAV = 
 `<ul>
-    <li>Simple
-      <div>
+    <li class=Simple>Simple
+      <div class=menu>
         <a href="/JS/simple/Date%20test.html">Date and Color</a>
         <a href="/JS/simple/char_count.html">Char Count</a>
         <a href="/JS/simple/Color%20Paragraphs.html">Color Paragraphs</a>
@@ -70,8 +70,8 @@ const NAV =
         <a href="/JS/simple/JSON_Teacher.html">JSON Teacher</a>
       </div>
     </li>
-    <li>Math
-      <div>
+    <li class=Math>Math
+      <div class=menu>
         <a href="/JS/math/Counting.html">Counting</a>
         <a href="/JS/math/Math%20functions.html">Math Functions</a>
         <a href="/JS/math/Numbers.html">Numbers</a>
@@ -87,8 +87,8 @@ const NAV =
         <a href="/JS/canvas/solar_system.html">Solar System</a>
       </div>
     </li>
-    <li>Hard
-      <div>
+    <li class=>Hard
+      <div class=menu>
         <a href="/JS/hard/JS%20page.html">Page made by JS</a>
         <a href="/JS/hard/Table%20maker.html">Table Maker</a>
         <a href="/JS/hard/Select%20file.html">Select Local</a>
@@ -104,8 +104,8 @@ const NAV =
         <a href="/JS/sss/inspector.html">Inspector</a>
       </div>
     </li>
-    <li>Events
-      <div>
+    <li class=Events>Events
+      <div class=menu>
         <a href="/JS/hard/Events.html">Event Handlers</a>
         <a href="/JS/hard/Battery.html">Battery & Internet</a>
         <a href="/JS/hard/Propagation.html">Event Propagation</a>
@@ -117,8 +117,8 @@ const NAV =
         <a href="/JS/util/name-tag.html">Web Components</a>
       </div>
     </li>
-    <li>External
-      <div>
+    <li class=External>External
+      <div class=menu>
         <a href="/JS/api/GitHub_Users.html">GitHub Users</a>
         <a href="/JS/api/Location.html">Location</a>
         <a href="/JS/api/Countries.html">Countries</a>
