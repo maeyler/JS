@@ -12,6 +12,7 @@ nav {
   font-family: sans-serif;
 }
 nav ul {
+  display: flex;
   white-space: nowrap;
   background: yellow;
   color: blue;
@@ -26,6 +27,7 @@ nav div {
   position: absolute;
   margin-top: 3px;
   display: none;
+  box-shadow: 0 4px 5px 3px rgb(0 0 0 / 20%);
 }
 nav a {
   display: block;
