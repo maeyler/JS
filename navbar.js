@@ -87,7 +87,7 @@ const NAV =
         <a href="/JS/canvas/solar_system.html">Solar System</a>
       </div>
     </li>
-    <li class=>Hard
+    <li class=Hard>Hard
       <div class=menu>
         <a href="/JS/hard/JS%20page.html">Page made by JS</a>
         <a href="/JS/hard/Table%20maker.html">Table Maker</a>
