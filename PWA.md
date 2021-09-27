@@ -107,3 +107,4 @@ self.addEventListener('fetch', fetchCB)
 * [Using Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers)
 * [Building a PWA](https://medium.freecodecamp.org/progressive-web-apps-102-building-a-progressive-web-app-from-scratch-397b72168040)
 
+<script src="navbar.js"></script>

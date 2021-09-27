@@ -45,3 +45,4 @@ _The power of JavaScript lies in its simplicity_
 
 Ref: [JavaScript fundamentals](https://medium.freecodecamp.org/learn-these-javascript-fundamentals-and-become-a-better-developer-2a031a0dc9cf)
 
+<script src="navbar.js"></script>
