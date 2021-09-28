@@ -2,7 +2,7 @@
 const CSS =
 `body {
   margin-top: 40px;
-  user-select: none;
+/* user-select: none;*/
 }
 nav {
   width: 100%;
@@ -31,10 +31,13 @@ nav div {
 }
 nav a {
   display: block;
-  background: wheat;
-  color: black;
+  background: yellow;
+  color: blue;
   text-decoration: none;
   border-bottom: 1px dotted gray;
+}
+nav a:visited {
+  color: purple;
 }
 nav a:last-child {
   border-bottom: none;
