@@ -1,61 +1,10 @@
 "use strict";
-const CSS =
-`body {
-  margin-top: 40px;
-/* user-select: none;*/
-}
-nav {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  margin-left: -8px;
-  font-family: sans-serif;
-}
-nav ul {
-  display: flex;
-  white-space: nowrap;
-  background: yellow;
-  color: blue;
-  top: 0;
-  margin: 0;
-  padding: 0;
-}
-nav li {
-  display: inline-block;
-}
-nav div {
-  position: absolute;
-  margin-top: 3px;
-  display: none;
-  box-shadow: 0 4px 5px 3px rgb(0 0 0 / 20%);
-}
-nav a {
-  display: block;
-  background: yellow;
-  color: blue;
-  text-decoration: none;
-  border-bottom: 1px dotted gray;
-}
-nav a:visited {
-  color: purple;
-}
-nav a:last-child {
-  border-bottom: none;
-}
-nav li, nav a {
-  text-align: left;
-  font-size: initial;
-  width: initial;
-  padding: 8px 10px;
-  margin: 0;
-}
-nav li:hover, nav a:hover {
-  background: blue;
-  color: yellow;
-}`
-
 const NAV = 
-`<ul>
+`<link href="https://maeyler.github.io/JS/navbar.css" rel="stylesheet">
+<style>
+    nav a {background: wheat}
+</style> 
+<ul>
     <li class=Simple>Simple
       <div class=menu>
         <a href="/JS/simple/Date%20test.html">Date and Color</a>
@@ -138,9 +87,6 @@ const NAV =
 </ul>`
 
 function setNavbar() {
-  let css = document.createElement('style')
-  css.innerHTML = CSS
-  document.head.append(css)
   let nav = document.createElement('nav')
   nav.innerHTML = NAV
   document.body.append(nav)

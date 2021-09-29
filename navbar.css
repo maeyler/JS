@@ -1,0 +1,51 @@
+body {
+  margin-top: 40px;
+/* user-select: none;*/
+}
+nav {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  margin-left: -8px;
+  font-family: sans-serif;
+}
+nav ul {
+  display: flex;
+  white-space: nowrap;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+nav li {
+  display: inline-block;
+}
+nav div {
+  position: absolute;
+  margin-top: 3px;
+  display: none;
+  box-shadow: 0 4px 5px 3px rgb(0 0 0 / 20%);
+}
+nav a {
+  display: block;
+  text-decoration: none;
+  border-bottom: 1px dotted gray;
+}
+nav a:last-child {
+  border-bottom: none;
+}
+nav a:visited {
+  color: purple;
+}
+nav li, nav a {
+  text-align: left;
+  font-size: initial;
+  background: yellow;
+  color: blue;
+  width: initial;
+  padding: 8px 10px;
+  margin: 0;
+}
+nav li:hover, nav a:hover {
+  background: blue;
+  color: yellow;
+}
