@@ -1,6 +1,6 @@
 "use strict";
 const NAV = 
-`<link href="https://maeyler.github.io/JS/navbar.css" rel="stylesheet">
+`<link href="/JS/navbar.css" rel="stylesheet">
 <style>
     nav a {background: wheat}
 </style> 
