@@ -5,50 +5,60 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
     <title>Base Conversion </title>
+<style>
+    input {
+        font-family: monospace;
+        width: 160px;
+    }
+</style>
 </head>
+
+<body>
+<h2 id=title></h2>
+<p>Number: 
+<input type=number id=num value=65536 onChange="encode()">
+<button onClick="encode()">Encode</button>
+</p>
+<p>Base 16: <input type=text id=hex onChange="decode(hex)">
+<button onClick="decode(hex)">Decode</button>
+</p>
+<p>Base 36: <input type=text id=t36 onChange="decode(t36)">
+<button onClick="decode(t36)">Decode</button>
+</p>
+<p id=out></p>
+<p>Base 16 is the well-known hexadecimal.<br />
+Base 36 uses numeric digits and lower-case letters.<br />
+</p>
+<hr />
+
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Reference: <br />
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString" target="NewTab">n.toString()</a> &emsp;
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt" target="NewTab">Number.parseInt()</a>
+</p>
 
 <script>
 "use strict";
-const BASE = 80, MIN = 7680, MAX = MIN+BASE-1;
 function encodeB(n, base) {
-    if (base == undefined) base = 16;
     return n.toString(base);
 }
 function decodeB(s, base) {
-    if (base == undefined) base = 16;
     return Number.parseInt(s, base);
-}
-function encode80(n) {
-    let s = "";
-    while (n > 0) {
-        let c = String.fromCharCode(MIN + n%BASE);
-        s = c + s; n = Math.trunc(n/BASE);
-    }
-    return s;
-}
-function decode80(s) {
-    let n = 0;
-    for (let i=0; i<s.length; i++) {
-        let c = s.charCodeAt(i);
-        if (c<MIN || c>MAX) return -1;
-        n = BASE*n + (c-MIN);
-    }
-    return n;
 }
 function encode(n) {
     let rep = (n == undefined);
     if (rep) n = Number(num.value);
     else num.value = n;
-    hex.value = encodeB(n);
+    hex.value = encodeB(n, 16);
     t36.value = encodeB(n, 36);
-    t80.value = encode80(n);
-    if (rep) report(n+" -> "+t80.value);
+    if (rep) report(n+" -> "+t36.value);
 }
 function decode(e) {
     let s = e.value; let n;
     if (e == t36) n = decodeB(s, 36);
-    else if (e == hex) n = decodeB(s);
-    else n = decode80(s);
+    else if (e == hex) n = decodeB(s, 16);
     if (Number.isInteger(n) && n>=0) encode(n);
     else num.value = -1;
     report(s +" -> "+num.value);
@@ -56,52 +66,10 @@ function decode(e) {
 function report(s) {
     out.innerText = s; console.log(s);
 }
-</script>
-
-<body>
-<h2 id=title></h2>
-<p>Number: 
-<input type=number id=num value=65536 onChange="encode()">
-<input type=button value="Encode" onClick="encode()">
-</p>
-<p>Base 16: <input type=text id=hex onChange="decode(hex)">
-<input type=button value="Decode" onClick="decode(hex)">
-</p>
-<p>Base 36: <input type=text id=t36 onChange="decode(t36)">
-<input type=button value="Decode" onClick="decode(t36)">
-</p>
-<p>Base 80: <input type=text id=t80 onChange="decode(t80)">
-<input type=button value="Decode" onClick="decode(t80)">
-
-<p id=out></p>
-<p>Base 16 is the well-known hexadecimal.<br />
-Base 36 uses numeric digits and lower-case letters.<br />
-Base 80 uses a block of Unicode to reduce the string length further.<br />
-(The number of bytes is actually twice the number of chars in this block)
-</p>
-<hr />
-
-<b>Sample code</b>
-<pre>
-function encodeB(n, base) {
-    if (base == undefined) base = 16;
-    return n.toString(base);
-}
-function decodeB(s, base) {
-    if (base == undefined) base = 16;
-    return Number.parseInt(s, base);
-}
-</pre>
-<hr />
-<p>Reference: <br />
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt" target="NewTab">Number.parseInt()</a><br />
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString" target="NewTab">n.toString()</a>
-</p>
-
-<script>
-    title.innerText = document.title;
-    num.min = 0; num.max = Number.MAX_SAFE_INTEGER;
-    encode();
+title.innerText = document.title;
+sample.innerText = encodeB+"\n"+decodeB;
+num.min = 0; num.max = Number.MAX_SAFE_INTEGER;
+encode();
 </script>
 <script src="/JS/navbar.js"></script>
 
