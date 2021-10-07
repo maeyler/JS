@@ -74,7 +74,6 @@ const NAV =
         <a href="/JS/api/QR_code.html">QR Code</a>
         <a href="/JS/api/GitHub_Users.html">GitHub Users</a>
         <a href="/JS/api/Location.html">Location</a>
-        <a href="/JS/api/Countries.html">Countries</a>
         <a href="/JS/api/Weather.html">OpenWeather</a>
         <a href="/JS/canvas/googlemaps.html">Maps 1</a>
         <a href="/JS/canvas/mapboxgl.html">Maps 2</a>
