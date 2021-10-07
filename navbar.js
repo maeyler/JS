@@ -71,6 +71,7 @@ const NAV =
     </li>
     <li class=External>External
       <div class=menu>
+        <a href="/JS/api/QR_code.html">QR Code</a>
         <a href="/JS/api/GitHub_Users.html">GitHub Users</a>
         <a href="/JS/api/Location.html">Location</a>
         <a href="/JS/api/Countries.html">Countries</a>
