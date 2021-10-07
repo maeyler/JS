@@ -10,18 +10,18 @@
     body { max-width: 440px; }
     #sample { overflow-x: auto; }
     #inp { width: 250px; }
-    #qrcode { margin: auto; }
+    #save { font-size: large; }
   </style>
 </head>
 
 <body>
 <h2>Generate QR Code</h2>
 <p>
-  <input type="url" id="inp" onchange="generateQRCode()">
-  <!-- <button type="button" onclick="">QR Code</button> -->
+  <input type=url id=inp onchange="generateQRCode()"> &ensp;
+  <button type=button id=save onclick="doSave()">Save</button>
 </p>
 <p>
-  <div id="qrcode"></div>
+  <div id=QR></div>
 </p>
 <hr />
 <b>Sample code</b>
@@ -29,23 +29,28 @@
 <hr />
 <p>Ref: 
 <a href="https://medium.com/geekculture/few-ways-to-generate-qr-code-using-javascript-54b6b5220c4f" 
-   target="NewTab">Generate QR Code Using JavaScript</a>
+   target="NewTab">Generate QR Code</a> &ensp;
+<a href="https://qreader.online/" target="NewTab">QReader.Online</a>
 </p>
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script type="text/javascript">
+function doSave() {
+  localStorage.qrcode = inp.value
+  save.disabled = true
+}
 function generateQRCode() {
   let txt = inp.value
   while (!txt) {
-    txt = prompt("Enter some text", start)
+    txt = prompt("Enter some text", location.href)
     inp.value = txt
   }
-  qrcode.innerHTML = ""
-  new QRCode(qrcode, txt)
+  QR.innerHTML = ""; new QRCode(QR, txt)
+  save.disabled = localStorage.qrcode == inp.value
   inp.selectionEnd = txt.length
   inp.selectionStart = 0; inp.focus()
 }
-sample.innerText = generateQRCode
-let start = inp.value = location.href
+sample.innerText = doSave+'\n'+generateQRCode
+inp.value = localStorage.qrcode || location.href
 generateQRCode()
 </script>
 <script src="/JS/navbar.js"></script>
