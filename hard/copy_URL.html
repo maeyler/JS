@@ -62,11 +62,10 @@ function makeButton(f) {
     save.hidden = false
     console.log(f.name+" "+f.size+" "+f.type)
 }
+const TEXT = [".js", ".java", ".json", ".md"]
 function isText(f) {
-    console.assert(f instanceof Blob)
     return f.type.startsWith("text") 
-        || f.name.endsWith(".js") || f.name.endsWith(".java")
-        || f.name.endsWith(".json") || f.name.endsWith(".md")
+        || TEXT.some(x => f.name.endsWith(x))
 }
 async function showURL(u) {
     try {
@@ -84,12 +83,13 @@ async function showURL(u) {
     }
 }
 function displayBlob(f) {
+    console.assert(f instanceof Blob)
     msg.innerText = f.size+" bytes "+f.type
     msg.style.color = ''; out.innerText = "" 
     save.hidden = true
     if (f.type.startsWith("image")) {
         reader.readAsDataURL(f);
-        reader.onload = function(evt) {
+        reader.onload = (evt) => {
             let a = evt.target.result //image
             out.innerHTML = "<img class=thumb "
               +"src='"+a+"' title='"+f.name+"' />"
@@ -97,7 +97,7 @@ function displayBlob(f) {
         }
     } else if (isText(f)) {
         reader.readAsText(f);
-        reader.onload = function(evt) {
+        reader.onload = (evt) => {
             let t = evt.target.result //text
             let a = t.replace(/</g, "&lt;")
             out.innerHTML = "<pre>"+a+"</pre>"
