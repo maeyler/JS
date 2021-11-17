@@ -10,11 +10,14 @@ Chrome gibi bir tarayıcı ile açarak kitabı uygulama halinde kaydedebilirsini
 Sayfanın Android/Chrome altında web uygulaması olması için iki adım yeterli:
 
 1. Ana sayfamıza iki satır ekleyelim: 
+
 ```
 <link rel="icon" sizes="192x192" href="images/JS.png">
 <link rel="manifest" href="manifest.json">
 ```
+
 Ayrıca `manifest.json` dosyası şöyle olmalı:
+
 ```
 {
   "name": "JavaScript samples",
@@ -30,6 +33,7 @@ Ayrıca `manifest.json` dosyası şöyle olmalı:
   ]
 }
 ```
+
 2. Gerekli simgeler (bir icon yeterli)
 
 Büyük (512x512) simge varsa, uygulama yüklenirken sistem onu kullanabilir.<br>
@@ -50,6 +54,7 @@ Masa üstünde uygulama statüsü kazanmak için ayrıca bir _service worker_ ek
 Uygulamayı çevrim dışı kullanabilmek için iki adım daha atalım:
 
 3. `install` olayları için bir dinleyici: statik dosyaları en başta ön-belleğe alır
+
 ```
 const CACHE ='JS'
 const FILES = ['/JS/', '/JS/sss/', '/JS/index.html', ...]
@@ -62,7 +67,9 @@ function installCB(e) {
 }
 self.addEventListener('install', installCB)
 ```
+
 4. `fetch` olayları için bir dinleyici: dosyayı önce ön-bellekte arar, bulamazsa fetch talebi gönderir
+
 ```
 function cacheCB(e) { //cache first
   let req = e.request
@@ -78,6 +85,7 @@ self.addEventListener('fetch', cacheCB)
 ### Otomatik Cache
 Yukarıda gösterilen "önce cache" yaklaşımı, zaman içinde değişmeyen statik kaynaklar için iyi bir çözüm. Mesela, arşiv dosyaları ya da kitap bölümleri gibi.
 Zaman içinde değişen bir içerik söz konusu ise, daha farklı davranılır: "önce fetch". Kaynak tarayıcıdan istenir ve gelen bilgi ön-belleğe kaydedilir. Çevrim dışı olduğu için cevap gelmezse ön-bellekteki dosya ile yetinilir.
+
 ```
 function save(req, resp) {
   return caches.open(CACHE)

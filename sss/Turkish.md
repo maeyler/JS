@@ -34,6 +34,7 @@ Bir önceki seçilmiş nesnenin adı ise `__`
 ### Ilk nesneler
 Sayfa açılınca önce inspector.js kodu yüklenir <br>
 HTML elemanları yapılır ve `init()` ile 8 adet nesne gösterilir:
+
 ```
 var MENU, a, b, c;  //global variables
 function init() {
@@ -63,6 +64,7 @@ Tarayıcıların console aracı ile bu işlemler PC'de kolayca yapılır <br>
 Aynı işi mobil cihazlarda yapabilmek için bunun gibi bir yazılım gerekiyor
 
 Zorluk sırasına göre birkaç örnek görelim:
+
 ```
 // işletim sistemi -- senkron
 navigator.platform

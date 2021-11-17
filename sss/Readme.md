@@ -34,6 +34,7 @@ Previously selected object is denoted by `__`
 ### Initial objects
 When the page is opened, inspector.js code is loaded <br>
 HTML elements are made, and `init()` displays 8 objects:
+
 ```
 var MENU, a, b, c;  //global variables
 function init() {
@@ -63,6 +64,7 @@ Browsers already have console tools available for inspection <br>
 This tool has some of the capabilities of the console
 
 Several use cases in order of increasing difficulty:
+
 ```
 // operating system -- synchronous
 navigator.platform

@@ -10,11 +10,14 @@ When you open this page, a PWA-aware browser (e.g. Chrome) will give the option 
 Two steps will make your web page look like a web app under Android/Chrome
 
 1. Add these two lines to the main page: 
+
 ```
 <link rel="icon" sizes="192x192" href="images/JS.png">
 <link rel="manifest" href="manifest.json">
 ```
+
 and make `manifest.json` as follows:
+
 ```
 {
   "name": "JavaScript samples",
@@ -30,6 +33,7 @@ and make `manifest.json` as follows:
   ]
 }
 ```
+
 2. Add related icons -- Just one icon is enough.
 If a large icon (512x512) exists, it may be used as splash screen. <br>
 [A wonderful tool](https://favicon.io) made by John Sorrentino will be very useful to make a full set of icons of the desired sizes from image/emoji/text. (5 stars!)
@@ -49,6 +53,7 @@ Add service worker `navigator.serviceWorker.register('/JS/sw.js')`
 We will use the cache so that the app can work off-line. Two more steps are needed:
 
 3. Supply a listener for `install` events -- add the static files to the cache
+
 ```
 const CACHE ='JS'
 const FILES = ['/JS/', '/JS/sss/', '/JS/index.html', ...]
@@ -61,7 +66,9 @@ function installCB(e) {
 }
 self.addEventListener('install', installCB)
 ```
+
 4. Supply a listener for `fetch` events -- return the file from the cache, if not found fetch the remote file
+
 ```
 function cacheCB(e) { //cache first
   let req = e.request
@@ -76,6 +83,7 @@ self.addEventListener('fetch', cacheCB)
 
 ### Automated Cache
 The solution outlined above will work for static files that do not change in time, e.g. archive files or book chapters. But if the content is variable (as in a growing web site) we use a different approach: Fetch the file first, then save it in the cache. No need to check if it is modified... If fetch fails we can return what we find in the cache, which may not be up-to-date.
+
 ```
 function save(req, resp) {
   return caches.open(CACHE)
