@@ -9,7 +9,7 @@ Chrome gibi bir tarayıcı ile açarak kitabı uygulama halinde kaydedebilirsini
 ### PWA -- 1. Safha
 Sayfanın Android/Chrome altında web uygulaması olması için iki adım yeterli:
 
-1. Ana sayfamıza iki satır ekleyelim: 
+(1) Ana sayfamıza iki satır ekleyelim: 
 
 ```
 <link rel="icon" sizes="192x192" href="images/JS.png">
@@ -34,7 +34,7 @@ Ayrıca `manifest.json` dosyası şöyle olmalı:
 }
 ```
 
-2. Gerekli simgeler (bir icon yeterli)
+(2) Gerekli simgeler (bir icon yeterli)
 
 Büyük (512x512) simge varsa, uygulama yüklenirken sistem onu kullanabilir.<br>
 [favicon.io](https://favicon.io) yardımı ile farklı boylarda bir simge takımı kolayca yapılabilir. (5 yıldız!)
@@ -53,7 +53,7 @@ Masa üstünde uygulama statüsü kazanmak için ayrıca bir _service worker_ ek
 
 Uygulamayı çevrim dışı kullanabilmek için iki adım daha atalım:
 
-3. `install` olayları için bir dinleyici: statik dosyaları en başta ön-belleğe alır
+(3) `install` olayları için bir dinleyici: statik dosyaları en başta ön-belleğe alır
 
 ```
 const CACHE ='JS'
@@ -68,7 +68,7 @@ function installCB(e) {
 self.addEventListener('install', installCB)
 ```
 
-4. `fetch` olayları için bir dinleyici: dosyayı önce ön-bellekte arar, bulamazsa fetch talebi gönderir
+(4) `fetch` olayları için bir dinleyici: dosyayı önce ön-bellekte arar, bulamazsa fetch talebi gönderir
 
 ```
 function cacheCB(e) { //cache first
