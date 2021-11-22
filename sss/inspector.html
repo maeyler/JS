@@ -46,8 +46,8 @@ var a, b, c, txt='';  //global variables
 //define Menu methods
 class Main extends Menu {
   displayFile(f) {
-    console.assert(f instanceof File); let M = this;
-    console.log(f.name+" "+f.size+" bytes "+f.type);
+    console.assert(f instanceof File);
+    console.log(f.name, f.size, f.type);
     if (f.type.endsWith("html")) {
         RDR2.onload = function(evt) {
             displayHTML(RDR2.result)
@@ -88,10 +88,10 @@ function adjustFrameSize() {
     b.style.margin = 0 //no margin inside ifrm
     ifrm.style.width  = b.scrollWidth+"px" 
     ifrm.style.height = b.scrollHeight+"px"
-    let a = [...b.children]
-    if (a.length == 0) return   //nothing to display
-    if (a.length == 1) display(a[0])  //just one
-    else display(b.children)   //all elements
+    // let a = [...b.children]
+    // if (a.length == 0) return   //nothing to display
+    // if (a.length == 1) display(a[0])  //just one
+    // else display(b.children)   //all elements
 }
 function isTextFile(f) {
     console.assert(f instanceof File);
