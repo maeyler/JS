@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Local directory </title>
+
+<style>
+  body { max-width: 500px; }
+  div { margin: 12px 0; }
+  img {
+    max-width: 100%;
+    border: 1px solid darkgray;
+  }
+  #files { width: 240px; }
+  pre { overflow-x: auto; }
+  #disp1 { color: blue; }
+</style>
+</head>
+
+<body>
+<h2 id=title></h2>
+
+<div>
+  <button id=folder onclick="displayFolder()">Choose Folder</button>
+</div>
+<div id=msg>Select text or image </div>
+<div id=out></div> <pre id=disp1></pre> <img id=disp2 />
+
+<hr>
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr>
+<p>Ref: 
+  <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/showDirectoryPicker">showDirectoryPicker</a> &emsp;
+</p>
+
+<script>
+"use strict";
+const MAP = new Map()  //global
+const RDR = new FileReader()
+function setMessage(txt, col) {
+    msg.innerText = txt
+    msg.style.color = col
+}
+function error(e) {
+    setMessage(e, 'red')
+    console.error(e)
+}
+function displayBlob(f) {
+    console.assert(f instanceof Blob)
+    let str = f.size+" bytes "+f.type
+    if (f.name) str = f.name+'\n'+str
+    setMessage(str)
+    disp1.innerText = ""; disp2.src = ""
+    if (f.type.startsWith("image")) {
+        RDR.readAsDataURL(f); //display image
+        RDR.onload = () => {disp2.src = RDR.result}
+    } else if (f.type.startsWith("text")) {
+        RDR.readAsText(f);  //display text
+        RDR.onload = () => {disp1.innerText = RDR.result}
+    } else {
+        msg.innerText += " -- Unknown"
+    }
+}
+async function toArray(i) {
+  let a = []
+  while (true) {
+    let x = await i.next()
+    if (!x.value) break
+    a.push(x.value)
+  }
+  return a
+}
+function arrayToHTML(a) {
+  let b = []
+  for (let h of a) {
+    let s = (h.kind == 'file')? `<li>${h.name}</li>` :
+    `<details><summary>${h.name}</summary></details>`
+    b.push(s); MAP.set(h.name, h)
+  }
+  return `<ul>${b.join('\n')}</ul>`
+}
+async function doClick(e) {
+  let t = e.target
+  let h = MAP.get(t.innerText)
+  if (!h) return
+  console.log(t.tagName, t.innerText)
+  if (t.tagName === 'SUMMARY') {
+    let p = t.parentElement //details
+    if (p.childElementCount !== 1) return
+    let a = await toArray(h.values())
+    p.innerHTML += arrayToHTML(a)
+  } else if (t.tagName === 'LI') {
+    displayBlob(await h.getFile())
+  } 
+}
+async function displayFolder() {
+  try {
+    let h = await showDirectoryPicker()
+    let a = await toArray(h.values())
+    setMessage(a.length+' files')
+    MAP.clear() //global
+    out.innerHTML = arrayToHTML(a)
+  } catch (e) {
+    error(e)
+  }
+}
+title.innerText = document.title
+out.onclick = doClick
+if (!window.showDirectoryPicker) folder.hidden = true
+sample.innerText = doClick+'\n'+displayFolder
+</script>
+
+</body>
+</html>
