@@ -6,7 +6,7 @@ const NAV =
 </style> 
 <ul>
     <li class=Simple>Simple
-      <div class=menu>
+      <div class=nav_menu>
         <a href="/JS/simple/Date%20test.html">Date and Color</a>
         <a href="/JS/simple/char_count.html">Char Count</a>
         <a href="/JS/simple/Color%20Paragraphs.html">Color Paragraphs</a>
@@ -23,7 +23,7 @@ const NAV =
       </div>
     </li>
     <li class=Math>Math
-      <div class=menu>
+      <div class=nav_menu>
         <a href="/JS/math/Counting.html">Counting</a>
         <a href="/JS/math/Math%20functions.html">Math Functions</a>
         <a href="/JS/math/Numbers.html">Numbers</a>
@@ -40,7 +40,7 @@ const NAV =
       </div>
     </li>
     <li class=Hard>Hard
-      <div class=menu>
+      <div class=nav_menu>
         <a href="/JS/hard/JS%20page.html">Page made by JS</a>
         <a href="/JS/hard/Table%20maker.html">Table Maker</a>
         <a href="/JS/hard/Select%20file.html">Select Local</a>
@@ -57,7 +57,7 @@ const NAV =
       </div>
     </li>
     <li class=Events>Events
-      <div class=menu>
+      <div class=nav_menu>
         <a href="/JS/hard/Events.html">Event Handlers</a>
         <a href="/JS/hard/Battery.html">Battery & Internet</a>
         <a href="/JS/hard/Propagation.html">Event Propagation</a>
@@ -71,7 +71,7 @@ const NAV =
       </div>
     </li>
     <li class=External>External
-      <div class=menu>
+      <div class=nav_menu>
         <a href="/JS/api/qrcode.html">QR Code</a>
         <a href="/JS/api/GitHub_Users.html">GitHub Users</a>
         <a href="/JS/api/Location.html">Location</a>
