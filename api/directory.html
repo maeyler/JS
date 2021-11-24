@@ -12,7 +12,21 @@
     max-width: 100%;
     border: 1px solid darkgray;
   }
-  #files { width: 240px; }
+  ul {
+    list-style-type: none;
+    padding-inline-start: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: black;
+  }
+  details {
+    font-size: 14px;
+    color: blue;
+  }
+  li, summary {
+    cursor: pointer;
+    margin: 3px 0;
+  }
   pre { overflow-x: auto; }
   #disp1 { color: blue; }
 </style>
@@ -24,8 +38,10 @@
 <div>
   <button id=folder onclick="displayFolder()">Choose Folder</button>
 </div>
-<div id=msg>Select text or image </div>
-<div id=out></div> <pre id=disp1></pre> <img id=disp2 />
+<div id=msg>Select directory</div>
+<div id=out></div>
+<pre id=disp1></pre>
+<img id=disp2 />
 
 <hr>
 <b>Sample code</b>
@@ -48,6 +64,11 @@ function error(e) {
     console.error(e)
 }
 function displayBlob(f) {
+  function isText(f) {
+    const TEXT = [".js", ".java", ".json", ".md"]
+    return f.type.startsWith("text") 
+        || TEXT.some(x => f.name.endsWith(x))
+  }
     console.assert(f instanceof Blob)
     let str = f.size+" bytes "+f.type
     if (f.name) str = f.name+'\n'+str
@@ -56,7 +77,7 @@ function displayBlob(f) {
     if (f.type.startsWith("image")) {
         RDR.readAsDataURL(f); //display image
         RDR.onload = () => {disp2.src = RDR.result}
-    } else if (f.type.startsWith("text")) {
+    } else if (isText(f)) {
         RDR.readAsText(f);  //display text
         RDR.onload = () => {disp1.innerText = RDR.result}
     } else {
@@ -75,9 +96,13 @@ async function toArray(i) {
 function arrayToHTML(a) {
   let b = []
   for (let h of a) {
-    let s = (h.kind == 'file')? `<li>${h.name}</li>` :
-    `<details><summary>${h.name}</summary></details>`
-    b.push(s); MAP.set(h.name, h)
+    MAP.set(h.name, h)
+    if (h.kind == 'file') {
+      b.push(`<li>${h.name}</li>`)
+    } else { // 'directory'
+      let sum = `<summary>${h.name}</summary>`
+      b.push(`<details>${sum}</details>`)
+    }
   }
   return `<ul>${b.join('\n')}</ul>`
 }
@@ -108,9 +133,13 @@ async function displayFolder() {
 }
 title.innerText = document.title
 out.onclick = doClick
-if (!window.showDirectoryPicker) folder.hidden = true
+if (!window.showDirectoryPicker) {
+    folder.hidden = true
+    error('Not implemented: showDirectoryPicker')
+}
 sample.innerText = doClick+'\n'+displayFolder
 </script>
+<script src="/JS/navbar.js"></script>
 
 </body>
 </html>

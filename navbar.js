@@ -44,13 +44,13 @@ const NAV =
         <a href="/JS/hard/JS%20page.html">Page made by JS</a>
         <a href="/JS/hard/Table%20maker.html">Table Maker</a>
         <a href="/JS/hard/Select%20file.html">Select Local</a>
+        <a href="/JS/api/directory.html">Select directory</a>
         <a href="/JS/hard/Fetch%20remote.html">Fetch Remote</a>
         <a href="/JS/data/Students.html">Student Database</a>
         <a href="/JS/hard/ObjectList.html">List of Objects</a>
         <a href="/JS/linear/Equation.html">Linear Equations</a>
         <a href="/JS/auto/Auto.html">Automata</a>
         <a href="/JS/auto/Expression.html">Expression tree</a>
-        <a href="/JS/hard/DOM%20tree.html">DOM tree</a>
         <a href="/JS/hard/JSON_Hilite.html">JSON Highlight</a>
         <a href="/JS/hard/Philosophers.html">Dining Philosophers</a>
         <a href="/JS/sss/inspector.html">Inspector</a>
@@ -67,6 +67,7 @@ const NAV =
         <a href="/JS/util/Modal_dialog.html">Modal dialog</a>
         <a href="/JS/util/Details.html">Details-Summary</a>
         <a href="/JS/util/name-tag.html">Web Components</a>
+        <a href="/JS/hard/DOM%20tree.html">DOM tree</a>
       </div>
     </li>
     <li class=External>External
