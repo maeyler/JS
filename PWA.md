@@ -12,7 +12,7 @@ Sayfanın Android/Chrome altında web uygulaması olması için iki adım yeterl
 (1) Ana sayfamıza iki satır ekleyelim: 
 
 ```
-<link rel="icon" sizes="192x192" href="images/JS.png">
+<link rel="icon" href="images/JS.png">
 <link rel="manifest" href="manifest.json">
 ```
 
@@ -37,7 +37,7 @@ Ayrıca `manifest.json` dosyası şöyle olmalı:
 (2) Gerekli simgeler (bir icon yeterli)
 
 Büyük (512x512) simge varsa, uygulama yüklenirken sistem onu kullanabilir.<br>
-[favicon.io](https://favicon.io) yardımı ile farklı boylarda bir simge takımı kolayca yapılabilir. (5 yıldız!)
+[favicon.io](https://favicon.io) yardımı ile farklı boylarda bir simge takımı kolayca yapılabilir.
 
 ![JS icon](images/JS.png)
 
@@ -49,7 +49,8 @@ Bir web sayfası uzaktaki bir kaynağa (metin, resim, vb) erişmek istediğinde,
 Bir *web uygulaması* benzeri bir talep yaptığında, _service worker_ araya girer. Cevabı ya kendi ön-belleğinde bulur ya da tarayıcıdan ister.
 
 ### PWA -- 2. Safha
-Masa üstünde uygulama statüsü kazanmak için ayrıca bir _service worker_ eklemek gerekiyor: `navigator.serviceWorker.register('/JS/sw.js')`
+Masa üstünde uygulama statüsü kazanmak için, index.html içine bir _service worker_ eklemek gerekiyor <br>
+`navigator.serviceWorker.register('sw.js')`
 
 Uygulamayı çevrim dışı kullanabilmek için iki adım daha atalım:
 

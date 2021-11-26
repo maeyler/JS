@@ -12,7 +12,7 @@ Two steps will make your web page look like a web app under Android/Chrome
 (1) Add these two lines to the main page: 
 
 ```
-<link rel="icon" sizes="192x192" href="images/JS.png">
+<link rel="icon" href="images/JS.png">
 <link rel="manifest" href="manifest.json">
 ```
 
@@ -36,7 +36,7 @@ and make `manifest.json` as follows:
 
 (2) Add related icons -- Just one icon is enough.
 If a large icon (512x512) exists, it may be used as splash screen. <br>
-[A wonderful tool](https://favicon.io) made by John Sorrentino will be very useful to make a full set of icons of the desired sizes from image/emoji/text. (5 stars!)
+[This wonderful page](https://favicon.io) will be very useful to make a full set of icons of the desired sizes from image/emoji/text.
 
 ![JS icon](images/JS.png)
 
@@ -48,7 +48,8 @@ When a web page makes a fetch request for a web resource, the browser sends a ht
 When a *web app* makes a similar request, a service worker acts as a proxy in between. It may get its response from the cache or from the browser depending on the caching strategy used, as explained below.
 
 ### PWA -- Stage 2
-Add service worker `navigator.serviceWorker.register('/JS/sw.js')`
+Add service worker to index.html <br>
+`navigator.serviceWorker.register('sw.js')`
 
 We will use the cache so that the app can work off-line. Two more steps are needed:
 
