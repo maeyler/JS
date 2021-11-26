@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
+    <link rel="icon" href="/JS/images/JS.png">
     <title>GitHub Users</title>
-
   <style>
     body {
         max-width: 440px;
@@ -13,6 +12,15 @@
     img {
         padding-right: 12px; 
         width: 64px;
+        float: left;
+    }
+    pre { overflow-x: auto; }
+    #out { color: blue; }
+    #lim {
+        position: absolute;
+        top: 40px; right: 5px;
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: smaller;
     }
   </style>
 </head>
@@ -20,45 +28,58 @@
 <body>
 
 <h2 id=title></h2>
-<input type=text id=usr value=hakandilek onChange="readUser()">
-<p id=out></p>
+<input type=text id=usr value=BLM305 onChange="readUser()">
+<p id=out>Reading data</p>
+<div id=lim title="Rate used / Rate limit"></div>
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
 <hr />
-<p>Ref: <a href="https://developer.github.com/v3/#rate-limiting" 
-   target=NewTab>GitHub Developer</a>
+<p>Ref: 
+  <a href="https://docs.github.com/en/rest/reference/rate-limit" target=NewTab>GitHub API</a> &emsp;
+  <a href="https://blm305.github.io/2021/work/await.html" target=NewTab>await</a>
 </p>
 
 <script>
 "use strict";
-const NL = "\n", BR = "<BR>", 
-    URL = "https://api.github.com/users/"
-function error(t) {
+function error(e) {
+    out.innerText = e
     out.style.color = 'red'
-    out.innerText = t; console.log(t)
+    console.error(e)
 }
-function listRepos(b) {
-    if (b.length) 
-      out.innerHTML += 
-        b.map(x => x.name).join(", ")
+function cause(s) {
+  switch (s) {
+    case 403:
+      return 'Rate limit exceeded'
+    case 404:
+      return usr.value+' not found'
+    default:
+      return 'Status '+s
+  }
 }
-function userData(u) {
-    if (!u || !u.login) {
-      error(usr.value+' not found')
-      return
-    } 
-    //u.login is the same as usr.value
+async function toJSON(url) {
+  try {
+    let r = await fetch(url)
+    if (!r.ok) throw cause(r.status)
+    return await r.json()
+  } catch (e) {
+    error(e)
+  }
+}
+async function readUser() {
+    const URL = "https://api.github.com/users/"
+    const BR = '<BR>'
+    let u = await toJSON(URL+usr.value)
+    if (!u || !u.login) return
     out.style.color = ''
     out.innerHTML = ''
     //start with a tiny image
     let i = document.createElement("img")
     i.src = u.avatar_url
-    i.align = "left"
     out.appendChild(i)
     //add name and location
-    let s = (u.name? u.name : u.login)
-    if (u.location) s += ", "+u.location
+    let s = (u.name || u.login)
+    if (u.location) s += ', '+u.location
     out.innerHTML += s+BR; console.log(s)
     //add link to GitHub 
     let h = "github.com/"+u.login
@@ -67,23 +88,21 @@ function userData(u) {
     a.target = "NewTab"
     a.innerText = h
     out.appendChild(a)
-    //add repo count
-    let p = u.public_repos+" repos"
-    out.innerHTML += BR+p+BR+BR
-    fetch(URL+u.login+"/repos")
-      .then(r => r.json()) 
-      .then(listRepos).catch(error)
+    //add repo count and repo names
+    let n = u.public_repos
+    out.innerHTML += BR+`${n} public repos`
+    if (n) {
+      let p = document.createElement("p")
+      let b = await toJSON(URL+u.login+"/repos")
+      p.innerText = b.map(x => x.name).join(", ")
+      out.appendChild(p)
+    }
+    const LIM="https://api.github.com/rate_limit"
+    let {rate} = await toJSON(LIM)
+    lim.innerText = rate.used+'/'+rate.limit
 }
-function readUser() {
-    fetch(URL+usr.value)
-      .then(r => r.ok? r.json() : null) 
-      .then(userData).catch(error)
-}
-
     title.innerText = document.title
-    sample.innerText =  
-       listRepos +NL+ userData +NL+ readUser
-    out.innerText = "Reading data"
+    sample.innerText = toJSON +'\n'+ readUser
     readUser()
 </script>
 <script src="/JS/navbar.js"></script>
