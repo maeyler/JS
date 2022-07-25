@@ -6,7 +6,8 @@ Bu repoda JavaScript öğrenmeye yönelik [örnek web sayfaları](https://maeyle
 * JavaScript ile kodlanır `<script>`
 
 Yani güzel bir web sayfası için üç farklı dil gerekiyor... 
-Ref: [JavaScript Tutorial](https://www.w3schools.com/js/)
+Ref: [JavaScript Tutorial](https://www.w3schools.com/js/), [Notes on Javascript](https://www.scaler.com/topics/javascript/)
+
 
 ### Java avantajları
 * Daha profesyonel ve disiplinli
