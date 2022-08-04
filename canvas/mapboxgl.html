@@ -12,7 +12,7 @@
     pre { overflow-x: auto; }
     #one, #two { margin: 10px; }
     #map {
-        height:500px; width:100%;
+        height:90vh; width:100%;
         box-sizing: border-box;
         border: 0;
     }
@@ -101,9 +101,21 @@ function error() {
     err.style.display = "block"; //show
     throw 'You need an API access token'
 }
+function process() {
+    let h = location.hash.slice(1)
+    let [lat, lon, zoom] = h.split(',')
+    lat = Number.parseFloat(lat)
+    lon = Number.parseFloat(lon)
+    console.log('process', lat, lon, zoom)
+    if (lon) MAP.setCenter({lat, lon})
+    zoom = Number.parseFloat(zoom)
+    if (zoom) MAP.setZoom(zoom)
+}
 if (!access._key) error()
 title.innerText = document.title;
 sample.innerText = init; init();
+window.onhashchange = process
+if (location.hash) process()
 </script>
 
 </body>
