@@ -28,7 +28,7 @@
     <h2 id=title></h2>
     <input id=but type=button value="Run" onClick="start()"> &emsp;
     <span id=out></span>
-    <input type=checkbox onClick="mapType(checked)">Satellite
+    <input type=checkbox id=satellite onClick="mapType(checked)">Satellite
 </div>
 <hr />
 <div id=map></div>
@@ -60,6 +60,7 @@ function mapType(sat) {
     MAP.setStyle(sat?
       'mapbox://styles/mapbox/satellite-v9' :
       'mapbox://styles/mapbox/streets-v9')
+    localStorage.satellite = sat
 }
 function init() {
     mapboxgl.accessToken = access._key
@@ -71,7 +72,9 @@ function init() {
       center: [p.lng, p.lat],
       zoom: 10
     })
-    mapType() //street map
+    if (localStorage.satellite === 'true') 
+        satellite.checked = true
+    mapType(satellite.checked) //street map is default
 }
 const MIN = 2, MAX = 19;
 var incr = 0;
