@@ -27,8 +27,9 @@
 <div id=one>
     <h2 id=title></h2>
     <input id=but type=button value="Run" onClick="start()"> &emsp;
-    <span id=out></span>
-    <input type=checkbox id=satellite onClick="mapType(checked)">Satellite
+    <input type=checkbox id=satellite onClick="mapType(checked)">Satellite &emsp;
+    <input type=button value="Location" onClick="getLocation()">
+    <!-- <span id=out></span> -->
 </div>
 <hr />
 <div id=map></div>
@@ -104,12 +105,21 @@ function error() {
     err.style.display = "block"; //show
     throw 'You need an API access token'
 }
-function process() {
+function getLocation() {
+    let {lat, lng} = MAP.getCenter()
+    let zoom = MAP.getZoom()
+    let str = lat.toFixed(7)+','
+        +lng.toFixed(7)+','+zoom.toFixed(2)+'z'
+    // location.hash = str
+    navigator.clipboard.writeText(str)
+    alert('Location: '+str)
+}
+function setLocation() {
     let h = location.hash.slice(1)
     let [lat, lon, zoom] = h.split(',')
     lat = Number.parseFloat(lat)
     lon = Number.parseFloat(lon)
-    console.log('process', lat, lon, zoom)
+    console.log('setLocation', lat, lon, zoom)
     if (lon) MAP.setCenter({lat, lon})
     zoom = Number.parseFloat(zoom)
     if (zoom) MAP.setZoom(zoom)
@@ -117,8 +127,8 @@ function process() {
 if (!access._key) error()
 title.innerText = document.title;
 sample.innerText = init; init();
-window.onhashchange = process
-if (location.hash) process()
+window.onhashchange = setLocation
+if (location.hash) setLocation()
 </script>
 
 </body>
