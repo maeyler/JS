@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/JS/images/JS.png">
+    <title>CSS Transition</title>
+
+  <style>
+    body { max-width: 500px; }
+    button {
+      user-select: none;
+      cursor: pointer;
+    }
+    button.used {
+      background: #ffc;
+    }
+    #but {
+      transition: transform 4s;
+    }
+    #but.moved {
+      transform: translateX(270px)
+    }
+    #box {
+      font-size: 180px;
+      background: #cfc;
+      width: 300px;
+      height: 240px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 4s;
+    }
+    #box.moved {
+      transform: rotate(90deg)
+    }
+    #iii, #dot {
+      user-select: none;
+      position: absolute;
+      left: 130px;
+    }
+    #iii {
+      color: blue;
+      transition: color 4s;
+    }
+    #iii.moved {
+      color: pink;
+    }
+    #dot {
+      color: #da0;
+      top: -105px;
+      transition: transform 4s;
+    }
+    #dot.moved {
+      transform: rotate(90deg)
+    }
+    #out {
+      height: 35px;
+      transition: font-size 4s;
+    }
+    #out.moved {
+      font-size: 140%
+    }
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    .main {
+      perspective: 1000px;
+      display: flex;
+    }
+    .flip-card  {
+      width: 200px;
+      aspect-ratio: 1;
+      text-align: center;
+      transition: transform 1.6s;
+      transform-style: preserve-3d;
+    }
+    .flip-card:hover {
+      transform: rotateY(180deg);
+    }
+    .flip-front, .flip-back {
+      color: white;
+      background-color: gray;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+    .flip-back {
+      background-color: navy;
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+
+<div id=box onClick="toggle(this, box)">
+  <span id=iii>ı</span>
+  <span id=dot>.</span>
+</div>
+
+<p id=buttons>
+<button onClick="toggle(this, this)" id="but">translate</button>
+<button onClick="toggle(this, dot)">rotate</button>
+<button onClick="toggle(this, iii)">color</button>
+<button onClick="toggle(this, out)">font-size</button>
+</p>
+
+<div id=out>Transitions in CSS are simpler</div>
+<p>Ref: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Transitions/Using_CSS_transitions" 
+   target="NewTab">Using CSS Transitions</a>
+</p>
+<hr />
+
+<h2>Flip Cards</h2>
+
+<div class="main">
+  <div class="flip-card">
+    <div class="flip-front">
+      <img src="https://www.w3schools.com/howto/img_avatar.png" alt="J Doe Avatar">
+    </div>
+    <div class="flip-back">
+      <h1>John Doe</h1> 
+      <p>Architect & Engineer</p> 
+      <p>We love that guy</p>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-front">
+      <img src="https://avatars.githubusercontent.com/u/14038292?s=400&u=33de449cffe374aa00c8df748e01ff8a5e4ff17c&v=4" alt="MAE Avatar">
+    </div>
+    <div class="flip-back">
+      <h1>MAE</h1> 
+      <p>Second avatar</p> 
+      <p>from GitHub</p>
+    </div>
+  </div>
+</div>
+
+<p>Ref: <a href="https://www.w3schools.com/howto/howto_css_flip_box.asp" 
+   target="NewTab">Flip box</a>
+</p>
+<hr />
+
+<script>
+"use strict";
+function toggle(but, elt) {
+    but.classList.toggle('used')
+    elt.classList.toggle('moved')
+}
+title.innerText = document.title
+</script>
+<script src="/JS/navbar.js"></script>
+
+</body>
+</html>
