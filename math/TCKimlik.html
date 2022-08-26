@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" sizes="192x192" href="../images/JS.png">
-    <title>TC Kimlik Doğrula </title>
+    <title>TC Kimlik/IBAN Doğrula </title>
 
   <style> /* CSS code in use */
     body { max-width: 440px; }
     #sample { overflow-x: auto; }
+    #kimlik { width: 90%; }
     #out {
         font-size: 18px;
         background: blue;
@@ -22,8 +23,7 @@
 <body>
 
 <h2 id=title></h2>
-Kimlik No 
-<input type=number id=kimlik>
+<input type=text id=kimlik>
 <p id=out></p>
 <hr />
 <b>Sample code</b>
@@ -32,22 +32,69 @@ Kimlik No
 <p>Ref: <a href="https://www.wikiwand.com/tr/T.C._Kimlik_Numaras%C4%B1" 
    target="NewTab">T.C. Kimlik -- Vikipedia</a><br>
    <a href="https://matemacik.blogspot.com/2020/03/tc-kimlik-numaras.html"
-   target="NewTab">Matemacik -- yöntem burada</a>
+   target="NewTab">Matemacik -- yöntem burada</a><br>
+   <a href="https://en.wikipedia.org/wiki/International_Bank_Account_Number#Validating_the_IBAN" target="NewTab">Validating the IBAN</a>
 </p>
 
-<script src="../util/Util.js"></script>
+<!-- <script src="../util/Util.js"></script> -->
 <script>
 "use strict";
+//https://stackoverflow.com/questions/29275649/javascript-iban-validation-check-german-or-austrian-iban
+function verifyIBAN(s) {
+    const ASCII_0 = 48, ASCII_A = 65;
+    if (typeof s != 'string') s = String(s)
+    const E = /[A-Z]{2}[0-9]{2}[A-Z0-9]+/
+    if (!s.match(E)) return false;
+    var acc = 0;
+    function add(n) {
+        if (n == 32) return
+        // if (acc > 1000000) acc %= 97;
+        acc = n < ASCII_A ? 10 * acc + n - ASCII_0 
+            : 100 * acc + n - ASCII_A + 10;
+        acc %= 97;
+    }
+    s = s.substring(4)+s.substring(0,4)
+    for (let i=0; i<s.length; ++i) 
+        add(s.charCodeAt(i));
+    return acc == 1;
+}
+function verifyTC(s) {
+    // ilk test için s string olmalı
+    if (typeof s != 'string') s = String(s)
+    // 11 basamaklı sayı (ilk basamak 0 olamaz)
+    const E = /^[1-9][0-9]{10}$/
+    if (!E.test(s)) return 'hatalı'
+
+    // şimdi number[] gerekiyor
+    s = [...s].map(i => Number(i))
+    // a, b, c değerlerine bakalım
+    let a=0, b=0, c=s[10]
+    for (let i=0; i<9; i+=2) {
+        a += s[i]; b += s[i+1]
+    }
+    // (a+b)nin son basamağı c olmalı
+    if ((a+b)%10 != c) return 'a+b hata'
+
+    // (8a)nın son basamağı c olmalı
+    if (8*a%10 != c) return '8a hata'
+    return true
+}
 function report() {
-    let v = kimlik.value
-    let t = verifyTC(v)
+    let v = kimlik.value.replaceAll(/\s/g, '')
+    let t = ''
+    if (v.length === 11) {
+        t = verifyTC(v)
+        if (t === true) t = 'TC ✓'
+    } else {
+        t = verifyIBAN(v)? 'IBAN ✓' : 'hatalı'
+    }
     out.innerText += '\n'+v+' '+t
     console.log(v, t)
 }
     title.innerText = document.title
-    sample.innerText = verifyTC.toString()
+    sample.innerText = verifyIBAN+'\n'+report
     kimlik.onchange = report
-    kimlik.value = 21221221272
+    kimlik.value = '212 212 212 72'
     report()
 </script>
 <script src="/JS/navbar.js"></script>
