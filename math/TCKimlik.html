@@ -80,7 +80,8 @@ function verifyTC(s) {
     return true
 }
 function report() {
-    let v = kimlik.value.replaceAll(/\s/g, '')
+    //g flag global replace -- no need for replaceAll
+    let v = kimlik.value.replace(/\s/g, '')
     let t = ''
     if (v.length === 11) {
         t = verifyTC(v)
