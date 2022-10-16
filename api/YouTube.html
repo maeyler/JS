@@ -28,7 +28,7 @@
         <input id=maxNum type=number value=30 style="width:40px;"><br><br>
         Play list ID 
         <input id=listID type=text size=35 value=PLC20F52B96F3E8206>
-        <button onclick="location.hash=listID.value">Run</button>
+        <button onclick="setHash()">Run</button>
     </p>
     <p id=out>Please reload if not started automatically</p>
     <div id=nav>
@@ -79,15 +79,17 @@ function getTitle(response) {
     console.log(listTitle, x)
   }
 function getItems(response) {
-    let a = response.result.items  //might .reverse()
-    console.log('getItems', a)
+    let a = response.result.items  //.reverse()
+ // console.log('getItems', a)
+ // out.innerText = `${a.length} items by ${chanTitle}\n${listTitle}`
+    out.innerHTML = `${a.length} items by ${chanTitle}<br>
+    <a href="https://www.youtube.com/playlist?list=${listID.value}" target="NewTab">${listTitle}</a>`
     a = a.map(x => ({tit:x.snippet.title, vid:x.snippet.resourceId.videoId}))
-    out.innerText = a.length+' items by '+chanTitle+'\n'+listTitle
     useData(a)  //fill data
   }
 function doClick(evt) {
     let t = evt.target
-    setCurrent(t.ref? t : t.parentNode)
+    setCurrent(t.id? t : t.parentNode)
 }
 function prevPage() {
     setCurrent(current.previousElementSibling || liste.lastElementChild)
@@ -96,28 +98,20 @@ function nextPage() {
     setCurrent(current.nextElementSibling || liste.firstElementChild)
 }
 function setCurrent(i) {
-    console.log(i, i.ref)
     if (!i) return
+    console.log('setCurrent', i.id)
     const HREF = 'https://www.youtube.com/embed/'
-    current = i; player.src = i.ref
+    current = i; player.src = HREF+i.id
     player.scrollIntoView()
 }
 function useData(data) {
-    const IMG1 = 'https://img.youtube.com/vi/'
-    const IMG2 = '/0.jpg' //mqdefault is smaller
-    const HREF = 'https://www.youtube.com/embed/'
-    liste.innerText = '' //clear list
-    for (let x of data) {
-        let t = document.createElement('li')
-        let i = document.createElement('img')
-        i.src = IMG1+x.vid+IMG2; t.append(i)
-        let a = document.createElement('span')
-        a.innerText = x.tit; t.append(a)
-        t.ref = HREF+x.vid; t.title = x.tit
-        liste.append(t)
-    }
-    // player.src = liste.querySelector('li').ref
+    liste.innerHTML = data.map(
+        x => `<li title="${x.tit}" id="${x.vid}"><img src="https://img.youtube.com/vi/${x.vid}/0.jpg"><span>${x.tit}</span></li>`
+    ).join('\n')
     setCurrent(liste.querySelector('li'))
+}
+function setHash() {
+    location.hash = listID.value
 }
 function hashModified() {
     let id = location.hash
@@ -127,11 +121,12 @@ function hashModified() {
 }
     title.innerText = document.title
     window.onhashchange = hashModified
+    listID.onkeyup = e => (e.key == "Enter"? setHash() : '')
     liste.onclick = doClick
 </script>
 <script src="https://apis.google.com/js/api.js" 
 onload ="gapi.load('client', loadClient)"></script>
-<script src="/JS/navbar.js"></script>
+<!-- <script src="/JS/navbar.js"></script> -->
 
 </body>
 </html>
