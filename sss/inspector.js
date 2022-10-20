@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.16", ITERABLE = new Object();
+const VERSION = "V2.17", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -45,8 +45,23 @@ function doMethod(met) { //target == list3
     if (_n_ == 0) _s_ += "optional arguments "; 
     if (_n_ == 1) _s_ += "the argument ";
     if (_n_ >= 2) _s_ += _n_+" arguments separated by commas ";
-    let arg = prompt(_s_+"in order to call "+met+"()");
-    if (arg != null) try {
+    _s_ += '\nto invoke '+met+'()'
+    if (invokeDialog.showModal) {
+      invokeLabel.innerText = _s_
+      invokeInput.value = ''
+      invokeDialog.returnValue = ''
+      invokeDialog.showModal()
+      invokeDialog.onclose = () => {
+        if (invokeDialog.returnValue !== 'cancel')
+          doInvoke(met, invokeInput.value)
+      }
+    } else { //dialog tag not supported
+      let arg = prompt(_s_) //+"in order to call "+met+'()'
+      if (arg != null) doInvoke(met, arg)
+    }
+}
+function doInvoke(met, arg) {
+    try {
         let cmd = "_."+met+"("+arg+")";
         report(cmd, eval(cmd));
     } catch(e) {
@@ -336,7 +351,20 @@ function inspect(parent, init) {
   <tr>
     <td colSpan=2 id=out></td>
   </tr>
-`
+  `
+    let d = document.createElement("dialog");
+    d.id = 'invokeDialog'; parent.appendChild(d);
+    d.innerHTML =
+`<form method=dialog>
+  <p>
+    <label id=invokeLabel for=invokeInput></label><br>
+    <input id=invokeInput>
+  </p>
+  <p>
+    <button id=invokeOK>OK</button>
+    <button value=cancel>Cancel</button>
+  </p>
+</form>`
     if (init) init(); 
     if (!MENU) menu.style.visibility="hidden";
     inp.selectionEnd = inp.value.length; 

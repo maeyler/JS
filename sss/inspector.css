@@ -84,4 +84,11 @@ button:hover .tip1 {
 .cfirst:hover .tip2 { 
   visibility: visible; 
 }
-
+dialog#invokeDialog {
+  background: #fc7;
+  border-color: gray;
+}
+label#invokeLabel {
+  font-family: sans-serif;
+  font-size: small;
+}
