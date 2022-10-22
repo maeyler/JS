@@ -16,6 +16,12 @@
     }
     pre { overflow-x: auto; }
     #out { color: blue; }
+    #err { color: red; }
+    #repoList {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: smaller;
+        color: initial;
+    }
     #lim {
         position: absolute;
         top: 40px; right: 5px;
@@ -29,7 +35,14 @@
 
 <h2 id=title></h2>
 <input type=text id=usr value=BLM305 onChange="readUser()">
-<p id=out>Reading data</p>
+<p id=out>
+  <img id=avatar alt="Avatar for the selected user">
+  <span id=repoName></span><br>
+  <a id=repoLink target="NewTab"></a><br>
+  <span id=repoCount></span> public repos<br><br>
+  <span id=repoList></span>
+</p>
+<p id=err></p>
 <div id=lim title="Rate used / Rate limit"></div>
 <hr />
 <b>Sample code</b>
@@ -43,24 +56,24 @@
 <script>
 "use strict";
 function error(e) {
-    out.innerText = e
-    out.style.color = 'red'
-    console.error(e)
+    err.innerText = e; console.error(e)
+    out.hidden = 1; err.hidden = 0
+    showRateLimit()
 }
-function cause(s) {
+function exception(s) {
   switch (s) {
     case 403:
-      return 'Rate limit exceeded'
+      throw 'Rate limit exceeded'
     case 404:
-      return usr.value+' not found'
+      throw usr.value+' not found'
     default:
-      return 'Status '+s
+      throw 'Status '+s
   }
 }
 async function toJSON(url) {
   try {
     let r = await fetch(url)
-    if (!r.ok) throw cause(r.status)
+    if (!r.ok) exception(r.status)
     return await r.json()
   } catch (e) {
     error(e)
@@ -68,35 +81,27 @@ async function toJSON(url) {
 }
 async function readUser() {
     const URL = "https://api.github.com/users/"
-    const BR = '<BR>'
     let u = await toJSON(URL+usr.value)
     if (!u || !u.login) return
-    out.style.color = ''
-    out.innerHTML = ''
-    //start with a tiny image
-    let i = document.createElement("img")
-    i.src = u.avatar_url
-    out.appendChild(i)
-    //add name and location
+    out.hidden = 0; err.hidden = 1
+    //start with the avatar
+    avatar.src = u.avatar_url
+    //name and location
     let s = (u.name || u.login)
     if (u.location) s += ', '+u.location
-    out.innerHTML += s+BR; console.log(s)
-    //add link to GitHub 
+    repoName.innerText = s; console.log(s)
+    //link to GitHub 
     let h = "github.com/"+u.login
-    let a = document.createElement("a")
-    a.href = "https://"+h
-    a.target = "NewTab"
-    a.innerText = h
-    out.appendChild(a)
-    //add repo count and repo names
+    repoLink.href = "https://"+h
+    repoLink.innerText = h
+    //repo count and repo names
     let n = u.public_repos
-    out.innerHTML += BR+`${n} public repos`
-    if (n) {
-      let p = document.createElement("p")
-      let b = await toJSON(URL+u.login+"/repos")
-      p.innerText = b.map(x => x.name).join(", ")
-      out.appendChild(p)
-    }
+    repoCount.innerText = n
+    let b = n>0? await toJSON(URL+u.login+"/repos") : []
+    repoList.innerText = b.map(x => x.name).join(", ")
+    showRateLimit()
+}
+async function showRateLimit() {
     const LIM="https://api.github.com/rate_limit"
     let {rate} = await toJSON(LIM)
     lim.innerText = rate.used+'/'+rate.limit
