@@ -39,24 +39,28 @@ function reportError(e) {
     out.style.background = "pink";
 }
 function doMethod(met) { //target == list3
-    //n, s may interfere with local vars with the same name
-    let _n_ = _[met].length; //number of arguments in met
-    let _s_ = "Enter ";
-    if (_n_ == 0) _s_ += "optional arguments "; 
-    if (_n_ == 1) _s_ += "the argument ";
-    if (_n_ >= 2) _s_ += _n_+" arguments separated by commas ";
-    _s_ += '\nto invoke '+met+'()'
+    if (!met) return
+    let n = _[met].length; //number of arguments in met
+    let str = "Enter ";
+    if (n == 0) str += "optional arguments "; 
+    if (n == 1) str += "the argument ";
+    if (n >= 2) str += n+" arguments separated by commas ";
+    str += '\nto invoke '+met+'()'
     if (invokeDialog.showModal) {
-      invokeLabel.innerText = _s_
+      invokeLabel.innerText = str
       invokeInput.value = ''
+      invokeInput.focus()
       invokeDialog.returnValue = ''
       invokeDialog.showModal()
+      invokeDialog.oncancel = () => {
+        invokeDialog.returnValue ='cancel'
+      }
       invokeDialog.onclose = () => {
         if (invokeDialog.returnValue !== 'cancel')
           doInvoke(met, invokeInput.value)
       }
     } else { //dialog tag not supported
-      let arg = prompt(_s_) //+"in order to call "+met+'()'
+      let arg = prompt(str) //+"in order to call "+met+'()'
       if (arg != null) doInvoke(met, arg)
     }
 }
