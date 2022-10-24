@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.17", ITERABLE = new Object();
+const VERSION = "V2.18", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -311,6 +311,7 @@ function hideTip(t, show) {
       x.hidden = !show
 }
 function inspect(parent, init) {
+    const DOLLAR = '${}'
     let t = document.createElement("table");
     t.className = 'inspector';
     parent.appendChild(t); t.innerHTML =
@@ -365,6 +366,10 @@ function inspect(parent, init) {
     <input id=invokeInput>
   </p>
   <p>
+    <span onclick="insertChars('_', 1)">_</span>
+    <span onclick="insertChars('$`+`{}', 2)">$</span>
+    <span onclick="insertChars('x => ', 5)"><i>f</i></span>
+    &emsp;
     <button id=invokeOK>OK</button>
     <button value=cancel>Cancel</button>
   </p>
@@ -377,4 +382,10 @@ function inspect(parent, init) {
        x.onmouseover = (e) => { hideTip(x, true) }
        x.onmouseout  = (e) => { hideTip(x, false) }
     }
+}
+function insertChars(cc, n) {
+    let i = invokeInput, v = i.value
+    let s = i.selectionStart, e = i.selectionEnd
+    i.value = v.slice(0, s) + cc + v.slice(e, v.length)
+    i.selectionStart = i.selectionEnd = s+n; i.focus()
 }

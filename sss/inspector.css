@@ -92,3 +92,15 @@ label#invokeLabel {
   font-family: sans-serif;
   font-size: small;
 }
+#invokeDialog input {
+  width: 186px;
+}
+#invokeDialog span {
+  display: inline-block;
+  text-align: center;
+  width: 18px;
+  padding: 1px;
+  border: 1px solid;
+  background: white;
+  cursor: pointer;
+}
