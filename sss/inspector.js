@@ -164,6 +164,7 @@ function checkFile(f) { //not used
 function objToString(obj) {
     const LT = /</g;
     //if (obj instanceof File) checkFile(obj);
+    if(!("toString" in obj))obj.toString = () => "{}"
     let s = obj.toString().replace(LT, "&lt;");
     if (typeof obj == "string") s = '"'+s+'"';
     else if (obj instanceof Array) s = '['+s+']';
