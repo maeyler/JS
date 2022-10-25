@@ -27,6 +27,7 @@ class Menu {
 function report(input, result) { 
     let msg = trunc(input, MAX_CHARS);
     if (result != undefined) {
+        if (typeof result === "object" && !result.toString) result = { ...result }
         display(result);
         msg += trunc(" ⇒ "+result, 2*MAX_CHARS); 
     }
