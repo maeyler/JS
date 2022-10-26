@@ -204,7 +204,7 @@ function superClasses(obj) {
     return a;
 }
 function display(f) {
-    if(f.toString == undefined){ let newObj = {};f = newObj;}
+    if(f.toString == undefined) f = {};
     if (!f) return; let t = typeof f;
     if (t != "string" && t != "object") return;
   //if (f instanceof Promise) nothing to display in f
