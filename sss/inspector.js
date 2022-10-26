@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.18", ITERABLE = new Object();
+const VERSION = "V2.19", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -204,9 +204,10 @@ function superClasses(obj) {
     return a;
 }
 function display(f) {
-    if(f.toString == undefined) f = {};
+  //if (f.toString == undefined) f = {}; Gürkan Yakar
     if (!f) return; let t = typeof f;
     if (t != "string" && t != "object") return;
+    if (!f.toString) throw "cannot display object";
   //if (f instanceof Promise) nothing to display in f
     if (f.then && typeof(f.then) == "function") {
         f.then(display, reportError); console.log(f);
@@ -312,7 +313,6 @@ function hideTip(t, show) {
       x.hidden = !show
 }
 function inspect(parent, init) {
-    const DOLLAR = '${}'
     let t = document.createElement("table");
     t.className = 'inspector';
     parent.appendChild(t); t.innerHTML =
