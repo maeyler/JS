@@ -19,7 +19,10 @@
         display: inline-block; 
         vertical-align: text-top; 
         overflow-y: auto;  
-    } 
+    }
+    #urlb {
+        width: 80%;
+    }
   </style> </head>
 
 <script>
@@ -142,8 +145,8 @@ function init() {
   <p><input type=file multiple onChange='fileSelect(this)' />
   </p>
   <p>URL:
-    <input type=text id=urlb onKeyUp='enterKey(event)'
-      style="width:70%" value="https://maeyler.github.io/JS/" />
+    <input type=search id=urlb onKeyUp='enterKey(event)'
+      value="https://maeyler.github.io/JS/" />
   </p>
   <hr color="blue" size="2">
 </div>

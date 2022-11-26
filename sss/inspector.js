@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "V2.19", ITERABLE = new Object();
+const VERSION = "V2.20", ITERABLE = new Object();
 const MAX_CHARS = 28, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
@@ -351,7 +351,7 @@ function inspect(parent, init) {
     </ul></td>
   </tr>
   <tr>
-    <td colSpan=2><input id=inp onKeyUp='doEnter(event)'>
+    <td colSpan=2><input id=inp type=search onKeyUp='doEnter(event)'>
     </td>
   </tr>
   <tr>
