@@ -34,7 +34,7 @@
 <body>
 
 <h2 id=title></h2>
-<input type=text id=usr value=BLM305 onChange="readUser()">
+<input type=search id=usr value=BLM305 onChange="readUser()">
 <p id=out>
   <img id=avatar alt="Avatar for the selected user">
   <span id=repoName></span><br>
@@ -74,7 +74,7 @@ async function toJSON(url) {
   try {
     let r = await fetch(url)
     if (!r.ok) exception(r.status)
-    return await r.json()
+    return r.json()
   } catch (e) {
     error(e)
   }
