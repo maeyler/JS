@@ -9,6 +9,9 @@ table th {
   font-weight: bold;
   cursor: default;
 }
+table td {
+  max-width: 180px;
+}
 table ul { /*scroll doesn't work on td*/
   padding: 0;
   margin: 2px;
@@ -25,6 +28,11 @@ table li {
 }
 table li, #small {
   font: 12px arial, sans-serif;
+}
+table li:not(:first-child), #out {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
 }
 table li:hover {
   color: white;

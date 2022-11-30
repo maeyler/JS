@@ -1,6 +1,6 @@
 "use strict";
-const VERSION = "V2.20", ITERABLE = new Object();
-const MAX_CHARS = 28, MAX_PROP = 1000;
+const VERSION = "V2.21", ITERABLE = new Object();
+const MAX_CHARS = 50, MAX_PROP = 1000;
 const objA = [], objP = [], NL = "\n";
 const hist = [];    //object history -- global variable
 var current = 0;  //current object index in list1 & objA
@@ -25,17 +25,17 @@ class Menu {
   }
 }
 function report(input, result) { 
-    let msg = trunc(input, MAX_CHARS);
+    let msg = trunc(input);
     if (result != undefined) {
         display(result);
-        msg += trunc(" ⇒ "+result, 2*MAX_CHARS); 
+        msg += trunc(" ⇒ "+result); 
     }
     console.log(msg); out.innerText = msg; 
     out.style.background = "";
 }
 function reportError(e) {
     console.log(e); 
-    out.innerText = trunc(" "+e, 4*MAX_CHARS); 
+    out.innerText = e //trunc(" "+e, 4*MAX_CHARS); 
     out.style.background = "pink";
 }
 function doMethod(met) { //target == list3
@@ -133,8 +133,8 @@ function doEnter(evt) {
         reportError(e);
     }
 }
-function trunc(s, M) { //if s is long, truncate to M chars
-    if (s == null) s = "null";
+function trunc(s, M=MAX_CHARS) { //truncate to M chars
+    if (s == null) return "null";
     if (s.length > M+4) s = s.substring(0, M)+"...";
     return s;
 }
@@ -177,8 +177,7 @@ function arrayToList(a, L) {
         let obj = a[j];
         if (obj === "") obj = " ";
         if (!obj) continue;
-        let s = (L == list1? objToString(obj) : obj);
-        s = trunc(s, MAX_CHARS);
+        let s = trunc(L == list1? objToString(obj) : obj);
         if (s[0] != '"' && s.includes(OBJ)) {
           s = s.replace(OBJ, "<B>");
           if (s.includes(RB))
