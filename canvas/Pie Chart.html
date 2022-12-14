@@ -7,69 +7,115 @@
     <title>Pie Chart </title>
 
   <style>
-    body { max-width: 440px; }
+    body {
+      max-width: 600px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    td {
+      text-align: center;
+      padding: 4px;
+      border: 0.5px solid;
+    }
     #sample { overflow-x: auto; }
+    canvas, #pie {
+      display: inline-block;
+      margin: 4%;
+      width: 40%;
+      aspect-ratio: 1;
+    }
+    #pie {
+      /* background: conic-gradient(
+        lightblue 0deg 164deg, 
+        lightgreen 164deg 252deg, 
+        pink 252deg 332deg, 
+        silver 332deg 359deg); */
+      border-radius: 50%;
+    }
   </style>
 </head>
 
 <body>
 
 <h2 id=title></h2>
-<p>using JavaScript canvas</p>
-
-<p id=out></p>
+<p>Using HTML Canvas and plain CSS</p>
+<table id=out></table>
 <hr />
-<canvas id=canvas></canvas>
+<canvas id=canvas title="Uses HTML Canvas"></canvas>
+<div id=pie title="This is plain CSS"></div>
 <hr />
 <b>Sample code</b>
 <pre id=sample></pre>
 
-<p>Ref: <i>Eloquent JavaScript</i>,
+<p>Ref: <br>
+<i>Eloquent JavaScript</i>,
 <a href="http://eloquentjavascript.net/17_canvas.html" 
-   target="NewTab"> Chap 17</a>
-</p>
-
+   target="NewTab">Chap 17</a><br>
+CSS function:
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/conic-gradient" 
+   target="NewTab">conic-gradient()</a><br>
+<a href="https://www.freecodecamp.org/news/css-only-pie-chart/" 
+   target="NewTab">Pie Chart Using Only CSS</a>
+  </p>
 <script>
 "use strict";
-const results = [
+const DATA = [
   {name: "Satisfied", count: 1043, color: "lightblue"},
   {name: "Neutral", count: 563, color: "lightgreen"},
   {name: "Unsatisfied", count: 510, color: "pink"},
   {name: "No comment", count: 175, color: "silver"}
 ];
-function namesToHTML(data) {
-    let total = 0;
-    for (let x of data) total += x.count;
-    //data.reduce((sum, {count}) => sum + count, 0);
-    let s = "";
-    for (let x of data) {
-        x.percent = x.count * 100 / total;
-        s += x.percent.toFixed()+"% &nbsp; <span style='color:"
-            +x.color+"'> "+x.name+" </span><br>";
-    }
-    return s;
+function round(num, unit = '') {
+    return Math.round(num)+unit
 }
-function pieChart(data, R = 110, C = 20) {
-    canvas.width = 2*(R+C); canvas.height = 2*(R+C);
+function toTable() {
+    let total = 
+      DATA.reduce((sum, x) => sum + x.count, 0)
+    // for (let x of DATA) total += x.count
+    let b = ["<tr><th>Count<th>Response<th>Angle<th>Color"]
+    for (let x of DATA) {
+        x.degree = x.count * 360 / total
+        let t = x.count, d = round(x.degree, '°')
+        let n = x.name, c = x.color
+        b.push(`<tr><td>${t}<td>${n}<td>${d}<td>${c}`)
+    }
+    return b.join('\n')
+}
+function pieChart(R = canvas.clientWidth/2) {
+ // the chart at the left uses HTML Canvas 
+    canvas.width = 2*R; canvas.height = 2*R;
     const cx = canvas.getContext("2d");
-    const k = 2 * Math.PI / 100;
+    const k = Math.PI / 180;
     let a = -0.5 * Math.PI; // start at -pi/2
-    for (let x of data) {
-        const delta = x.percent * k;
+    for (let x of DATA) {
+        const delta = x.degree * k;
         cx.beginPath();
-        // center=(R+C, R+C) radius=R
         // clockwise by delta
-        cx.arc(R+C, R+C, R, a, a + delta);
+        cx.arc(R, R, R, a, a + delta);
         a += delta;
-        cx.lineTo(R+C, R+C);
+        cx.lineTo(R, R);
         cx.fillStyle = x.color;
         cx.fill();
     }
 }
+function setBackground() {
+ // the chart at the right is plain CSS
+    let angle = 0, b = []
+    for (let x of DATA) {
+        b.push(x.color+" "+round(angle, "deg"))
+        angle += x.degree
+        b.push(x.color+" "+round(angle, "deg"))
+    }
+    pie.style.background 
+      = "conic-gradient("+b.join(', ')+")"
+}
     title.innerText = document.title;
-    sample.innerText = pieChart.toString();
-    out.innerHTML = namesToHTML(results);
-    pieChart(results);
+    out.innerHTML = toTable();
+    pieChart(); //first chart is canvas
+    setBackground(); //second chart is CSS
+    sample.innerText = pieChart +'\n'+setBackground
 </script>
 <script src="/JS/navbar.js"></script>
 
