@@ -120,6 +120,7 @@ class Drive_teacher {
     await gapi.client.request({path, method, headers, params, body})
     return setObjStr(result)
   }
+  showText(t) { msg.innerText = t }
   toString() { return "Drive_teacher" }
 }
 async function listFiles(q) {
