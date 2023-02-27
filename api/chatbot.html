@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Simple ChatBot</title>
+  <style>
+    body {
+      max-width: 600px;
+    }
+    input[type="text" i] {
+      padding: 5px;
+      width: 80%;
+    }
+    #chatlog {
+      resize: both;
+      display: flex;
+      flex-direction: column;
+      height: 70vh;
+      margin: 10px 0;
+      border: thin solid black;
+      padding: 0 2px;
+      overflow-y: auto;
+    }
+    #chatlog div {
+      padding: 5px;
+      max-width: 80%;
+    }
+    .user-msg {
+      margin: 2px 0 2px auto;
+      background-color: #c3e2ff;
+    }
+    .bot-msg {
+      margin: 2px auto 2px 0;
+      background-color: #d6e9c6;
+    }
+  </style>
+
+<h2 id=title></h2>
+<div id=main>
+  <div id="chatlog"></div>
+  <div>
+    <input type="text" id="input" placeholder="Query here">
+    <button id="button">Listen</button>
+  </div>
+</div>
+<div id=noKey>
+  <p>You need an openAI access key from
+    <a href="https://platform.openai.com/account/api-keys">here</a>
+  </p>
+</div>
+  
+<script src="../util/Util.js"></script>  
+<script>
+  const access = new KeyHolder('openAI')
+  const MODEL = 'text-davinci-002';
+  const chatlog = document.getElementById('chatlog');
+  const input = document.getElementById('input');
+  const button = document.getElementById('button');
+
+  async function doQuery() {
+    const prompt = `User: ${input.value}\nBot:`;
+    const resp = await generateResponse(prompt);
+    appendToChatlog(input.value, 'user');
+    appendToChatlog(resp, 'bot');
+    input.value = '';
+  }
+  input.onchange = doQuery;
+  input.focus()
+
+  async function generateResponse(prompt) {
+    const u = 'https://api.openai.com/v1/engines/' + MODEL + '/completions'
+    const body = JSON.stringify({
+      'prompt': prompt,
+      'max_tokens': 200,
+    })
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + access._key,
+    }
+    const method = 'POST'
+    const opt = {
+      method,
+      headers,
+      body
+    }
+    const resp = await fetch(u, opt);
+    const data = await resp.json();
+    return data.choices[0].text.trim();
+  }
+  function appendToChatlog(msg, sender) {
+    const elt = document.createElement('div');
+    elt.className = sender === 'bot' ? 'bot-msg' : 'user-msg';
+    elt.textContent = msg;
+    chatlog.appendChild(elt);
+    elt.scrollIntoView();
+    if (sender === 'bot') speak(msg)
+  }
+
+function speak(s=input.value, t=dil.value) {
+    let u = new SpeechSynthesisUtterance(s)
+    u.lang = t; speechSynthesis.speak(u)
+}
+function listen(t=dil.value) {
+    SR.lang = t; SR.start()
+    input.value = 'Listening'
+    input.style.background = 'yellow'
+}
+function getResult(e) {
+    let a = e.results[0][0]; //use first result
+    let s = a.transcript
+    console.log(s, a.confidence.toFixed(2))
+    input.value = s; input.focus()
+    input.style.background = ''
+}
+function error(e) {
+    input.value = '[no input]'
+    input.style.background = 'pink'
+}
+const dil = { value: 'en-EN' }
+const SR = new webkitSpeechRecognition()
+SR.onspeechend = SR.stop; SR.onsoundend = error
+SR.onresult = getResult;  SR.onnomatch = error
+button.onclick = listen;
+
+  function noKeyFound(e) {
+    main.style.display = 'none'; //hide
+    noKey.style.display = ''; //show
+    throw e
+  }
+  title.textContent = document.title
+  if (!access._key) noKeyFound('You need an access key')
+  noKey.style.display = 'none';
+</script>
