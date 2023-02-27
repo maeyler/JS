@@ -7,7 +7,7 @@
     body {
       max-width: 600px;
     }
-    input[type="text" i] {
+    input[type="search" i] {
       padding: 5px;
       width: 80%;
     }
@@ -28,10 +28,22 @@
     .user-msg {
       margin: 2px 0 2px auto;
       background-color: #c3e2ff;
+      font-family: Arial, Helvetica, sans-serif;
     }
     .bot-msg {
       margin: 2px auto 2px 0;
       background-color: #d6e9c6;
+      font-family: Cambria, Georgia, Times, serif;
+    }
+    span.box {
+      display: inline-block;
+      align-items: center;
+      border: thin solid;
+      width: 12px;
+      text-align: center;
+      background: white;
+      padding: 0 3px;
+      cursor: pointer;
     }
   </style>
 
@@ -39,7 +51,7 @@
 <div id=main>
   <div id="chatlog"></div>
   <div>
-    <input type="text" id="input" placeholder="Query here">
+    <input type="search" id="input" placeholder="Query here">
     <button id="button">Listen</button>
   </div>
 </div>
@@ -51,20 +63,26 @@
   
 <script src="../util/Util.js"></script>  
 <script>
-  const access = new KeyHolder('openAI')
+  const VERSION = 'V0.1';
+  const access = new KeyHolder('openAI');
   const MODEL = 'text-davinci-002';
   const chatlog = document.getElementById('chatlog');
   const input = document.getElementById('input');
   const button = document.getElementById('button');
 
+  var recognition = false;
   async function doQuery() {
     const prompt = `User: ${input.value}\nBot:`;
     const resp = await generateResponse(prompt);
     appendToChatlog(input.value, 'user');
     appendToChatlog(resp, 'bot');
-    input.value = '';
+    input.value = ''; recognition = false;
   }
   input.onchange = doQuery;
+  input.onkeydown = (evt) => {
+    if (evt.key == 'Enter') doQuery();
+    if (evt.key == 'Escape') input.value = '';
+  }
   input.focus()
 
   async function generateResponse(prompt) {
@@ -87,13 +105,26 @@
     const data = await resp.json();
     return data.choices[0].text.trim();
   }
+  function close(evt) {
+    console.log(evt)
+    let t = evt.target
+    let p = t.parentElement
+    let q = p.nextSibling
+    p.remove(); q.remove()
+  }
   function appendToChatlog(msg, sender) {
     const elt = document.createElement('div');
-    elt.className = sender === 'bot' ? 'bot-msg' : 'user-msg';
-    elt.textContent = msg;
-    chatlog.appendChild(elt);
-    elt.scrollIntoView();
-    if (sender === 'bot') speak(msg)
+    if (sender === 'bot') {
+      elt.innerText = msg;
+      elt.className = 'bot-msg';
+    } else { //user
+      const s = document.createElement('span');
+      s.innerText = 'x'; s.className = 'box';
+      s.onclick = close; elt.append(s,' '+msg);
+      elt.className = 'user-msg';
+    }
+    chatlog.append(elt); elt.scrollIntoView();
+    if (recognition && sender === 'bot') speak(msg)
   }
 
 function speak(s=input.value, t=dil.value) {
@@ -111,6 +142,7 @@ function getResult(e) {
     console.log(s, a.confidence.toFixed(2))
     input.value = s; input.focus()
     input.style.background = ''
+    recognition = true
 }
 function error(e) {
     input.value = '[no input]'
@@ -127,7 +159,7 @@ button.onclick = listen;
     noKey.style.display = ''; //show
     throw e
   }
-  title.textContent = document.title
+  title.textContent = document.title+' -- '+VERSION
   if (!access._key) noKeyFound('You need an access key')
   noKey.style.display = 'none';
 </script>
