@@ -60,14 +60,14 @@
   </div>
 </div>
 <div id=noKey>
-  <p>You need an openAI access key from
+  <p>You need an openAI key from
     <a href="https://platform.openai.com/account/api-keys">here</a>
   </p>
 </div>
   
 <script src="../util/Util.js"></script>  
 <script>
-  const VERSION = 'V0.2';
+  const VERSION = 'V0.3';
   const KEY_NAME = 'openAI';
   const MODEL = 'text-davinci-002';
   const chatlog = document.getElementById('chatlog');
@@ -109,6 +109,7 @@
     }
     try {
       const resp = await fetch(u, opt);
+      if (!resp.ok) noKeyFound()
       const data = await resp.json();
       return data.choices[0].text.trim();
     } catch (e) {
@@ -174,9 +175,9 @@ keyBut.onclick = () => {
   function noKeyFound(e) {
     main.style.display = 'none'; //hide
     noKey.style.display = ''; //show
-    throw e
+    throw 'You need an openAI key'
   }
   title.textContent = document.title+' -- '+VERSION
-  if (!access._key) noKeyFound('You need an access key')
+  if (!access._key) noKeyFound()
   noKey.style.display = 'none';
 </script>
