@@ -9,7 +9,7 @@
     }
     input[type="search" i] {
       padding: 5px;
-      width: 80%;
+      width: 75%;
     }
     #chatlog {
       resize: both;
@@ -45,14 +45,18 @@
       padding: 0 3px;
       cursor: pointer;
     }
+    button {
+      padding: 4px;
+    }
   </style>
 
 <h2 id=title></h2>
 <div id=main>
   <div id="chatlog"></div>
   <div>
+    <button id="keyBut">🔑</button>
     <input type="search" id="input" placeholder="Query here">
-    <button id="button">Listen</button>
+    <button id="listenB">🎤</button>
   </div>
 </div>
 <div id=noKey>
@@ -63,14 +67,16 @@
   
 <script src="../util/Util.js"></script>  
 <script>
-  const VERSION = 'V0.1';
-  const access = new KeyHolder('openAI');
+  const VERSION = 'V0.2';
+  const KEY_NAME = 'openAI';
   const MODEL = 'text-davinci-002';
   const chatlog = document.getElementById('chatlog');
   const input = document.getElementById('input');
-  const button = document.getElementById('button');
+  const keyBut = document.getElementById('keyBut');
+  const listenB = document.getElementById('listenB');
 
   var recognition = false;
+  var access = new KeyHolder(KEY_NAME);
   async function doQuery() {
     const prompt = `User: ${input.value}\nBot:`;
     const resp = await generateResponse(prompt);
@@ -101,12 +107,15 @@
       headers,
       body
     }
-    const resp = await fetch(u, opt);
-    const data = await resp.json();
-    return data.choices[0].text.trim();
+    try {
+      const resp = await fetch(u, opt);
+      const data = await resp.json();
+      return data.choices[0].text.trim();
+    } catch (e) {
+      return e
+    }
   }
   function close(evt) {
-    console.log(evt)
     let t = evt.target
     let p = t.parentElement
     let q = p.nextSibling
@@ -152,7 +161,15 @@ const dil = { value: 'en-EN' }
 const SR = new webkitSpeechRecognition()
 SR.onspeechend = SR.stop; SR.onsoundend = error
 SR.onresult = getResult;  SR.onnomatch = error
-button.onclick = listen;
+listenB.onclick = listen;
+keyBut.onclick = () => {
+    let x = JSON.parse(localStorage.keys)
+    if (x[KEY_NAME]) {
+      delete x[KEY_NAME]
+      localStorage.keys = JSON.stringify(x)
+    }
+    access = new KeyHolder(KEY_NAME);
+}
 
   function noKeyFound(e) {
     main.style.display = 'none'; //hide
