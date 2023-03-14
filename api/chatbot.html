@@ -65,18 +65,43 @@
   </p>
 </div>
   
-<script src="../util/Util.js"></script>  
 <script>
-  const VERSION = 'V0.3';
-  const KEY_NAME = 'openAI';
+  const VERSION = 'V0.4';
   const MODEL = 'text-davinci-002';
+  const max_tokens = 256;
   const chatlog = document.getElementById('chatlog');
   const input = document.getElementById('input');
   const keyBut = document.getElementById('keyBut');
   const listenB = document.getElementById('listenB');
 
   var recognition = false;
-  var access = new KeyHolder(KEY_NAME);
+  var currentKey = getKey()
+  function getKey() {
+    let k = localStorage.openAI
+    if (k) return k
+    let x = localStorage.keys
+    if (!x) return null
+    k = JSON.parse(x).openAI
+    if (!k) return null
+    saveKey(k); return k
+  }
+  function saveKey(k) {
+    if (localStorage.openAI !== k)
+        localStorage.openAI = k
+  }
+  async function askUser() {
+    let k = prompt('Enter OpenAI API key')
+    if (!k) return
+    let resp = await generateResponse('hello', k)
+    if (resp) { //verified
+      currentKey = k; saveKey(k);
+      noKey.style.display = 'none';
+    } else if (!currentKey) {
+      main.style.display = 'none'; //hide
+      console.error('You need an OpenAI API key')
+    }
+  }
+
   async function doQuery() {
     const prompt = `User: ${input.value}\nBot:`;
     const resp = await generateResponse(prompt);
@@ -91,25 +116,18 @@
   }
   input.focus()
 
-  async function generateResponse(prompt) {
+  async function generateResponse(prompt, key=currentKey) {
     const u = 'https://api.openai.com/v1/engines/' + MODEL + '/completions'
-    const body = JSON.stringify({
-      'prompt': prompt,
-      'max_tokens': 200,
-    })
+    const body = JSON.stringify({ prompt, max_tokens })
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + access._key,
+      'Authorization': 'Bearer ' + key,
     }
     const method = 'POST'
-    const opt = {
-      method,
-      headers,
-      body
-    }
+    const opt = { method, headers, body }
     try {
       const resp = await fetch(u, opt);
-      if (!resp.ok) noKeyFound()
+      if (!resp.ok) return null;
       const data = await resp.json();
       return data.choices[0].text.trim();
     } catch (e) {
@@ -163,21 +181,15 @@ const SR = new webkitSpeechRecognition()
 SR.onspeechend = SR.stop; SR.onsoundend = error
 SR.onresult = getResult;  SR.onnomatch = error
 listenB.onclick = listen;
-keyBut.onclick = () => {
-    let x = JSON.parse(localStorage.keys)
-    if (x[KEY_NAME]) {
-      delete x[KEY_NAME]
-      localStorage.keys = JSON.stringify(x)
-    }
-    access = new KeyHolder(KEY_NAME);
-}
+keyBut.onclick = askUser;
 
-  function noKeyFound(e) {
+  function noKeyFound(e) { //not used
     main.style.display = 'none'; //hide
     noKey.style.display = ''; //show
     throw 'You need an openAI key'
   }
   title.textContent = document.title+' -- '+VERSION
-  if (!access._key) noKeyFound()
-  noKey.style.display = 'none';
+  if (currentKey)
+    noKey.style.display = 'none'
+  else askUser()
 </script>
