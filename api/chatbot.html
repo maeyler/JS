@@ -2,7 +2,7 @@
 <html lang="en-US">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
-  <title>Simple ChatBot</title>
+  <title>Ruhsuz Zekâ</title>
   <style>
     body {
       max-width: 600px;
@@ -55,13 +55,13 @@
   <div id="chatlog"></div>
   <div>
     <button id="keyBut">🔑</button>
-    <input type="search" id="input" placeholder="Query here">
+    <input type="search" id="input" placeholder="Sesli sorabilirsiniz">
     <button id="listenB">🎤</button>
   </div>
 </div>
 <div id=noKey>
-  <p>You need an openAI key from
-    <a href="https://platform.openai.com/account/api-keys">here</a>
+  <p>"OpenAI API key" gerekiyor:
+    <a href="https://platform.openai.com/account/api-keys">Buradan alın</a>
   </p>
 </div>
   
@@ -73,6 +73,7 @@
   const input = document.getElementById('input');
   const keyBut = document.getElementById('keyBut');
   const listenB = document.getElementById('listenB');
+  const MICRO = listenB.textContent, STOP = '🗙';
 
   var recognition = false;
   var currentKey = getKey()
@@ -156,12 +157,16 @@
   }
 
 function speak(s=input.value, t=dil.value) {
-    let u = new SpeechSynthesisUtterance(s)
-    u.lang = t; speechSynthesis.speak(u)
+    SU.lang = t; SU.text = s
+    speechSynthesis.speak(SU)
+    listenB.textContent = STOP; 
+}
+function showMicrophone() {
+    listenB.textContent = MICRO
 }
 function listen(t=dil.value) {
     SR.lang = t; SR.start()
-    input.value = 'Listening'
+    input.value = 'Dinliyorum...'
     input.style.background = 'yellow'
 }
 function getResult(e) {
@@ -176,12 +181,19 @@ function error(e) {
     input.value = '[no input]'
     input.style.background = 'pink'
 }
-const dil = { value: 'en-EN' }
+const dil = { value: 'tr-TR' }
 const SR = new webkitSpeechRecognition()
 SR.onspeechend = SR.stop; SR.onsoundend = error
 SR.onresult = getResult;  SR.onnomatch = error
-listenB.onclick = listen;
+const SU = new SpeechSynthesisUtterance()
+SU.onend = showMicrophone
 keyBut.onclick = askUser;
+listenB.onclick = () => {
+  if (!speechSynthesis.speaking) listen()
+  else {
+    speechSynthesis.cancel(); showMicrophone()
+  }
+}
 
   function noKeyFound(e) { //not used
     main.style.display = 'none'; //hide
