@@ -7,6 +7,7 @@
 
   <style>
     body { max-width: 440px; }
+    #dil { font-family: Courier, monospace }
     #sample { overflow-x: auto; }
     #out {
         font-size: 18px;
@@ -24,14 +25,7 @@
 
 <input id=dinle type=button onclick=listen() value=Listen>&emsp;
 <select id=dil>
-  <option>en-US</option>
-  <option>ar-AR</option>
-  <option>fr-FR</option>
-  <option>en-GB</option>
-  <option>it-IT</option>
-  <option>tr-TR</option>
-</select>
-<!--Lang <input id=dil type=text size=6 value="en-US"-->&emsp;
+</select>&emsp;
 <input id=konus type=button onclick=speak()  value=Speak>
 
 <p id=out>Tell me something</p>
@@ -43,6 +37,21 @@
 
 <script>
 "use strict"
+const map = new Map()
+function populateVoiceList() {
+  if (!speechSynthesis) return;
+  const a = speechSynthesis.getVoices();
+  for (let voice of a) {
+    let lan = voice.lang.slice(0, 2);
+    if (map.get(lan)) continue;
+    let option = document.createElement("option");
+    option.textContent = voice.lang;
+    option.dataName = voice.name;
+    if (voice.default) option.selected = true;
+    dil.appendChild(option); map.set(lan, option);
+  }
+  console.log(a.length, "voices =>", dil.childElementCount)
+}
 function speak(s=out.innerText, t=dil.value) {
     let u = new SpeechSynthesisUtterance(s)
     u.lang = t; speechSynthesis.speak(u)
@@ -65,11 +74,12 @@ function error(e) {
     out.style.background = ''
 }
 
-    title.innerText = document.title
-    listen+'\n'+getResult
-    const SR = new webkitSpeechRecognition()
-    SR.onspeechend = SR.stop; SR.onsoundend = error
-    SR.onresult = getResult;  SR.onnomatch = error
+title.innerText = document.title
+listen+'\n'+getResult
+const SR = new webkitSpeechRecognition()
+SR.onspeechend = SR.stop; SR.onsoundend = error
+SR.onresult = getResult;  SR.onnomatch = error
+speechSynthesis.onvoiceschanged = populateVoiceList
 </script>
 
 </body>
