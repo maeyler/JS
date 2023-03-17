@@ -39,17 +39,19 @@
 "use strict"
 const map = new Map()
 function populateVoiceList() {
-  if (!speechSynthesis) return;
-  const a = speechSynthesis.getVoices();
-  for (let voice of a) {
+  function addToMenu(voice) {
     let lan = voice.lang.slice(0, 2);
-    if (map.get(lan)) continue;
+    if (map.get(lan)) return;
     let option = document.createElement("option");
     option.textContent = voice.lang;
     option.dataName = voice.name;
-    if (voice.default) option.selected = true;
     dil.appendChild(option); map.set(lan, option);
   }
+  if (!speechSynthesis) return;
+  const a = speechSynthesis.getVoices();
+  for (let voice of a) 
+    if (voice.default) addToMenu(voice)
+  for (let voice of a) addToMenu(voice)
   console.log(a.length, "voices =>", dil.childElementCount)
 }
 function speak(s=out.innerText, t=dil.value) {
