@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
+    <title>Word count </title>
+</head>
+
+<body>
+<h3>Word 
+    <button id=count>count</button>&ensp;
+    <input type=text id=out size=10 /></h3>
+<textarea id=txa rows=20 style="width:100%">
+</textarea>
+<hr />
+<b>Sample code</b>
+<pre id=sample>
+</pre>
+<hr />
+<script>
+function countWords(s) {
+  let P = /[.,#&!$%;:{}+*=_`'"~()…’“”—\-\^\[\]\/\\]/g
+  s = s.trim(); if (s === '') return 0
+  let a = s.replace(P,' ').split(/\s+/)
+  if (!a[a.length-1]) a.pop()
+  console.log(a); return a.length;
+}
+sample.innerText = countWords
+count.onclick = () => out.value = countWords(txa.value)
+</script>
+<script src="/JS/navbar.js"></script>
+
+</body>
+</html>
+
