@@ -4,7 +4,7 @@ body {
 }
 nav {
   width: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   margin-left: -8px;
   font-family: sans-serif;

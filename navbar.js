@@ -9,7 +9,7 @@ const NAV =
       <div class=nav_menu>
         <a href="/JS/simple/Date%20test.html">Date and Color</a>
         <a href="/JS/simple/char_count.html">Char Count</a>
-        <a href="/JS/simple/Color%20Paragraphs.html">Color Paragraphs</a>
+        <a href="/JS/simple/word_count.html">Word Count</a>
         <a href="/JS/simple/Compare%20Colors.html">Compare Colors</a>
         <a href="/JS/simple/HTML%20items.html">HTML Items</a>
         <a href="/JS/simple/Calculator.html">Calculator</a>
@@ -59,6 +59,7 @@ const NAV =
     </li>
     <li class=Events>Events
       <div class=nav_menu>
+        <a href="/JS/simple/Color%20Paragraphs.html">Color Paragraphs</a>
         <a href="/JS/hard/Events.html">Event Handlers</a>
         <a href="/JS/hard/Battery.html">Battery & Internet</a>
         <a href="/JS/hard/Propagation.html">Event Propagation</a>
