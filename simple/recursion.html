@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Recursion</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Recursion</title>
 
 <h3 id=baslik></h3>
-<input type=number value=4 max=7 onChange="exec(value)">
+<input id=inp type=number value=4 max=7>
 <p id=out></p>
 <hr />
 <b>Sample code</b>
@@ -13,12 +13,12 @@
 
 <script>
 "use strict";
-function init() {
-    print = x => {out.textContent += x+' '}
-    mark(4)
+function print(x) {
+    out.textContent += x+' '
 }
-function exec(n) {
-    out.textContent = ''; mark(n)
+function exec() {
+    out.textContent = ''
+    mark(inp.value)
 }
 function mark(n) {
     if (n > 0) {
@@ -28,6 +28,6 @@ function mark(n) {
     }
 }
 baslik.textContent = document.title
-sample.textContent = init+'\n'+exec+'\n'+mark
-init()
+sample.textContent = print+'\n'+exec+'\n'+mark
+inp.onchange = exec; exec()
 </script>
