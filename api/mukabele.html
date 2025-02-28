@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <meta charset="UTF-8">
+    <meta name="viewport"    content="width=device-width">
+    <meta name="author"      content="M A Eyler, Istanbul, 2020" />
+    <meta name="description" content="YouTube player" />
+    <link rel="icon" href="mukabele.jpg">
+    <title>Mukabele 30 cüz</title>
+<style>
+    body { 
+        background: #bef;
+        font: 14px arial;
+    }
+    body, h2, h3 { margin: 8px; }
+    li {
+        width: 280px;
+        list-style: none;
+        margin: 8px 0;
+        cursor: pointer;
+    }
+    li img { 
+        width: 90%;
+        background-color: black;
+        padding: 0 5%;
+    }
+    li span {
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+        margin: 8px;
+    }
+    li, iframe, div {
+        display: inline-block;
+    }
+    iframe {
+        width: 560px; height: 315px;
+    }
+    pre { 
+        margin: 2px; 
+        font-size: small;
+    }
+    #out {
+        font-size: larger;
+    }
+    li a {
+      margin: 8px;
+      display: inline-block;
+    }
+    #nav a {
+      font-size: 20px;
+      font-weight:bolder;
+      cursor: pointer;
+    }
+</style>
+
+<body>
+<h2 id=title></h2>
+<div>
+    <p id=exec hidden>
+        Number desired
+        <input id=maxNum type=number value=30 style="width:40px;"><br><br>
+        Play list ID 
+        <input id=listID type=text size=35>
+        <button onclick="setHash()">Run</button>
+    </p>
+    <p id=out>Please reload if not started automatically</p>
+    <div id=nav>
+        Önceki cüz: <a onclick="prevPage()">⇦</a> &emsp;
+        Sonraki cüz: <a onclick="nextPage()">⇨</a><br><br>
+    </div>
+</div>
+<iframe id=player frameborder="0" allowfullscreen
+  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture">
+</iframe>
+<hr />
+<div id=liste>
+</div>
+<hr />
+
+<script>
+"use strict";
+const _key = 'AIzaSyCH22pYgwYoWme6CFPiU3i_JLD-SgATteU'
+var chanTitle, listTitle, current
+//https://developers.google.com/explorer-help/guides/code_samples#javascript
+function loadClient() {
+    const YT = "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
+    gapi.client.setApiKey(_key)
+    out.innerText = "Loading client"
+    gapi.client.load(YT).then(success, console.error)
+}
+function success() {
+    // exec.hidden = false; 
+    out.innerText = "GAPI client loaded"
+    console.log("GAPI client loaded for youtube API")
+    location.hash = "PLbxwMdSNkTauJdKskkVznM4fV3aErgPJf" 
+    hashModified()  //use the initial value
+}
+// Make sure the client is loaded before calling this method.
+function execute(id = listID.value) {
+    chanTitle = ''; listTitle = ''
+    out.innerText = "Loading play list "+id
+    let part = "snippet"
+    gapi.client.youtube.playlists.list({part, id})
+      .then(getTitle, console.error)
+    let maxResults = maxNum.value || 12
+    let playlistId = id
+    gapi.client.youtube.playlistItems.list({part, maxResults, playlistId})
+      .then(getItems, console.error)
+}
+function getTitle(response) {
+    let x = response.result.items[0]
+    chanTitle = x.snippet.channelTitle
+    listTitle = x.snippet.title
+    console.log(listTitle, x)
+  }
+function getItems(response) {
+    let a = response.result.items  //.reverse()
+ // console.log('getItems', a)
+ // out.innerText = `${a.length} items by ${chanTitle}\n${listTitle}`
+    out.innerHTML = `${a.length} cüz ${chanTitle}<br>
+    <a href="https://www.youtube.com/playlist?list=${listID.value}" target="NewTab">${listTitle}</a>`
+    a = a.map(x => ({tit:x.snippet.title, vid:x.snippet.resourceId.videoId}))
+    useData(a)  //fill data
+  }
+function doClick(evt) {
+    let t = evt.target
+    setCurrent(t.id? t : t.parentNode)
+}
+function prevPage() {
+    setCurrent(current.previousElementSibling || liste.lastElementChild)
+}
+function nextPage() {
+    setCurrent(current.nextElementSibling || liste.firstElementChild)
+}
+function setCurrent(i) {
+    if (!i) return
+    console.log('setCurrent', i.id)
+    const HREF = 'https://www.youtube.com/embed/'
+    current = i; player.src = HREF+i.id
+    player.scrollIntoView()
+}
+function useData(data) {
+    liste.innerHTML = data.map(
+        x => `<li title="${x.tit}" id="${x.vid}"><img src="https://img.youtube.com/vi/${x.vid}/0.jpg"><span>${x.tit}</span></li>`
+    ).join('\n')
+    setCurrent(liste.querySelector('li'))
+}
+function setHash() {
+    location.hash = listID.value
+}
+function hashModified() {
+    let id = location.hash
+    if (!id) return
+    console.log('hashModified', id)
+    listID.value = id.substring(1); execute()
+}
+    title.innerText = document.title
+    window.onhashchange = hashModified
+    listID.onkeyup = e => (e.key == "Enter"? setHash() : '')
+    liste.onclick = doClick
+</script>
+<script src="https://apis.google.com/js/api.js" 
+onload ="gapi.load('client', loadClient)"></script>
+
+</body>
+</html>
